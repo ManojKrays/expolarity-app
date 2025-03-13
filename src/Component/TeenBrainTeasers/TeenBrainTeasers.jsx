@@ -5,7 +5,10 @@ import assessment3 from "../../assets/assessment3.png";
 import questionImage from "../../assets/question.png";
 import backgroundImg from "../../assets/backgroundImg.png";
 
+
+
 const TeenBrainTeasers = () => {
+
   const assessments = [
     { id: 1, image: assessment1, title: "Assessment 1" },
     { id: 2, image: assessment2, title: "Assessment 2" },
@@ -51,9 +54,13 @@ const TeenBrainTeasers = () => {
               "This test predicts communication styles and how people respond in different situations."
             </p>
             <div className="p-4">
-              <button className="font-mallanna border border-black text-black px-6 py-2 rounded-full hover:bg-black hover:text-white transition duration-300">
-                Take a Test
-              </button>
+            <button
+  onClick={() => (window.location.href = "https://panel.expolarity.ai/")}
+  className="font-mallanna border border-black text-black px-6 py-2 rounded-full hover:bg-black hover:text-white transition duration-300"
+>
+  Take a Test
+</button>
+
             </div>
           </div>
         ))}
