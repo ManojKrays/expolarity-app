@@ -14,6 +14,7 @@ export default {
       fontFamily: {
         kite: ['"Kite One"', 'sans-serif'],
         mallanna: ['"Mallanna"', 'sans-serif'],
+        golos: ['"Golos Text"', 'sans-serif'],
       },
     },
   },
