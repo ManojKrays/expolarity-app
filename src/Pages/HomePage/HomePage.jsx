@@ -1,5 +1,10 @@
 import { motion } from "framer-motion";
-import { FaUsers, FaSatelliteDish, FaKey, FaStar } from "react-icons/fa";
+import {
+  FaUsers,
+  FaSatelliteDish,
+  FaStar,
+  FaGraduationCap,
+} from "react-icons/fa";
 import logoImg from "../../assets/logo.png";
 import { TbBellSchool } from "react-icons/tb";
 import { FaThumbsUp, FaTwitter, FaRss } from "react-icons/fa";
@@ -94,7 +99,7 @@ const HomePage = () => {
             Take a test
           </button>
         </div>
-
+        {/* Card Section */}
         <div className=" flex flex-col px-6 relative ">
           {/* Text Section */}
           <div className="w-full md:w-[30%] absolute  left-0 md:left-10 lg:left-60 text-center md:text-left">
@@ -130,23 +135,23 @@ const HomePage = () => {
           </div>
         </div>
 
-        <section className="flex flex-col md:flex-row flex-wrap items-center px-6 sm:px-12 md:px-20 py-10 md:py-20 gap-10">
-          {/* Title and Description */}
+        <section className=" flex flex-col md:flex-row items-center justify-between px-6 sm:px-12 md:px-20 py-14 md:py-20">
+          {/* Left Side - Text & Testimonial Section */}
           <motion.div
-            className="text-center md:text-left md:w-1/2"
-            initial={{ opacity: 0, y: -50 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, ease: "easeOut" }}
+            className="w-full lg:w-1/2 text-center md:text-left"
+            initial={{ opacity: 0, x: -50 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.8 }}
           >
-            <div className="flex justify-center md:justify-start items-center">
+            <div className="flex items-center justify-center md:justify-start">
               <TbBellSchool className="text-teal-600 text-3xl mr-2" />
-              <h2 className="text-3xl sm:text-4xl font-bold text-teal-600">
-                SCHOOLS
+              <h2 className="text-3xl sm:text-4xl font-bold text-teal-600 uppercase tracking-wide">
+                Schools
               </h2>
             </div>
-            <p className="text-gray-700 mt-2 mx-auto md:mx-0 max-w-lg">
-              Many schools across the world use Expolarity.ai to transform the
-              way they record and analyse data. Do you want to know how?
+            <p className="text-gray-700 mt-2 max-w-lg mx-auto md:mx-0">
+              Many schools across the world use Report Bee to transform the way
+              they record and analyze data. Do you want to know how?
             </p>
             <motion.button
               className="mt-6 px-6 py-2 border border-teal-600 text-teal-600 rounded-md hover:bg-teal-600 hover:text-white transition"
@@ -155,68 +160,81 @@ const HomePage = () => {
             >
               LEARN MORE...
             </motion.button>
-          </motion.div>
-          {/* <div className="relative flex justify-center items-center h-[300px] p-26 ">
-  <motion.div
-    className="hidden lg:flex w-40 h-40 md:w-52 md:h-52 border-4 border-red-900 rounded-full flex-col justify-center items-center text-red-900 absolute top-25 md:left-12 z-0"
-    initial={{ opacity: 0, scale: 0.5 }}
-    animate={{ opacity: 1, scale: 1 }}
-    transition={{ duration: 0.8, delay: 0.3 }}
-  >
-    <span className="text-sm font-semibold">#SCHOOLS</span>
-    <span className="text-md ">384</span>
-  </motion.div>
 
-  <motion.div
-    className="hidden lg:flex w-40 h-40 md:w-52 md:h-52 border-4 border-blue-900 rounded-full flex-col justify-center items-center text-blue-900 absolute top-25 right-26 z-0"
-    initial={{ opacity: 0, scale: 0.5 }}
-    animate={{ opacity: 1, scale: 1 }}
-    transition={{ duration: 0.8, delay: 0.5 }}
-  >
-    <span className="text-sm font-semibold">#TEACHERS</span>
-    <span className="text-md ">7,231</span>
-  </motion.div>
-
-  <motion.div
-    className="hidden lg:flex w-40 h-40 md:w-52 md:h-52 border-4 border-green-900 rounded-full flex-col justify-center items-center text-green-900 absolute top-44 z-0 left-0"
-    initial={{ opacity: 0, scale: 0.5 }}
-    animate={{ opacity: 1, scale: 1 }}
-    transition={{ duration: 0.8, delay: 0.7 }}
-  >
-    <span className="text-sm font-semibold">#STUDENTS</span>
-    <span className="text-md ">3,68,641</span>
-  </motion.div>
-</div> */}
-          {/* Customer Testimonials */}
-          <motion.div
-            className="md:w-1/2 text-center md:text-left"
-            initial={{ opacity: 0, x: -50 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8, delay: 0.9 }}
-          >
-            <h3 className="text-teal-600 text-2xl sm:text-3xl font-bold">
-              WHAT OUR CUSTOMERS HAVE TO SAY
-            </h3>
-            <p className="italic text-gray-700 mt-2 max-w-lg mx-auto md:mx-0">
-              "On behalf of all the members of the Heritage Family, I wanted to
-              congratulate Expolarity.ai on such a different and amazing
-              website. We would like to convey our best regards to your team..."
-            </p>
-            <div className="flex flex-col sm:flex-row items-center gap-4 mt-4">
-              <img
-                src={logoImg}
-                alt="Heritage School"
-                className="w-12 h-12 rounded-md"
-              />
-              <div>
-                <p className="font-semibold">S Mehta (Coordinator)</p>
-                <p className="text-gray-600">The Heritage School, New Delhi.</p>
+            {/* Testimonial Section */}
+            <motion.div
+              className="mt-10"
+              initial={{ opacity: 0, y: 50 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.6 }}
+            >
+              <h3 className="text-teal-600 text-2xl sm:text-3xl font-bold uppercase">
+                What Our Customers Have To Say
+              </h3>
+              <p className="italic text-gray-700 mt-2 max-w-lg mx-auto md:mx-0">
+                "On behalf of all the members of the Heritage Family, I wanted
+                to congratulate Report Bee on such a different and amazing
+                website. We would like to convey our best regards to your
+                team..."
+              </p>
+              <div className="flex flex-col sm:flex-row items-center gap-4 mt-4">
+                <img
+                  src={logoImg}
+                  alt="Heritage School"
+                  className="w-12 h-12 rounded-md"
+                />
+                <div>
+                  <p className="font-semibold">S Mehta (Coordinator)</p>
+                  <p className="text-gray-600">
+                    The Heritage School, New Delhi.
+                  </p>
+                </div>
               </div>
-            </div>
-            <p className="text-green-700 font-semibold mt-4 cursor-pointer">
-              VIEW MORE &gt;&gt;
-            </p>
+              <p className="text-green-700 font-semibold mt-4 cursor-pointer">
+                VIEW MORE &gt;&gt;
+              </p>
+            </motion.div>
           </motion.div>
+
+          {/* Right Side*/}
+          <div className="relative flex justify-center items-center w-full lg:h-[60vh] h-auto">
+            {/* Blue Circle - Schools */}
+            <motion.div
+              className="hidden lg:flex absolute w-[180px] md:w-[220px] aspect-square border-[3px] border-blue-900 rounded-full flex-col justify-center items-center text-blue-900 
+                 left-[30%] top-[10%] "
+              initial={{ opacity: 0, scale: 0.5 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+            >
+              <span className="text-sm pr-16">#SCHOOLS</span>
+              <span className="text-xl pr-16">384</span>
+            </motion.div>
+
+            {/* Red Circle - Teachers */}
+            <motion.div
+              className="hidden lg:flex absolute w-[180px] md:w-[220px] aspect-square border-[3px] border-red-900 rounded-full flex-col justify-center items-center text-red-900 
+                 left-[50%] top-[10%] z-20 "
+              initial={{ opacity: 0, scale: 0.5 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.6, delay: 0.4 }}
+            >
+              <span className="text-sm pl-24">#TEACHERS</span>
+              <span className="text-xl pl-24">7,231</span>
+            </motion.div>
+
+            {/* Green Circle - Students */}
+            <motion.div
+              className="hidden lg:flex absolute w-[200px] md:w-[240px] aspect-square border-[3px] border-green-900 rounded-full flex-col justify-center items-center text-green-900 
+                 left-[40%] top-[40%] z-30 "
+              initial={{ opacity: 0, scale: 0.5 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.6, delay: 0.6 }}
+            >
+              <FaGraduationCap size={20} className="mb-2 text-green-900" />
+              <span className="text-sm font-semibold uppercase">#STUDENTS</span>
+              <span className="text-2xl font-bold">3,68,641</span>
+            </motion.div>
+          </div>
         </section>
 
         <section className="flex flex-col md:flex-row items-center justify-start p-6 sm:p-8 md:px-20">
