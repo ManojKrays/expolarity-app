@@ -5,10 +5,7 @@ import assessment3 from "../../assets/assessment3.png";
 import questionImage from "../../assets/question.png";
 import backgroundImg from "../../assets/backgroundImg.png";
 
-
-
 const TeenBrainTeasers = () => {
-
   const assessments = [
     { id: 1, image: assessment1, title: "Assessment 1" },
     { id: 2, image: assessment2, title: "Assessment 2" },
@@ -23,7 +20,11 @@ const TeenBrainTeasers = () => {
           More than just a tool
         </h1>
         <div className="p-4 lg:pr-32">
-          <img src={questionImage} alt="Question Mark" className="w-24 sm:w-32" />
+          <img
+            src={questionImage}
+            alt="Question Mark"
+            className="w-24 sm:w-32"
+          />
         </div>
       </div>
 
@@ -32,7 +33,8 @@ const TeenBrainTeasers = () => {
         Teen Brain Teasers
       </p>
       <p className="text-[15px] text-lightGray text-center">
-        A fun and engaging quiz designed to test the knowledge of teens aged 12-20. How much do you really know?
+        A fun and engaging quiz designed to test the knowledge of teens aged
+        12-20. How much do you really know?
       </p>
 
       {/* Assessment Cards */}
@@ -51,16 +53,18 @@ const TeenBrainTeasers = () => {
               {assessment.title}
             </h3>
             <p className="text-gray-500 text-sm sm:text-[14px] py-4 font-mallanna">
-              "This test predicts communication styles and how people respond in different situations."
+              "This test predicts communication styles and how people respond in
+              different situations."
             </p>
             <div className="p-4">
-            <button
-  onClick={() => (window.location.href = "https://panel.expolarity.ai/")}
-  className="font-mallanna border border-black text-black px-6 py-2 rounded-full hover:bg-black hover:text-white transition duration-300"
->
-  Take a Test
-</button>
-
+              <button
+                onClick={() =>
+                  (window.location.href = "https://panel.expolarity.ai/")
+                }
+                className="font-mallanna border border-black text-black px-6 py-2 rounded-full hover:bg-black hover:text-white transition duration-300"
+              >
+                Take a Test
+              </button>
             </div>
           </div>
         ))}
@@ -68,7 +72,11 @@ const TeenBrainTeasers = () => {
 
       {/* Background Icons */}
       <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-full max-w-[500px] z-0 hidden sm:block">
-        <img src={backgroundImg} alt="Background Icons" className="object-contain w-full" />
+        <img
+          src={backgroundImg}
+          alt="Background Icons"
+          className="object-contain w-full"
+        />
       </div>
     </div>
   );
