@@ -19,13 +19,14 @@ import { useState, useEffect } from "react";
 import Home from "../../assets/home.jpeg";
 
 const texts = [
-  "Next-Gen Learning Analytics",
-  "Transforming Education with AI",
-  "Precision Tracking for Success",
+  "Next-Gen Learning Analytics for a smarter, data-driven, and adaptive future.",
+  "Transforming Education with AI to personalize and enhance learning.",
+  "Precision Tracking for Success to monitor progress with accuracy.",
 ];
 
 const HomePage = () => {
   const [index, setIndex] = useState(0);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -36,35 +37,41 @@ const HomePage = () => {
   }, []);
   return (
     <>
-      <div className="font-golos w-full overflow-x-hidden bg-[#E8FDF7] ">
-      <div
-  className="w-full min-h-screen flex flex-col bg-no-repeat bg-cover sm:bg-[length:100%_100%] md:bg-[length:100%_93%]"
-  style={{
-    backgroundImage: `url(${Home})`,
-  }}
->
+      <div className="font-golos w-full overflow-hidden bg-[#E8FDF7] ">
+        <div
+          className="w-full min-h-screen flex flex-col bg-no-repeat bg-cover sm:bg-[length:100%_100%] md:bg-[length:100%_93%]"
+          style={{
+            backgroundImage: `url(${Home})`,
+          }}
+        >
           {/* Navbar */}
           <nav className="w-full flex items-center justify-between px-6 py-4">
             <div className="flex items-center gap-2">
               <img src={logoImg} alt="Logo" className="w-8 h-8" />
-              <h1 className="text-2xl font-bold text-white">Expolarity.ai</h1>
+              <h1 className="text-2xl font-bold text-white">Expolarity.Ai</h1>
             </div>
 
             {/* Desktop Menu */}
             <div className="hidden md:flex space-x-6 items-center">
-              <a href="#" className="text-gray-900">
-                REGISTER
-              </a>
-              <a href="#" className="text-gray-900">
-                LOG IN
-              </a>
+              <a href="#" className="text-white">REGISTER</a>
+              <a href="#" className="text-white">LOG IN</a>
             </div>
 
             {/* Mobile Menu Icon */}
             <div className="md:hidden">
-              <RxHamburgerMenu className="w-6 h-6 cursor-pointer" />
+              <RxHamburgerMenu
+                className="w-6 h-6 cursor-pointer"
+                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              />
             </div>
           </nav>
+             {/* Mobile Menu  */}
+             {isMobileMenuOpen && (
+            <div className="md:hidden absolute top-16 right-6 bg-white shadow-lg rounded-md w-40 flex flex-col p-4  py-3">
+              <a href="#" className="py-2 text-gray-900">REGISTER</a>
+              <a href="#" className="py-2 text-gray-900">LOG IN</a>
+            </div>
+          )}
 
           {/* Hero Section */}
           <div className="flex flex-col items-center justify-center flex-grow text-center px-6 sm:px-4">
@@ -74,7 +81,7 @@ const HomePage = () => {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
               transition={{ duration: 0.8, ease: "easeInOut" }}
-              className="text-4xl lg:text-5xl md:text-3xl sm:text-2xl font-bold text-gray-900 max-w-[90%] md:max-w-[80%] shadow-2xl"
+              className="text-2xl lg:text-4xl md:text-3xl sm:text-lg font-bold text-white max-w-[90%] md:max-w-[80%] "
             >
               {texts[index]}
             </motion.h2>
@@ -82,14 +89,23 @@ const HomePage = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 1, delay: 0.3 }}
-              className="text-gray-800 mt-2 text-lg max-w-[90%] font-semibold md:max-w-[60%] shadow-2xl"
+              className="text-white mt-2 text-lg max-w-[90%] font-semibold md:max-w-[60%] "
             >
-              A child's growth story told like never before
+             A child's growth story, beautifully captured with deeper insights and a fresh perspective.
             </motion.p>
+            <motion.button
+            className="mt-4 px-6 py-2 bg-[#1b721c] text-white rounded-md cursor-pointer"
+            initial={{ scale: 0.8, opacity: 0 }}
+            whileInView={{ scale: 1, opacity: 1 }}
+            transition={{ duration: 0.6, delay: 0.6 }}
+          >
+            Take a test
+          </motion.button>
           </div>
+          
 
           {/* Bottom Sections */}
-          <div className="w-full grid grid-cols-2 sm:grid-cols-2 text-center text-white bg-teal-500 shadow-lg">
+          <div className="w-full grid grid-cols-2 sm:grid-cols-2 text-center text-white bg-[#20db8a] shadow-lg">
             <div className="py-4 border-b sm:border-b-0 border-r border-teal-600 transition-transform transform hover:scale-105">
               <FaSchool className="inline-block mr-2" /> SCHOOLS
             </div>
@@ -102,7 +118,7 @@ const HomePage = () => {
         <motion.div
           initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: false, amount: 0.3 }}
+          viewport={{ once: true, amount: 0.3 }}
           transition={{ duration: 0.8, ease: "easeOut" }}
           className="flex flex-col items-center justify-center text-center p-6 md:p-10 pb-40 md:pb-60 bg-center bg-no-repeat bg-auto mx-auto w-full min-h-[80vh]"
           style={{ backgroundImage: `url(${homebg})` }}
@@ -195,7 +211,7 @@ const HomePage = () => {
         <motion.section
           initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: false, amount: 0.3 }}
+          viewport={{ once: true, amount: 0.3 }}
           transition={{ duration: 0.8, ease: "easeOut" }}
           className="flex flex-col md:flex-row items-center justify-between px-6 sm:px-12 md:px-20 py-14 md:py-20"
         >
@@ -298,7 +314,7 @@ const HomePage = () => {
         <motion.section
           initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: false, amount: 0.3 }}
+          viewport={{ once: true, amount: 0.3 }}
           transition={{ duration: 0.8, ease: "easeOut" }}
           className="flex flex-col md:flex-row items-center justify-start p-6 sm:p-8 md:px-20"
         >
@@ -339,7 +355,7 @@ const HomePage = () => {
         <motion.div
           initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: false, amount: 0.3 }}
+          viewport={{ once: true, amount: 0.3 }}
           transition={{ duration: 0.8, ease: "easeOut" }}
           className="flex flex-col md:flex-row justify-between items-start p-6 sm:p-8 md:p-10 text-gray-900 sm:px-4 md:px-10 lg:px-20"
         >
@@ -427,7 +443,7 @@ const Card = ({ title, description, image }) => {
     <motion.div
       initial={{ opacity: 0, y: 50 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: false, amount: 0.3 }}
+      viewport={{ once: true, amount: 0.3 }}
       transition={{ duration: 0.8, ease: "easeOut" }}
       className="bg-white shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)] rounded-lg w-full max-w-xs sm:max-w-sm md:max-w-md lg:w-80 flex flex-col items-center mx-auto"
     >
