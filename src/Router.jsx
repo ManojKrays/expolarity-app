@@ -4,14 +4,11 @@ import TeenBrainTeasers from "./Component/TeenBrainTeasers/TeenBrainTeasers.jsx"
 import HomePage from "./Pages/HomePage/HomePage.jsx";
 
 const Router = () => {
-
-
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<TeenBrainTeasers />} />
-        <Route path="/home" element={<HomePage />} />
-
+        <Route path="/testpage" element={<TeenBrainTeasers />} />
+        <Route path="/" element={<HomePage />} />
       </Routes>
     </BrowserRouter>
   );

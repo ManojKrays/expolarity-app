@@ -53,8 +53,12 @@ const HomePage = () => {
 
             {/* Desktop Menu */}
             <div className="hidden md:flex space-x-6 items-center">
-              <a href="#" className="text-white">REGISTER</a>
-              <a href="#" className="text-white">LOG IN</a>
+              <a href="#" className="text-white">
+                REGISTER
+              </a>
+              <a href="#" className="text-white">
+                LOG IN
+              </a>
             </div>
 
             {/* Mobile Menu Icon */}
@@ -65,11 +69,15 @@ const HomePage = () => {
               />
             </div>
           </nav>
-             {/* Mobile Menu  */}
-             {isMobileMenuOpen && (
+          {/* Mobile Menu  */}
+          {isMobileMenuOpen && (
             <div className="md:hidden absolute top-16 right-6 bg-white shadow-lg rounded-md w-40 flex flex-col p-4  py-3">
-              <a href="#" className="py-2 text-gray-900">REGISTER</a>
-              <a href="#" className="py-2 text-gray-900">LOG IN</a>
+              <a href="#" className="py-2 text-gray-900">
+                REGISTER
+              </a>
+              <a href="#" className="py-2 text-gray-900">
+                LOG IN
+              </a>
             </div>
           )}
 
@@ -91,18 +99,21 @@ const HomePage = () => {
               transition={{ duration: 1, delay: 0.3 }}
               className="text-white mt-2 text-lg max-w-[90%] font-semibold md:max-w-[60%] "
             >
-             A child's growth story, beautifully captured with deeper insights and a fresh perspective.
+              A child's growth story, beautifully captured with deeper insights
+              and a fresh perspective.
             </motion.p>
             <motion.button
-            className="mt-4 px-6 py-2 bg-[#1b721c] text-white rounded-md cursor-pointer"
-            initial={{ scale: 0.8, opacity: 0 }}
-            whileInView={{ scale: 1, opacity: 1 }}
-            transition={{ duration: 0.6, delay: 0.6 }}
-          >
-            Take a test
-          </motion.button>
+              className="mt-4 px-6 py-2 bg-[#1b721c] text-white rounded-md cursor-pointer"
+              initial={{ scale: 0.8, opacity: 0 }}
+              whileInView={{ scale: 1, opacity: 1 }}
+              transition={{ duration: 0.6, delay: 0.6 }}
+              onClick={() =>
+                (window.location.href = "https://panel.expolarity.ai/")
+              }
+            >
+              Take a test
+            </motion.button>
           </div>
-          
 
           {/* Bottom Sections */}
           <div className="w-full grid grid-cols-2 sm:grid-cols-2 text-center text-white bg-[#20db8a] shadow-lg">
@@ -145,6 +156,9 @@ const HomePage = () => {
             initial={{ scale: 0.8, opacity: 0 }}
             whileInView={{ scale: 1, opacity: 1 }}
             transition={{ duration: 0.6, delay: 0.6 }}
+            onClick={() =>
+              (window.location.href = "https://panel.expolarity.ai/")
+            }
           >
             Take a test
           </motion.button>
