@@ -53,12 +53,22 @@ const HomePage = () => {
 
             {/* Desktop Menu */}
             <div className="hidden md:flex space-x-6 items-center">
-              <a href="#" className="text-white">
+              <button
+                onClick={() =>
+                  (window.location.href = "https://panel.expolarity.ai/login/")
+                }
+                className="py-2 text-white"
+              >
                 REGISTER
-              </a>
-              <a href="#" className="text-white">
+              </button>
+              <button
+                onClick={() =>
+                  (window.location.href = "https://panel.expolarity.ai/login/")
+                }
+                className="py-2 text-white"
+              >
                 LOG IN
-              </a>
+              </button>
             </div>
 
             {/* Mobile Menu Icon */}
@@ -72,12 +82,22 @@ const HomePage = () => {
           {/* Mobile Menu  */}
           {isMobileMenuOpen && (
             <div className="md:hidden absolute top-16 right-6 bg-white shadow-lg rounded-md w-40 flex flex-col p-4  py-3">
-              <a href="#" className="py-2 text-gray-900">
+              <button
+                onClick={() =>
+                  (window.location.href = "https://panel.expolarity.ai/login/")
+                }
+                className="py-2 text-gray-900"
+              >
                 REGISTER
-              </a>
-              <a href="#" className="py-2 text-gray-900">
+              </button>
+              <button
+                onClick={() =>
+                  (window.location.href = "https://panel.expolarity.ai/login/")
+                }
+                className="py-2 text-gray-900"
+              >
                 LOG IN
-              </a>
+              </button>
             </div>
           )}
 
