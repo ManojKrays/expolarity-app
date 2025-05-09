@@ -1,0 +1,89 @@
+import React, { useState } from "react";
+import logoImg from "../../assets/logo.png";
+import { CircleArrowRight, Menu, X } from "lucide-react";
+
+const Nav = () => {
+    const [menuOpen, setMenuOpen] = useState(false);
+
+    return (
+        <div className="fixed z-50 w-full">
+            <div className="relative bg-[#FBFBFB] py-4 font-mallanna">
+                <div className="flex items-center justify-between px-4 md:justify-around">
+                    <div className="flex items-center gap-2">
+                        <img
+                            src={logoImg}
+                            alt="Logo"
+                            className="h-8 w-8"
+                        />
+                        <div className="flex flex-col">
+                            <h1 className="text-2xl text-green-600">Expolarity.Ai</h1>
+                            <p className="-mt-1 text-[9px] text-green-500">EMPOWERING CAREER GROWT</p>
+                        </div>
+                    </div>
+
+                    <div className="flex items-center gap-3 md:hidden">
+                        <button className="flex items-center gap-1 rounded-full border border-green-500 px-3 py-1 text-green-600 duration-300 hover:bg-green-500 hover:text-white">
+                            Login
+                            <CircleArrowRight
+                                className="fill-green-500 text-white"
+                                size={20}
+                            />
+                        </button>
+                        <button onClick={() => setMenuOpen(!menuOpen)}>
+                            {menuOpen ? (
+                                <X
+                                    size={28}
+                                    className="text-green-500"
+                                />
+                            ) : (
+                                <Menu
+                                    className="text-green-600"
+                                    size={28}
+                                />
+                            )}
+                        </button>
+                    </div>
+
+                    <ul className="hidden gap-5 text-[16px] md:flex">
+                        {["Career", "Assessment", "Test", "Blogs", "Testimonials"].map((item) => (
+                            <li
+                                key={item}
+                                className="cursor-pointer duration-200 hover:text-green-500"
+                            >
+                                {item}
+                            </li>
+                        ))}
+                    </ul>
+
+                    <div className="hidden cursor-pointer rounded-full border border-green-500 px-4 py-1 text-green-500 duration-300 hover:bg-green-500 hover:text-white md:flex">
+                        <button
+                            type="button"
+                            className="flex items-center gap-3"
+                        >
+                            Login
+                            <CircleArrowRight
+                                className="fill-green-500 text-white"
+                                size={28}
+                            />
+                        </button>
+                    </div>
+                </div>
+
+                <div className={`overflow-hidden transition-all duration-300 md:hidden ${menuOpen ? "max-h-[500px]" : "max-h-0"}`}>
+                    <ul className="flex flex-col items-center gap-4 py-4">
+                        {["Career", "Assessment", "Test", "Blogs", "Testimonials"].map((item) => (
+                            <li
+                                key={item}
+                                className="cursor-pointer text-[16px] duration-200 hover:text-green-500"
+                            >
+                                {item}
+                            </li>
+                        ))}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    );
+};
+
+export default Nav;
