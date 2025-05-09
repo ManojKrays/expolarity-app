@@ -1,9 +1,14 @@
 import React, { useState } from "react";
 import logoImg from "../../assets/logo.png";
 import { CircleArrowRight, Menu, X } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 const Nav = () => {
     const [menuOpen, setMenuOpen] = useState(false);
+
+    const NavigateToApp = () => {
+        window.location.href = "https://zurtle-school-app.onrender.com/";
+    };
 
     return (
         <div className="fixed z-50 w-full">
@@ -22,7 +27,10 @@ const Nav = () => {
                     </div>
 
                     <div className="flex items-center gap-3 md:hidden">
-                        <button className="flex items-center gap-1 rounded-full border border-green-500 px-3 py-1 text-green-600 duration-300 hover:bg-green-500 hover:text-white">
+                        <button
+                            onClick={() => NavigateToApp()}
+                            className="flex items-center gap-1 rounded-full border border-green-500 px-3 py-1 text-green-600 duration-300 hover:bg-green-500 hover:text-white"
+                        >
                             Login
                             <CircleArrowRight
                                 className="fill-green-500 text-white"
@@ -57,6 +65,7 @@ const Nav = () => {
 
                     <div className="hidden cursor-pointer rounded-full border border-green-500 px-4 py-1 text-green-500 duration-300 hover:bg-green-500 hover:text-white md:flex">
                         <button
+                            onClick={() => NavigateToApp()}
                             type="button"
                             className="flex items-center gap-3"
                         >

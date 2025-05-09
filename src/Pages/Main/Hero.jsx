@@ -3,6 +3,10 @@ import hero from "../../assets/HeroChildren.svg";
 import { CircleArrowRight, CircleCheck } from "lucide-react";
 
 const Hero = () => {
+    const NavigateToApp = () => {
+        window.location.href = "https://zurtle-school-app.onrender.com/";
+    };
+
     return (
         <div className="px-[5%] pt-[80px] font-mallanna">
             <div className="flex flex-col-reverse items-center justify-center lg:flex-row">
@@ -26,6 +30,7 @@ const Hero = () => {
                         ))}
                     </ul>
                     <button
+                        onClick={() => NavigateToApp()}
                         type="button"
                         className="mt-5 flex w-[145px] cursor-pointer items-center justify-center gap-3 rounded-full border border-green-500 bg-green-500 px-2 py-2 font-semibold text-white duration-300 hover:bg-white hover:text-green-500"
                     >
