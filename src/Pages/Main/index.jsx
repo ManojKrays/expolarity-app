@@ -6,11 +6,13 @@ import Testimonials from "./Testimonials";
 import Banner from "./Banner";
 import Blogs from "./Blogs";
 import Footer from "./Footer";
+import ChatBot from "../../Component/ChatBot";
 
 const Main = () => {
     return (
         <div>
             <Nav />
+            <ChatBot />
             <Hero />
             <WhyUs />
             <Testimonials />

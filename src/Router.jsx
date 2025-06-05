@@ -1,8 +1,8 @@
 import React from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import LaunchSoon from "./Pages/LaunchSoon";
-import Main from "./Pages/Main/Main.jsx";
 import Career from "./Pages/Career/Career.jsx";
+import Main from "./Pages/Main";
 
 const Router = () => {
     return (
