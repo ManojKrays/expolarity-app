@@ -1,11 +1,12 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Home } from "lucide-react";
+import { ArrowLeft, Home } from "lucide-react";
 
-const QuestionScreen = ({ questionType, onBackToWelcome }) => {
+const QuestionScreen = ({ questionType, onBackToWelcome, isLoading }) => {
     const [messages, setMessages] = useState([]);
     const [currentIndex, setCurrentIndex] = useState(0);
     const [showOptions, setShowOptions] = useState(true);
     const [answers, setAnswers] = useState({});
+    const [isCompleted, setIsCompleted] = useState(false);
     const messagesEndRef = useRef(null);
 
     const scrollToBottom = () => {
@@ -44,7 +45,7 @@ const QuestionScreen = ({ questionType, onBackToWelcome }) => {
         return "📘 Thank you. Let’s proceed.";
     };
 
-    const handleAnswer = (answer) => {
+    const handleAnswer1 = (answer) => {
         const currentQuestion = questionType.questions[currentIndex];
         const userMsg = { type: "user", content: answer };
         const botReply = { type: "bot", content: getBotReply(answer) };
@@ -68,8 +69,49 @@ const QuestionScreen = ({ questionType, onBackToWelcome }) => {
                 setShowOptions(true);
             } else {
                 setMessages([...updatedMsgs, { type: "bot", content: "🎉 You've finished the questions!" }]);
+                setIsCompleted(true);
                 setTimeout(() => {
-                    console.log("Final Answers:", updatedAnswers); // ✅ Contains all 20 answers
+                    console.log("Final Answers:", updatedAnswers);
+                    onBackToWelcome();
+                }, 2000);
+            }
+        }, 1000);
+    };
+
+    const handleAnswer = (answer) => {
+        const currentQuestion = questionType.questions[currentIndex];
+        const isSingle = questionType.type === "single";
+
+        // Determine message content and stored value
+        const displayText = isSingle && typeof answer === "object" ? `${answer.label} (${answer.value})` : answer;
+
+        const answerValue = isSingle && typeof answer === "object" ? answer.value : answer;
+
+        const userMsg = { type: "user", content: displayText };
+        const botReply = { type: "bot", content: getBotReply(answerValue) };
+
+        const updatedAnswers = { ...answers, [currentQuestion.id]: answerValue };
+        setAnswers(updatedAnswers);
+
+        const updatedMsgs = [...messages, userMsg, botReply];
+        setMessages(updatedMsgs);
+        setShowOptions(false);
+
+        setTimeout(() => {
+            const nextIndex = currentIndex + 1;
+            if (nextIndex < questionType.questions.length) {
+                const nextQ = {
+                    type: "bot",
+                    content: questionType.questions[nextIndex].question,
+                };
+                setMessages([...updatedMsgs, nextQ]);
+                setCurrentIndex(nextIndex);
+                setShowOptions(true);
+            } else {
+                setMessages([...updatedMsgs, { type: "bot", content: "🎉 You've finished the questions!" }]);
+                setIsCompleted(true);
+                setTimeout(() => {
+                    console.log("Final Answers:", updatedAnswers);
                     onBackToWelcome();
                 }, 2000);
             }
@@ -78,6 +120,8 @@ const QuestionScreen = ({ questionType, onBackToWelcome }) => {
 
     const currentQuestion = questionType.questions[currentIndex];
     const isRange = questionType.type === "range";
+    const isSingle = questionType.type === "single";
+    const isMulti = questionType.type === "multi";
 
     return (
         <div className="flex flex-col rounded-md bg-gray-100 shadow-sm">
@@ -111,9 +155,9 @@ const QuestionScreen = ({ questionType, onBackToWelcome }) => {
                 <div ref={messagesEndRef} />
             </div>
 
-            {showOptions && (
+            {showOptions ? (
                 <div className="mt-4 px-4 pb-3">
-                    {isRange ? (
+                    {isRange && (
                         <div className="space-y-3">
                             <div className="mb-2 flex justify-between text-xs text-gray-600">
                                 <span>Strongly Disagree</span>
@@ -131,21 +175,51 @@ const QuestionScreen = ({ questionType, onBackToWelcome }) => {
                                 ))}
                             </div>
                         </div>
-                    ) : (
-                        <div className="space-y-2">
+                    )}
+                    {isSingle && (
+                        <div className="mt-4 space-y-2">
                             {currentQuestion.options.map((option, index) => (
                                 <button
                                     key={index}
                                     onClick={() => handleAnswer(option)}
-                                    className="w-full rounded-lg border border-gray-300 bg-white p-3 text-left text-sm font-medium text-gray-800 hover:bg-gray-100"
+                                    className="w-full rounded-md border border-blue-300 bg-white px-4 py-2 text-left text-sm font-medium text-gray-800 shadow-sm transition-all duration-200 hover:bg-blue-100 hover:text-blue-700"
                                 >
-                                    {option}
+                                    {`${option.value})
+                                    ${option.label}`}
                                 </button>
                             ))}
                         </div>
                     )}
+
+                    {isMulti && <p>Multi Options</p>}
                 </div>
+            ) : (
+                !isCompleted && (
+                    <div className="px-6 pb-4">
+                        <div className="inline-flex items-center space-x-2 rounded-r-lg rounded-tl-lg bg-white px-4 py-2 text-xs text-gray-500 shadow">
+                            <span>Typing</span>
+                            <span className="flex items-center space-x-1">
+                                <span className="block h-1 w-1 animate-bounce rounded-full bg-gray-400 [animation-delay:0ms]"></span>
+                                <span className="block h-1 w-1 animate-bounce rounded-full bg-gray-400 [animation-delay:150ms]"></span>
+                                <span className="block h-1 w-1 animate-bounce rounded-full bg-gray-400 [animation-delay:300ms]"></span>
+                            </span>
+                        </div>
+                    </div>
+                )
             )}
+
+            <div className="flex items-center justify-between border bg-green-500 px-3 pb-2 pt-3 text-sm">
+                <button
+                    onClick={onBackToWelcome}
+                    className="flex items-center text-white duration-200 hover:underline"
+                >
+                    <ArrowLeft
+                        size={16}
+                        className="mr-1"
+                    />
+                    Back
+                </button>
+            </div>
         </div>
     );
 };

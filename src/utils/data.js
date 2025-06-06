@@ -96,7 +96,7 @@ export const questionTypes = [
         id: "personality",
         title: "Personality Test",
         emoji: "👤",
-        color: "bg-blue-500",
+        color: "bg-gray-400",
         type: "multiple-choice",
         questions: [
             {

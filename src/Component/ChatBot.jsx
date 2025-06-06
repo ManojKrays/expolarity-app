@@ -2,127 +2,117 @@ import React, { useState } from "react";
 import { MessageCircle, X } from "lucide-react";
 import WelcomeScreen from "./WelcomeScreen";
 import QuestionScreen from "./QuestionScreen";
-import ProgressIndicator from "./ProgressIndicator";
 import { questionTypes } from "../utils/data";
+import { get } from "../config/network";
+import apiDetails from "../config/apiDetails";
+import { useQuery } from "@tanstack/react-query";
 
 const ChatBot = () => {
     const [isOpen, setIsOpen] = useState(false);
     const [currentScreen, setCurrentScreen] = useState("welcome");
     const [selectedQuestionType, setSelectedQuestionType] = useState(null);
-    const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-
-    const [personalityAnswers, setPersonalityAnswers] = useState({});
-    const [agreementAnswers, setAgreementAnswers] = useState({});
-    const [scenarioAnswers, setScenarioAnswers] = useState({});
-    const [completedSections, setCompletedSections] = useState({});
+    const [isCompleted, setIsCompleted] = useState([{ personality: false, intrest: false, career: false }]);
 
     const handleQuestionTypeSelect = (questionType) => {
         setSelectedQuestionType(questionType);
-        setCurrentQuestionIndex(0);
         setCurrentScreen("questions");
-    };
-
-    const handleAnswerSubmit = (answer) => {
-        if (!selectedQuestionType) return;
-
-        const typeId = selectedQuestionType.id;
-        const questionNumber = currentQuestionIndex + 1;
-
-        if (typeId === "personality") {
-            setPersonalityAnswers((prev) => ({
-                ...prev,
-                [questionNumber]: answer,
-            }));
-        } else if (typeId === "agreement") {
-            setAgreementAnswers((prev) => ({
-                ...prev,
-                [questionNumber]: answer,
-            }));
-        } else if (typeId === "scenarios") {
-            const optionIndex = selectedQuestionType.questions[currentQuestionIndex].options.indexOf(answer);
-            const optionLetter = String.fromCharCode(65 + optionIndex); // A, B, C, D
-            setScenarioAnswers((prev) => ({
-                ...prev,
-                [questionNumber]: optionLetter,
-            }));
-        }
-
-        if (currentQuestionIndex < selectedQuestionType.questions.length - 1) {
-            setCurrentQuestionIndex((prev) => prev + 1);
-        } else {
-            console.log(`${selectedQuestionType.title} completed:`);
-
-            if (typeId === "personality") {
-                const updatedAnswers = { ...personalityAnswers, [questionNumber]: answer };
-                console.log("Personality Answers:", updatedAnswers);
-            } else if (typeId === "agreement") {
-                const updatedAnswers = { ...agreementAnswers, [questionNumber]: answer };
-                console.log("Agreement Answers:", updatedAnswers);
-            } else if (typeId === "scenarios") {
-                const optionIndex = selectedQuestionType.questions[currentQuestionIndex].options.indexOf(answer);
-                const optionLetter = String.fromCharCode(65 + optionIndex);
-                const updatedAnswers = { ...scenarioAnswers, [questionNumber]: optionLetter };
-                console.log("Scenario Answers:", updatedAnswers);
-            }
-
-            setCompletedSections((prev) => ({
-                ...prev,
-                [typeId]: true,
-            }));
-
-            setCurrentScreen("welcome");
-            setSelectedQuestionType(null);
-            setCurrentQuestionIndex(0);
-        }
-    };
-
-    const handlePreviousQuestion = () => {
-        if (currentQuestionIndex > 0) {
-            setCurrentQuestionIndex((prev) => prev - 1);
-        }
-    };
-
-    const handleNextQuestion = () => {
-        if (currentQuestionIndex > 0) {
-            setCurrentQuestionIndex((prev) => prev + 1);
-        }
     };
 
     const handleBackToWelcome = () => {
         setCurrentScreen("welcome");
         setSelectedQuestionType(null);
-        setCurrentQuestionIndex(0);
     };
 
-    const getCurrentAnswer = () => {
-        if (!selectedQuestionType) return "";
+    const fetchAssessment = async () => {
+        const res = await get(apiDetails.endPoint.getAssessment);
 
-        const typeId = selectedQuestionType.id;
-        const questionNumber = currentQuestionIndex + 1;
+        const grouped = res.data.reduce((acc, curr) => {
+            if (!acc[curr.type]) acc[curr.type] = [];
+            acc[curr.type].push(curr);
+            return acc;
+        }, {});
 
-        if (typeId === "personality") {
-            return personalityAnswers[questionNumber] || "";
-        } else if (typeId === "agreement") {
-            return agreementAnswers[questionNumber] || "";
-        } else if (typeId === "scenarios") {
-            const optionLetter = scenarioAnswers[questionNumber];
-            if (optionLetter) {
-                const optionIndex = optionLetter.charCodeAt(0) - 65; // Convert A,B,C,D back to 0,1,2,3
-                return selectedQuestionType.questions[currentQuestionIndex].options[optionIndex] || "";
-            }
-        }
-        return "";
+        // === RANGE (RATING) ===
+        const rangeQuestions = (grouped.RATING || []).map((q) => ({
+            id: q.id,
+            question: q.question,
+        }));
+
+        // === SINGLE ===
+        const singleQuestions = (grouped.SINGLE || []).map((q) => ({
+            id: q.id,
+            question: q.question,
+            options: [
+                q.option_a ? { value: "A", label: q.option_a } : null,
+                q.option_b ? { value: "B", label: q.option_b } : null,
+                q.option_c ? { value: "C", label: q.option_c } : null,
+                q.option_d ? { value: "D", label: q.option_d } : null,
+                q.option_e ? { value: "E", label: q.option_e } : null,
+            ].filter(Boolean),
+        }));
+
+        // === MULTI ===
+        const multiQuestions = (grouped.MULTI || []).map((q) => {
+            const optionObjects = [
+                q.artistic ? { artistic: q.artistic } : null,
+                q.conventional ? { conventional: q.conventional } : null,
+                q.enterprising ? { enterprising: q.enterprising } : null,
+                q.investigative ? { investigative: q.investigative } : null,
+                q.realistic ? { realistic: q.realistic } : null,
+                q.social ? { social: q.social } : null,
+            ].filter(Boolean);
+
+            return {
+                id: q.id,
+                question: q.question,
+                options: optionObjects,
+            };
+        });
+
+        return [
+            {
+                id: "agreement",
+                title: "Range Question",
+                emoji: "📊",
+                color: "bg-green-500",
+                type: "range",
+                questions: rangeQuestions,
+            },
+            {
+                id: "personality",
+                title: "Single Questions",
+                emoji: "🧠",
+                color: "bg-gray-400",
+                type: "single",
+                questions: singleQuestions,
+            },
+            {
+                id: "preference",
+                title: "Multi Questions",
+                emoji: "🔘",
+                color: "bg-blue-400",
+                type: "multi",
+                questions: multiQuestions,
+            },
+        ];
     };
 
-    const getCompletedCount = () => {
-        return Object.keys(completedSections).length;
-    };
+    const { data, isLoading, error, refetch } = useQuery({
+        queryKey: ["questions"],
+        queryFn: fetchAssessment,
+        enabled: false,
+    });
+
+    if (error) return <p>Error: {error.message}</p>;
 
     return (
         <div className="fixed bottom-4 right-4 z-50">
             {!isOpen && (
                 <button
-                    onClick={() => setIsOpen(true)}
+                    onClick={() => {
+                        setIsOpen(true);
+                        refetch();
+                    }}
                     className="rounded-full bg-green-500 p-4 text-white shadow-lg transition-all duration-300 hover:scale-110 hover:shadow-xl"
                 >
                     <MessageCircle size={24} />
@@ -140,14 +130,11 @@ const ChatBot = () => {
                             </div>
                         </div>
                         <div className="flex items-center space-x-2">
-                            {getCompletedCount() > 0 && (
-                                <div className="text-right">
-                                    <div className="text-xs text-indigo-100">Completed</div>
-                                    <div className="text-sm font-bold">{getCompletedCount()}/3</div>
-                                </div>
-                            )}
                             <button
-                                onClick={() => setIsOpen(false)}
+                                onClick={() => {
+                                    setIsOpen(false);
+                                    handleBackToWelcome();
+                                }}
                                 className="text-white/80 transition-colors hover:text-white"
                             >
                                 <X size={20} />
@@ -158,26 +145,18 @@ const ChatBot = () => {
                     <div className="min-h-0 overflow-y-auto p-4">
                         {currentScreen === "welcome" ? (
                             <WelcomeScreen
-                                questionTypes={questionTypes}
-                                completedSections={completedSections}
+                                questionTypes={data}
+                                isCompleted={isCompleted}
                                 onQuestionTypeSelect={handleQuestionTypeSelect}
+                                isLoading={isLoading}
                             />
                         ) : (
                             selectedQuestionType && (
                                 <>
-                                    {/* <ProgressIndicator
-                                        current={currentQuestionIndex + 1}
-                                        total={selectedQuestionType.questions.length}
-                                        questionType={selectedQuestionType}
-                                    /> */}
                                     <QuestionScreen
                                         questionType={selectedQuestionType}
-                                        currentQuestionIndex={currentQuestionIndex}
-                                        currentAnswer={getCurrentAnswer()}
-                                        onAnswerSubmit={handleAnswerSubmit}
-                                        onPreviousQuestion={handlePreviousQuestion}
                                         onBackToWelcome={handleBackToWelcome}
-                                        canGoPrevious={currentQuestionIndex > 0}
+                                        setIsCompleted={setIsCompleted}
                                     />
                                 </>
                             )
