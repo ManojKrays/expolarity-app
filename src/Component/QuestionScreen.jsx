@@ -8,6 +8,7 @@ const QuestionScreen = ({ questionType, onBackToWelcome, isLoading }) => {
     const [answers, setAnswers] = useState({});
     const [isCompleted, setIsCompleted] = useState(false);
     const messagesEndRef = useRef(null);
+    const [multiSelections, setMultiSelections] = useState({});
 
     const scrollToBottom = () => {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -43,39 +44,6 @@ const QuestionScreen = ({ questionType, onBackToWelcome, isLoading }) => {
             }
         }
         return "📘 Thank you. Let’s proceed.";
-    };
-
-    const handleAnswer1 = (answer) => {
-        const currentQuestion = questionType.questions[currentIndex];
-        const userMsg = { type: "user", content: answer };
-        const botReply = { type: "bot", content: getBotReply(answer) };
-
-        const updatedAnswers = { ...answers, [currentQuestion.id]: answer };
-        setAnswers(updatedAnswers);
-
-        const updatedMsgs = [...messages, userMsg, botReply];
-        setMessages(updatedMsgs);
-        setShowOptions(false);
-
-        setTimeout(() => {
-            const nextIndex = currentIndex + 1;
-            if (nextIndex < questionType.questions.length) {
-                const nextQ = {
-                    type: "bot",
-                    content: questionType.questions[nextIndex].question,
-                };
-                setMessages([...updatedMsgs, nextQ]);
-                setCurrentIndex(nextIndex);
-                setShowOptions(true);
-            } else {
-                setMessages([...updatedMsgs, { type: "bot", content: "🎉 You've finished the questions!" }]);
-                setIsCompleted(true);
-                setTimeout(() => {
-                    console.log("Final Answers:", updatedAnswers);
-                    onBackToWelcome();
-                }, 2000);
-            }
-        }, 1000);
     };
 
     const handleAnswer = (answer) => {
@@ -122,6 +90,113 @@ const QuestionScreen = ({ questionType, onBackToWelcome, isLoading }) => {
     const isRange = questionType.type === "range";
     const isSingle = questionType.type === "single";
     const isMulti = questionType.type === "multi";
+
+    const handleMultiSelect = (rowIndex, label) => {
+        const updatedSelections = { ...multiSelections, [rowIndex]: label };
+        setMultiSelections(updatedSelections);
+
+        // Check if all rows for this question have a selection
+        const current = questionType.questions[currentIndex];
+        if (Object.keys(updatedSelections).length === current.options.length) {
+            // Small delay so UI updates before submit
+            setTimeout(() => {
+                handleMultiSubmit(updatedSelections);
+            }, 200);
+        }
+    };
+
+    const handleMultiSubmit = (selections = multiSelections) => {
+        const allAnswers = Object.values(selections).join(", ");
+        const currentQuestion = questionType.questions[currentIndex];
+        const userMsg = { type: "user", content: allAnswers };
+        const botReply = { type: "bot", content: getBotReply(allAnswers) };
+
+        const updatedAnswers = { ...answers, [currentQuestion.id]: allAnswers };
+        setAnswers(updatedAnswers);
+        setMessages([...messages, userMsg, botReply]);
+        setMultiSelections({});
+        setShowOptions(false);
+
+        setTimeout(() => {
+            const nextIndex = currentIndex + 1;
+            if (nextIndex < questionType.questions.length) {
+                const nextQ = { type: "bot", content: questionType.questions[nextIndex].question };
+                setMessages((prev) => [...prev, nextQ]);
+                setCurrentIndex(nextIndex);
+                setShowOptions(true);
+            } else {
+                // All questions completed — print all Q&A in console
+                console.log("All questions completed. Answers:", updatedAnswers);
+
+                setMessages((prev) => [...prev, { type: "bot", content: "🎉 You've completed all questions!" }]);
+                setIsCompleted(true);
+            }
+        }, 500);
+    };
+
+    const chunkArray = (arr, size = 4) => {
+        const chunks = [];
+        for (let i = 0; i < arr.length; i += size) {
+            chunks.push(arr.slice(i, i + size));
+        }
+        return chunks;
+    };
+
+    const renderMultiRows = () => {
+        const current = questionType.questions[currentIndex];
+        return (
+            <div className="space-y-4 text-sm text-gray-700">
+                {current.options.map((group, groupIndex) => {
+                    const [key, values] = Object.entries(group)[0];
+                    const options = values.split(",\n");
+
+                    // split options into chunks of 4
+                    const optionChunks = chunkArray(options, 4);
+
+                    return (
+                        <div key={groupIndex}>
+                            {optionChunks.map((chunk, rowIndex) => (
+                                <div
+                                    key={rowIndex}
+                                    className="mb-3"
+                                >
+                                    {/* Row label */}
+                                    <div className="mb-1 select-none font-medium text-blue-600">{groupIndex + 1}:</div>
+
+                                    {/* Pills row */}
+                                    <div className="flex flex-wrap gap-2">
+                                        {chunk.map((label, i) => (
+                                            <button
+                                                key={i}
+                                                className={`cursor-pointer rounded-full border px-4 py-1.5 text-xs transition sm:text-sm ${
+                                                    multiSelections[groupIndex] === label
+                                                        ? "border-blue-600 bg-blue-600 text-white"
+                                                        : "border-gray-300 bg-white text-gray-700 hover:bg-blue-100"
+                                                } `}
+                                                onClick={() => handleMultiSelect(groupIndex, label)}
+                                                style={{ minWidth: "70px", textAlign: "center" }}
+                                            >
+                                                {label}
+                                            </button>
+                                        ))}
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    );
+                })}
+
+                {/* {Object.keys(multiSelections).length === current.options.length && (
+                    <button
+                        className="mt-4 rounded bg-green-600 px-5 py-2 font-semibold text-white transition hover:bg-green-700"
+                        onClick={handleMultiSubmit}
+                    >
+                        Submit
+                    </button>
+                )} */}
+            </div>
+        );
+    };
 
     return (
         <div className="flex flex-col rounded-md bg-gray-100 shadow-sm">
@@ -191,7 +266,21 @@ const QuestionScreen = ({ questionType, onBackToWelcome, isLoading }) => {
                         </div>
                     )}
 
-                    {isMulti && <p>Multi Options</p>}
+                    {isMulti ? (
+                        renderMultiRows()
+                    ) : (
+                        <div className="space-x-2">
+                            {currentQuestion.options.map((option, idx) => (
+                                <button
+                                    key={idx}
+                                    onClick={() => handleAnswer(option)}
+                                    className="rounded border bg-white px-4 py-2 hover:bg-gray-100"
+                                >
+                                    {option.label || option}
+                                </button>
+                            ))}
+                        </div>
+                    )}
                 </div>
             ) : (
                 !isCompleted && (

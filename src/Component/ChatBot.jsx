@@ -104,7 +104,7 @@ const ChatBot = () => {
     });
 
     if (error) return <p>Error: {error.message}</p>;
-
+    console.log(data);
     return (
         <div className="fixed bottom-4 right-4 z-50">
             {!isOpen && (
