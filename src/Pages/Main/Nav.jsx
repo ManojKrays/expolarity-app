@@ -5,9 +5,11 @@ import { useNavigate } from "react-router-dom";
 
 const Nav = () => {
     const [menuOpen, setMenuOpen] = useState(false);
+    const navigate = useNavigate();
 
     const NavigateToApp = () => {
-        window.location.href = "https://zurtle-school-app.onrender.com/";
+        // window.location.href = "https://zurtle-school-app.onrender.com/";
+        navigate("/login");
     };
 
     return (

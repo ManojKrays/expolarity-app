@@ -1,5 +1,9 @@
 import React, { useEffect, useRef, useState } from "react";
 import { ArrowLeft, Home } from "lucide-react";
+import { post } from "../config/network";
+import apiDetails from "../config/apiDetails";
+import { useMutation } from "@tanstack/react-query";
+import { successNotify } from "../service/Messagebar";
 
 const QuestionScreen = ({ questionType, onBackToWelcome, isLoading }) => {
     const [messages, setMessages] = useState([]);
@@ -9,6 +13,7 @@ const QuestionScreen = ({ questionType, onBackToWelcome, isLoading }) => {
     const [isCompleted, setIsCompleted] = useState(false);
     const messagesEndRef = useRef(null);
     const [multiSelections, setMultiSelections] = useState({});
+    const [questionCode, setQuestionCode] = useState(null);
 
     const scrollToBottom = () => {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -16,10 +21,54 @@ const QuestionScreen = ({ questionType, onBackToWelcome, isLoading }) => {
 
     useEffect(() => {
         const first = questionType.questions[0];
+        setQuestionCode(questionType.code);
         setMessages([{ type: "bot", content: first.question }]);
     }, []);
 
     useEffect(scrollToBottom, [messages]);
+
+    const saveAnswers = async (ans) => {
+        const endpointMap = {
+            BIG5: apiDetails.endPoint.personalityTest,
+            TIA: apiDetails.endPoint.intrestTest,
+            LNT: apiDetails.endPoint.skillTest,
+            MIT: apiDetails.endPoint.multipleInterest,
+        };
+
+        try {
+            const apiEnd = endpointMap[questionCode];
+
+            if (!apiEnd) {
+                console.warn(`No API endpoint configured for questionCode: ${questionCode}`);
+                return;
+            }
+
+            const data = {
+                userId: 25,
+                answers: ans,
+            };
+
+            const res = await post(apiEnd, data);
+            console.log(res);
+        } catch (error) {
+            throw error;
+        }
+    };
+
+    const mutation = useMutation({
+        mutationFn: saveAnswers,
+        onSuccess: (data) => {
+            successNotify("Assessment Saved!");
+            setTimeout(() => {
+                // onBackToWelcome();
+                console.log(data);
+            }, 1000);
+        },
+        onError: (error) => {
+            errorNotify(error.message);
+            console.error("Error creating user:", error);
+        },
+    });
 
     const getBotReply = (answer) => {
         if (typeof answer === "string") {
@@ -78,10 +127,11 @@ const QuestionScreen = ({ questionType, onBackToWelcome, isLoading }) => {
             } else {
                 setMessages([...updatedMsgs, { type: "bot", content: "🎉 You've finished the questions!" }]);
                 setIsCompleted(true);
-                setTimeout(() => {
-                    console.log("Final Answers:", updatedAnswers);
-                    onBackToWelcome();
-                }, 2000);
+                console.log("Final Answers:", updatedAnswers);
+                console.log(questionCode);
+
+                // api call
+                mutation.mutate(updatedAnswers);
             }
         }, 1000);
     };
@@ -125,13 +175,12 @@ const QuestionScreen = ({ questionType, onBackToWelcome, isLoading }) => {
                 setCurrentIndex(nextIndex);
                 setShowOptions(true);
             } else {
-                // All questions completed — print all Q&A in console
-                console.log("All questions completed. Answers:", updatedAnswers);
-
                 setMessages((prev) => [...prev, { type: "bot", content: "🎉 You've completed all questions!" }]);
                 setIsCompleted(true);
+                console.log("All questions completed. Answers:", updatedAnswers);
+                mutation.mutate(updatedAnswers);
             }
-        }, 500);
+        }, 1000);
     };
 
     const chunkArray = (arr, size = 4) => {
@@ -185,15 +234,6 @@ const QuestionScreen = ({ questionType, onBackToWelcome, isLoading }) => {
                         </div>
                     );
                 })}
-
-                {/* {Object.keys(multiSelections).length === current.options.length && (
-                    <button
-                        className="mt-4 rounded bg-green-600 px-5 py-2 font-semibold text-white transition hover:bg-green-700"
-                        onClick={handleMultiSubmit}
-                    >
-                        Submit
-                    </button>
-                )} */}
             </div>
         );
     };
@@ -266,21 +306,7 @@ const QuestionScreen = ({ questionType, onBackToWelcome, isLoading }) => {
                         </div>
                     )}
 
-                    {isMulti ? (
-                        renderMultiRows()
-                    ) : (
-                        <div className="space-x-2">
-                            {currentQuestion.options.map((option, idx) => (
-                                <button
-                                    key={idx}
-                                    onClick={() => handleAnswer(option)}
-                                    className="rounded border bg-white px-4 py-2 hover:bg-gray-100"
-                                >
-                                    {option.label || option}
-                                </button>
-                            ))}
-                        </div>
-                    )}
+                    {isMulti && renderMultiRows()}
                 </div>
             ) : (
                 !isCompleted && (
@@ -300,7 +326,8 @@ const QuestionScreen = ({ questionType, onBackToWelcome, isLoading }) => {
             <div className="flex items-center justify-between border bg-green-500 px-3 pb-2 pt-3 text-sm">
                 <button
                     onClick={onBackToWelcome}
-                    className="flex items-center text-white duration-200 hover:underline"
+                    className={`flex items-center text-white duration-200 hover:underline ${mutation.isPending ? "cursor-not-allowed" : "cursor-pointer"}`}
+                    disabled={mutation.isPending}
                 >
                     <ArrowLeft
                         size={16}

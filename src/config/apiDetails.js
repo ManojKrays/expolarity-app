@@ -4,7 +4,14 @@ const apiDetails = {
     CareerBaseUrl: "https://engine.expolarity.ai/api/careers",
 
     endPoint: {
+        register: "/students",
+        login: "/login",
+        googleLogin: "/google-login",
         getAssessment: "/assessment",
+        intrestTest: "/intrest",
+        skillTest: "/skills",
+        personalityTest: "/personality",
+        multipleInterest: "/multipleInterest",
     },
 };
 

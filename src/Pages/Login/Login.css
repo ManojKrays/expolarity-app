@@ -1,0 +1,14 @@
+.patternBg {
+    background-image: url("../../assets/Login/pattern.svg");
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.loginBg {
+    background-image: url("../../assets/Login/login-bg.svg");
+
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+}

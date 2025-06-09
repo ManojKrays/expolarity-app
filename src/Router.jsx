@@ -3,6 +3,8 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import LaunchSoon from "./Pages/LaunchSoon";
 import Career from "./Pages/Career/Career.jsx";
 import Main from "./Pages/Main";
+import Login from "./Pages/Login/index.jsx";
+import Register from "./Pages/Register/index.jsx";
 
 const Router = () => {
     return (
@@ -11,6 +13,16 @@ const Router = () => {
                 <Route
                     path="/"
                     element={<Main />}
+                />
+
+                <Route
+                    path="/login"
+                    element={<Login />}
+                />
+
+                <Route
+                    path="/register"
+                    element={<Register />}
                 />
                 <Route
                     path="/career"
