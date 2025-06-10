@@ -1,9 +1,7 @@
 import React from "react";
 import { CheckCircle } from "lucide-react";
 
-const WelcomeScreen = ({ questionTypes, onQuestionTypeSelect, isLoading }) => {
-    const isCompleted = false;
-
+const WelcomeScreen = ({ questionTypes, onQuestionTypeSelect, isLoading, testCompleted }) => {
     return (
         <>
             {isLoading ? (
@@ -26,6 +24,8 @@ const WelcomeScreen = ({ questionTypes, onQuestionTypeSelect, isLoading }) => {
 
                     <div className="flex-1 space-y-3 overflow-y-auto">
                         {questionTypes.map((type) => {
+                            const isCompleted = testCompleted?.[type.code] === true;
+
                             return (
                                 <button
                                     key={type.id}

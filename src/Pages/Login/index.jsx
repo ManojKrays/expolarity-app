@@ -11,6 +11,7 @@ import { useMutation } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { post } from "../../config/network";
 import { errorNotify, successNotify } from "../../service/Messagebar";
+import useAuthStore from "../../store/authStore";
 
 const Login = () => {
     const navigate = useNavigate();
@@ -18,6 +19,8 @@ const Login = () => {
     const togglePasswordVisibility = () => {
         setPasswordVisible((prev) => !prev);
     };
+
+    const loginUser = useAuthStore((state) => state.login);
 
     const {
         register,
@@ -45,11 +48,9 @@ const Login = () => {
         mutationFn: login,
         onSuccess: (data) => {
             successNotify("User Successfully Login!");
-            // localStorage.setItem("userId",data[0])
-            console.log(data);
+            loginUser();
             setTimeout(() => {
                 navigate("/");
-                console.log("User Details:", data);
             }, 1000);
         },
         onError: (error) => {
@@ -59,7 +60,7 @@ const Login = () => {
     });
 
     const onSubmit = async (data) => {
-        console.log("Submitted data:", data);
+        // console.log("Submitted data:", data);
         mutation.mutate(data);
     };
 

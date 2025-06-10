@@ -5,7 +5,7 @@ import apiDetails from "../config/apiDetails";
 import { useMutation } from "@tanstack/react-query";
 import { successNotify } from "../service/Messagebar";
 
-const QuestionScreen = ({ questionType, onBackToWelcome, isLoading }) => {
+const QuestionScreen = ({ questionType, onBackToWelcome, setTestCompleted }) => {
     const [messages, setMessages] = useState([]);
     const [currentIndex, setCurrentIndex] = useState(0);
     const [showOptions, setShowOptions] = useState(true);
@@ -49,7 +49,11 @@ const QuestionScreen = ({ questionType, onBackToWelcome, isLoading }) => {
             };
 
             const res = await post(apiEnd, data);
-            console.log(res);
+            setTestCompleted((prev) => ({
+                ...prev,
+                [questionCode]: true,
+            }));
+            return res;
         } catch (error) {
             throw error;
         }
@@ -251,9 +255,6 @@ const QuestionScreen = ({ questionType, onBackToWelcome, isLoading }) => {
                     />
                     Home
                 </button>
-                <span className="text-white">
-                    {currentIndex + 1}/{questionType.questions.length}
-                </span>
             </div>
 
             <div className="custom-scrollbar flex-1 space-y-3 overflow-y-auto px-4 pr-1 pt-2 md:px-6">
@@ -335,6 +336,10 @@ const QuestionScreen = ({ questionType, onBackToWelcome, isLoading }) => {
                     />
                     Back
                 </button>
+
+                <span className="text-white">
+                    {currentIndex + 1}/{questionType.questions.length}
+                </span>
             </div>
         </div>
     );

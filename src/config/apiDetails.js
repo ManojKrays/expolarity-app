@@ -8,7 +8,7 @@ const apiDetails = {
         login: "/login",
         googleLogin: "/google-login",
         getAssessment: "/assessment",
-        intrestTest: "/intrest",
+        intrestTest: "/interest",
         skillTest: "/skills",
         personalityTest: "/personality",
         multipleInterest: "/multipleInterest",

@@ -6,12 +6,13 @@ import { questionTypes } from "../utils/data";
 import { get } from "../config/network";
 import apiDetails from "../config/apiDetails";
 import { useQuery } from "@tanstack/react-query";
+import useAuthStore from "../store/authStore";
 
 const ChatBot = () => {
     const [isOpen, setIsOpen] = useState(false);
     const [currentScreen, setCurrentScreen] = useState("welcome");
     const [selectedQuestionType, setSelectedQuestionType] = useState(null);
-    const [isCompleted, setIsCompleted] = useState([{ personality: false, intrest: false, career: false }]);
+    const [testCompleted, setTestCompleted] = useState({ BIG5: false, LNT: false, MIT: false, TIA: false });
 
     const handleQuestionTypeSelect = (questionType) => {
         setSelectedQuestionType(questionType);
@@ -21,80 +22,6 @@ const ChatBot = () => {
     const handleBackToWelcome = () => {
         setCurrentScreen("welcome");
         setSelectedQuestionType(null);
-    };
-
-    const fetchAssessment1 = async () => {
-        const res = await get(apiDetails.endPoint.getAssessment);
-
-        const grouped = res.data.reduce((acc, curr) => {
-            if (!acc[curr.type]) acc[curr.type] = [];
-            acc[curr.type].push(curr);
-            return acc;
-        }, {});
-
-        // === RANGE (RATING) ===
-        const rangeQuestions = (grouped.RATING || []).map((q) => ({
-            id: q.id,
-            question: q.question,
-        }));
-
-        // === SINGLE ===
-        const singleQuestions = (grouped.SINGLE || []).map((q) => ({
-            id: q.id,
-            question: q.question,
-            options: [
-                q.option_a ? { value: "A", label: q.option_a } : null,
-                q.option_b ? { value: "B", label: q.option_b } : null,
-                q.option_c ? { value: "C", label: q.option_c } : null,
-                q.option_d ? { value: "D", label: q.option_d } : null,
-                q.option_e ? { value: "E", label: q.option_e } : null,
-            ].filter(Boolean),
-        }));
-
-        // === MULTI ===
-        const multiQuestions = (grouped.MULTI || []).map((q) => {
-            const optionObjects = [
-                q.artistic ? { artistic: q.artistic } : null,
-                q.conventional ? { conventional: q.conventional } : null,
-                q.enterprising ? { enterprising: q.enterprising } : null,
-                q.investigative ? { investigative: q.investigative } : null,
-                q.realistic ? { realistic: q.realistic } : null,
-                q.social ? { social: q.social } : null,
-            ].filter(Boolean);
-
-            return {
-                id: q.id,
-                question: q.question,
-                options: optionObjects,
-            };
-        });
-
-        return [
-            {
-                id: "agreement",
-                title: "BIG-5 Question",
-                emoji: "📊",
-                color: "bg-green-500",
-                type: "range",
-                questions: rangeQuestions,
-            },
-            {
-                id: "personality",
-                title: "Single Questions",
-                emoji: "🧠",
-                color: "bg-gray-400",
-                type: "single",
-                questions: singleQuestions,
-            },
-            {
-                id: "preference",
-                title: "Multi Questions",
-                emoji: "🔘",
-                color: "bg-blue-400",
-                type: "multi",
-                questions: multiQuestions,
-            },
-        ];
     };
 
     const fetchAssessment = async () => {
@@ -176,10 +103,13 @@ const ChatBot = () => {
     });
 
     if (error) return <p>Error: {error.message}</p>;
-    // console.log(data);
+    console.log(testCompleted);
+
+    const authorized = useAuthStore((state) => state.authorized);
+
     return (
         <div className="fixed bottom-4 right-4 z-50">
-            {!isOpen && (
+            {authorized && !isOpen && (
                 <button
                     onClick={() => {
                         setIsOpen(true);
@@ -192,7 +122,7 @@ const ChatBot = () => {
             )}
 
             {isOpen && (
-                <div className="flex h-[500px] w-80 flex-col overflow-hidden rounded-2xl bg-white shadow-2xl sm:w-96">
+                <div className="flex h-[500px] w-72 flex-col overflow-hidden rounded-2xl bg-white shadow-2xl sm:w-96">
                     <div className="flex flex-shrink-0 items-center justify-between bg-green-500 p-4 text-white">
                         <div className="flex items-center space-x-3">
                             <div className="flex h-8 w-8 items-center justify-center rounded-full bg-white/20">🤖</div>
@@ -218,7 +148,7 @@ const ChatBot = () => {
                         {currentScreen === "welcome" ? (
                             <WelcomeScreen
                                 questionTypes={data}
-                                isCompleted={isCompleted}
+                                testCompleted={testCompleted}
                                 onQuestionTypeSelect={handleQuestionTypeSelect}
                                 isLoading={isLoading}
                             />
@@ -226,9 +156,10 @@ const ChatBot = () => {
                             selectedQuestionType && (
                                 <>
                                     <QuestionScreen
+                                        testCompleted={testCompleted}
                                         questionType={selectedQuestionType}
                                         onBackToWelcome={handleBackToWelcome}
-                                        setIsCompleted={setIsCompleted}
+                                        setTestCompleted={setTestCompleted}
                                     />
                                 </>
                             )
