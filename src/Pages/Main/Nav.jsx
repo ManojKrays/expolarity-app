@@ -56,7 +56,7 @@ const Nav = () => {
                                 </button>
 
                                 {profileOpen && (
-                                    <div className="absolute right-0.5 top-10 h-[50px] w-[100px] rounded-md bg-white p-2 shadow-sm">
+                                    <div className="absolute right-0.5 top-10 z-50 h-[50px] w-[100px] rounded-md bg-white p-2 shadow-sm">
                                         <button
                                             onClick={() => handleLogout()}
                                             type="button"
@@ -119,7 +119,7 @@ const Nav = () => {
                                 </button>
 
                                 {profileOpen && (
-                                    <div className="absolute right-0.5 top-10 h-[50px] w-[100px] rounded-md bg-white p-2 shadow-sm">
+                                    <div className="absolute right-0.5 top-10 z-50 h-[50px] w-[100px] rounded-md bg-white p-2 shadow-sm">
                                         <button
                                             onClick={() => handleLogout()}
                                             type="button"

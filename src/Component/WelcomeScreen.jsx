@@ -1,7 +1,7 @@
 import React from "react";
 import { CheckCircle } from "lucide-react";
 
-const WelcomeScreen = ({ questionTypes, onQuestionTypeSelect, isLoading, testCompleted }) => {
+const WelcomeScreen = ({ questionTypes, onQuestionTypeSelect, isLoading, testData }) => {
     return (
         <>
             {isLoading ? (
@@ -16,21 +16,23 @@ const WelcomeScreen = ({ questionTypes, onQuestionTypeSelect, isLoading, testCom
                     </div>
                 </div>
             ) : (
-                <div className="flex h-full flex-col space-y-4">
+                <div className="flex h-full flex-col space-y-4 overflow-y-auto">
                     <div className="mb-4 flex-shrink-0 text-center">
                         <h2 className="mb-2 text-lg font-bold text-gray-800">Welcome! 👋</h2>
                         <p className="text-xs text-gray-600">I'm here to help you get started. Choose a category below to begin:</p>
                     </div>
 
-                    <div className="flex-1 space-y-3 overflow-y-auto">
+                    <div className="flex w-full flex-wrap items-center justify-center gap-3">
                         {questionTypes.map((type) => {
-                            const isCompleted = testCompleted?.[type.code] === true;
+                            const isCompleted = testData?.[type.code]?.isCompleted === true;
 
                             return (
                                 <button
                                     key={type.id}
-                                    onClick={() => onQuestionTypeSelect(type)}
-                                    className={`w-full rounded-lg border-2 p-3 transition-all duration-300 hover:shadow-md ${
+                                    onClick={() => {
+                                        onQuestionTypeSelect(type);
+                                    }}
+                                    className={`w-full rounded-lg border-2 p-3 transition-all duration-300 hover:shadow-md sm:w-[48%] ${
                                         isCompleted
                                             ? "border-green-200 bg-green-50 hover:bg-green-100"
                                             : "border-gray-200 hover:border-indigo-300 hover:bg-indigo-50"
@@ -62,7 +64,7 @@ const WelcomeScreen = ({ questionTypes, onQuestionTypeSelect, isLoading, testCom
                     </div>
 
                     <div className="mt-4 flex-shrink-0 rounded-lg bg-gray-50 p-3">
-                        <p className="text-center text-xs text-gray-600">Complete all sections to finish your assessment!</p>
+                        <p className="text-center text-xs text-gray-600">Complete all sections to see your Career Path!</p>
                     </div>
                 </div>
             )}

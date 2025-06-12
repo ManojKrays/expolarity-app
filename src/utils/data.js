@@ -1,3 +1,87 @@
+import practical from "../assets/images/practical.png";
+import analytical from "../assets/images/analytical.png";
+import creative from "../assets/images/creative.png";
+import friendly from "../assets/images/friendly.png";
+import assertive from "../assets/images/assertive.png";
+import wellGroomed from "../assets/images/well-groomed.png";
+
+import athletic from "../assets/images/athletic.png";
+import inquisitive from "../assets/images/inquisitive.png";
+import intuitive from "../assets/images/intuitive.png";
+import helpful from "../assets/images/helpful.png";
+import sociable from "../assets/images/sociable.png";
+import accurate from "../assets/images/accurate.png";
+
+import straight from "../assets/images/straight.png";
+import scientific from "../assets/images/scientific.png";
+import imaginative from "../assets/images/imaginative.png";
+import idealistic from "../assets/images/idealistic.png";
+import persuasive from "../assets/images/persuasive.png";
+import numerical from "../assets/images/numerical.png";
+
+import mechanical from "../assets/images/mechanical.png";
+import observant from "../assets/images/observant.png";
+import innovative from "../assets/images/innovative.png";
+import insightful from "../assets/images/insightful.png";
+import enthusiastic from "../assets/images/enthusiastic.png";
+import methodical from "../assets/images/methodical.png";
+
+import electrical from "../assets/images/electrical.png";
+import think from "../assets/images/think.png";
+import sketch from "../assets/images/sketch.png";
+import teach from "../assets/images/teach.png";
+import projects from "../assets/images/projects.png";
+import workWell from "../assets/images/workWell.png";
+
+import mechProblems from "../assets/images/mechProblems.png";
+import mathProblems from "../assets/images/mathProblems.png";
+import playMusic from "../assets/images/playMusic.png";
+import express from "../assets/images/express.png";
+import convince from "../assets/images/convince.png";
+import paperWork from "../assets/images/paperWork.png";
+
+import tent from "../assets/images/tent.png";
+import physical from "../assets/images/physical.png";
+import writing from "../assets/images/writing.png";
+import leadGroup from "../assets/images/leadGroup.png";
+import promoteIdeas from "../assets/images/promoteIdeas.png";
+import keepRecords from "../assets/images/keepRecords.png";
+
+import sport from "../assets/images/sport.png";
+import calculation from "../assets/images/calculation.png";
+import design from "../assets/images/design.png";
+import mediate from "../assets/images/mediate.png";
+import speach from "../assets/images/speach.png";
+import computer from "../assets/images/computer.png";
+
+import tinker from "../assets/images/tinker.png";
+import explore from "../assets/images/explore.png";
+import concert from "../assets/images/concert.png";
+import work from "../assets/images/work.png";
+import makeDecision from "../assets/images/makeDecision.png";
+import followProcedure from "../assets/images/followProcedure.png";
+
+import outdoors from "../assets/images/outdoors.png";
+import useComputer from "../assets/images/useComputer.png";
+import reading from "../assets/images/reading.png";
+import help from "../assets/images/help.png";
+import elected from "../assets/images/elected.png";
+import dataProcessing from "../assets/images/dataProcessing.png";
+
+import bePhysically from "../assets/images/bePhysically.png";
+import workIndependent from "../assets/images/workIndependent.png";
+import crafts from "../assets/images/crafts.png";
+import meetings from "../assets/images/meetings.png";
+import salesAward from "../assets/images/salesAward.png";
+import typing from "../assets/images/typing.png";
+
+import useHands from "../assets/images/useHands.png";
+import lab from "../assets/images/lab.png";
+import photo from "../assets/images/photo.png";
+import volunteer from "../assets/images/volunteer.png";
+import political from "../assets/images/political.png";
+import details from "../assets/images/details.png";
+
 export const testimonialsData = [
     {
         name: "Aarav Mehta",
@@ -415,4 +499,347 @@ export const questionTypes = [
     */
 
     ,
+];
+
+export const InterestTest = [
+    {
+        id: "tia",
+        title: "TIA",
+        emoji: "🧩",
+        color: "bg-pink-500",
+        type: "multi",
+        code: "TIA",
+        questions: [
+            {
+                id: 176,
+                question: "Are you?",
+                options: [
+                    {
+                        id: "q1",
+                        question: "Are you?",
+                        data: [
+                            { label: "Practical", image: practical, code: 176 },
+                            { label: "Analytical", image: analytical, code: 176 },
+                            { label: "Creative", image: creative, code: 176 },
+                            { label: "Friendly", image: friendly, code: 176 },
+                            { label: "Assertive", image: assertive, code: 176 },
+                            {
+                                label: "Well groomed",
+                                image: wellGroomed,
+                                code: 176,
+                            },
+                        ],
+                    },
+                    {
+                        id: "q2",
+                        question: "Are you?",
+                        data: [
+                            { label: "Athletic", image: athletic, code: 176 },
+                            {
+                                label: "Inquisitive",
+                                image: inquisitive,
+                                code: 176,
+                            },
+                            { label: "Intuitive", image: intuitive, code: 176 },
+                            { label: "Helpful", image: helpful, code: 176 },
+                            { label: "Sociable", image: sociable, code: 176 },
+                            { label: "Accurate", image: accurate, code: 176 },
+                        ],
+                    },
+                    {
+                        id: "q3",
+                        question: "Are you?",
+                        data: [
+                            { label: "Straight forward", image: straight, code: 176 },
+                            { label: "Scientific", image: scientific, code: 176 },
+                            { label: "Imaginative", image: imaginative, code: 176 },
+                            { label: "Idealistic", image: idealistic, code: 176 },
+                            { label: "Persuasive", image: persuasive, code: 176 },
+                            {
+                                label: "Numerically inclined",
+                                image: numerical,
+                                code: 176,
+                            },
+                        ],
+                    },
+                    {
+                        id: "q4",
+                        question: "Are you?",
+                        data: [
+                            {
+                                label: "Mechanically inclined",
+                                image: mechanical,
+                                code: 176,
+                            },
+                            { label: "Observant", image: observant, code: 176 },
+                            { label: "Innovative", image: innovative, code: 176 },
+                            { label: "Insightful", image: insightful, code: 176 },
+                            {
+                                label: "Enthusiastic",
+                                image: enthusiastic,
+                                code: 176,
+                            },
+                            { label: "Methodical", image: methodical, code: 176 },
+                        ],
+                    },
+                ],
+            },
+            {
+                id: 177,
+                question: "Can you?",
+                options: [
+                    {
+                        id: "q5",
+                        question: "Can you?",
+                        data: [
+                            {
+                                label: "Fix electrical things",
+                                image: electrical,
+                                code: 177,
+                            },
+                            {
+                                label: "Think abstractly",
+                                image: think,
+                                code: 177,
+                            },
+                            { label: "Sketch, draw, paint", image: sketch, code: 177 },
+                            { label: "Teach/train others", image: teach, code: 177 },
+                            {
+                                label: "Initiate projects",
+                                image: projects,
+                                code: 177,
+                            },
+                            {
+                                label: "Work well within a system",
+                                image: workWell,
+                                code: 177,
+                            },
+                        ],
+                    },
+                    {
+                        id: "q6",
+                        question: "Can you?",
+                        data: [
+                            {
+                                label: "Solve mechanical problems",
+                                image: mechProblems,
+                                code: 177,
+                            },
+                            {
+                                label: "Solve math problems",
+                                image: mathProblems,
+                                code: 177,
+                            },
+                            {
+                                label: "Play a musical instrument",
+                                image: playMusic,
+                                code: 177,
+                            },
+                            {
+                                label: "Express yourself clearly",
+                                image: express,
+                                code: 177,
+                            },
+                            {
+                                label: "Convince people to do things your way",
+                                image: convince,
+                                code: 177,
+                            },
+                            {
+                                label: "Do a lot of paper work in a short time",
+                                image: paperWork,
+                                code: 177,
+                            },
+                        ],
+                    },
+                    {
+                        id: "q7",
+                        question: "Can you?",
+                        data: [
+                            { label: "Pitch a tent", image: tent },
+                            {
+                                label: "Understand physical theories",
+                                image: physical,
+                                code: 177,
+                            },
+                            {
+                                label: "Write stories, poetry, music, sing, act, dance",
+                                image: writing,
+                                code: 177,
+                            },
+                            {
+                                label: "Lead a group discussion",
+                                image: leadGroup,
+                                code: 177,
+                            },
+                            {
+                                label: "Sell things or promote ideas",
+                                image: promoteIdeas,
+                                code: 177,
+                            },
+                            {
+                                label: "Keep accurate records",
+                                image: keepRecords,
+                                code: 177,
+                            },
+                        ],
+                    },
+                    {
+                        id: "q8",
+                        question: "Can you?",
+                        data: [
+                            { label: "Play a sport", image: sport },
+                            {
+                                label: "Do complex calculations",
+                                image: calculation,
+                                code: 177,
+                            },
+                            {
+                                label: "Design fashions or interiors",
+                                image: design,
+                                code: 177,
+                            },
+                            { label: "Mediate disputes", image: mediate },
+                            {
+                                label: "Give talks or speeches",
+                                image: speach,
+                                code: 177,
+                            },
+                            {
+                                label: "Use a computer terminal",
+                                image: computer,
+                                code: 177,
+                            },
+                        ],
+                    },
+                ],
+            },
+            {
+                id: 178,
+                question: "Like to?",
+                options: [
+                    {
+                        id: "q9",
+                        question: "Like to?",
+                        data: [
+                            {
+                                label: "Tinker with mechanics",
+                                image: tinker,
+                                code: 178,
+                            },
+                            { label: "Explore ideas", image: explore, code: 178 },
+                            {
+                                label: "Attend concerts, theaters, art exhibits",
+                                image: concert,
+                                code: 178,
+                            },
+                            { label: "Work in groups", image: work, code: 178 },
+                            {
+                                label: "Make decisions affecting others",
+                                image: makeDecision,
+                                code: 178,
+                            },
+                            {
+                                label: "Follow clearly defined procedures",
+                                image: followProcedure,
+                                code: 178,
+                            },
+                        ],
+                    },
+                    {
+                        id: "q10",
+                        question: "Like to?",
+                        data: [
+                            { label: "Work outdoors", image: outdoors, code: 178 },
+                            {
+                                label: "Use computers",
+                                image: useComputer,
+                                code: 178,
+                            },
+                            {
+                                label: "Read fiction, plays, poetry",
+                                image: reading,
+                                code: 178,
+                            },
+                            {
+                                label: "Help people with problems",
+                                image: help,
+                                code: 178,
+                            },
+                            {
+                                label: "Be elected to office",
+                                image: elected,
+                                code: 178,
+                            },
+                            {
+                                label: "Use data processing equipment",
+                                image: dataProcessing,
+                                code: 178,
+                            },
+                        ],
+                    },
+                    {
+                        id: "q11",
+                        question: "Like to?",
+                        data: [
+                            {
+                                label: "Be physically active",
+                                image: bePhysically,
+                                code: 178,
+                            },
+                            {
+                                label: "Work independently",
+                                image: workIndependent,
+                                code: 178,
+                            },
+                            { label: "Work on crafts", image: crafts, code: 178 },
+                            {
+                                label: "Participate in meetings",
+                                image: meetings,
+                                code: 178,
+                            },
+                            {
+                                label: "Win a leadership or sales award",
+                                image: salesAward,
+                                code: 178,
+                            },
+                            {
+                                label: "Type or take shorthand",
+                                image: typing,
+                                code: 178,
+                            },
+                        ],
+                    },
+                    {
+                        id: "q12",
+                        question: "Like to?",
+                        data: [
+                            { label: "Use your hands", image: useHands },
+                            {
+                                label: "Perform lab experiments",
+                                image: lab,
+                                code: 178,
+                            },
+                            { label: "Take photographs", image: photo },
+                            {
+                                label: "Do volunteer service",
+                                image: volunteer,
+                                code: 178,
+                            },
+                            {
+                                label: "Start your own political campaign",
+                                image: political,
+                                code: 178,
+                            },
+                            {
+                                label: "Be responsible for details",
+                                image: details,
+                                code: 178,
+                            },
+                        ],
+                    },
+                ],
+            },
+        ],
+    },
 ];

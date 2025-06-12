@@ -3,29 +3,34 @@ import { ArrowLeft, Home } from "lucide-react";
 import { post } from "../config/network";
 import apiDetails from "../config/apiDetails";
 import { useMutation } from "@tanstack/react-query";
-import { successNotify } from "../service/Messagebar";
+import { successNotify, errorNotify } from "../service/Messagebar";
 
-const QuestionScreen = ({ questionType, onBackToWelcome, setTestCompleted }) => {
-    const [messages, setMessages] = useState([]);
-    const [currentIndex, setCurrentIndex] = useState(0);
-    const [showOptions, setShowOptions] = useState(true);
-    const [answers, setAnswers] = useState({});
-    const [isCompleted, setIsCompleted] = useState(false);
+const QuestionScreen = ({ questionType, testData, setTestData, onBackToWelcome }) => {
     const messagesEndRef = useRef(null);
-    const [multiSelections, setMultiSelections] = useState({});
-    const [questionCode, setQuestionCode] = useState(null);
+    const questionCode = questionType.code;
+    const [typingState, setTypingState] = useState({});
+    const isTyping = typingState[questionCode];
 
     const scrollToBottom = () => {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
     };
 
     useEffect(() => {
-        const first = questionType.questions[0];
-        setQuestionCode(questionType.code);
-        setMessages([{ type: "bot", content: first.question }]);
+        if (!testData[questionCode] || testData[questionCode].messages.length === 0) {
+            const first = questionType.questions[0];
+            setTestData({
+                ...testData,
+                [questionCode]: {
+                    currentIndex: 0,
+                    messages: [{ type: "bot", content: first.question }],
+                    answers: {},
+                    isCompleted: false,
+                },
+            });
+        }
     }, []);
 
-    useEffect(scrollToBottom, [messages]);
+    useEffect(scrollToBottom, [testData[questionCode]?.messages]);
 
     const saveAnswers = async (ans) => {
         const endpointMap = {
@@ -35,43 +40,17 @@ const QuestionScreen = ({ questionType, onBackToWelcome, setTestCompleted }) => 
             MIT: apiDetails.endPoint.multipleInterest,
         };
 
-        try {
-            const apiEnd = endpointMap[questionCode];
+        const apiEnd = endpointMap[questionCode];
+        if (!apiEnd) return;
 
-            if (!apiEnd) {
-                console.warn(`No API endpoint configured for questionCode: ${questionCode}`);
-                return;
-            }
-
-            const data = {
-                userId: 25,
-                answers: ans,
-            };
-
-            const res = await post(apiEnd, data);
-            setTestCompleted((prev) => ({
-                ...prev,
-                [questionCode]: true,
-            }));
-            return res;
-        } catch (error) {
-            throw error;
-        }
+        const res = await post(`${apiEnd}?userId=25`, ans);
+        return res;
     };
 
     const mutation = useMutation({
         mutationFn: saveAnswers,
-        onSuccess: (data) => {
-            successNotify("Assessment Saved!");
-            setTimeout(() => {
-                // onBackToWelcome();
-                console.log(data);
-            }, 1000);
-        },
-        onError: (error) => {
-            errorNotify(error.message);
-            console.error("Error creating user:", error);
-        },
+        onSuccess: () => successNotify("Assessment Saved!"),
+        onError: (err) => errorNotify(err.message),
     });
 
     const getBotReply = (answer) => {
@@ -81,166 +60,82 @@ const QuestionScreen = ({ questionType, onBackToWelcome, setTestCompleted }) => 
             if (ans.includes("no")) return "🧠 Understood. Every perspective counts.";
             if (ans.includes("maybe")) return "🤔 Ambiguity is a part of self-awareness. Let’s continue.";
         } else if (typeof answer === "number") {
-            switch (answer) {
-                case 1:
-                    return "🟥 You strongly disagreed — thank you for your clarity. Let’s move on.";
-                case 2:
-                    return "🔵 You disagreed. Your self-awareness is appreciated.";
-                case 3:
-                    return "🟡 A neutral stance — staying balanced is also insightful.";
-                case 4:
-                    return "🟢 You agreed. Thanks for reflecting openly.";
-                case 5:
-                    return "🟩 Strong agreement — your confidence is noted. Let’s continue.";
-                default:
-                    return "📘 Thanks! Let’s keep going.";
-            }
+            return (
+                [
+                    "🟥 You strongly disagreed — thank you for your clarity.",
+                    "🔵 You disagreed. Your self-awareness is appreciated.",
+                    "🟡 A neutral stance — staying balanced is also insightful.",
+                    "🟢 You agreed. Thanks for reflecting openly.",
+                    "🟩 Strong agreement — your confidence is noted. Let’s continue.",
+                ][answer - 1] || "📘 Thanks! Let’s keep going."
+            );
         }
         return "📘 Thank you. Let’s proceed.";
     };
 
+    const handleNext = (updatedAnswers, updatedMsgs) => {
+        const currentData = testData[questionCode];
+        const nextIndex = currentData.currentIndex + 1;
+
+        if (nextIndex < questionType.questions.length) {
+            const nextQ = { type: "bot", content: questionType.questions[nextIndex].question };
+            setTestData({
+                ...testData,
+                [questionCode]: {
+                    ...currentData,
+                    messages: [...updatedMsgs, nextQ],
+                    currentIndex: nextIndex,
+                    answers: updatedAnswers,
+                },
+            });
+        } else {
+            setTestData({
+                ...testData,
+                [questionCode]: {
+                    ...currentData,
+                    messages: [...updatedMsgs, { type: "bot", content: "🎉 You've finished the questions!" }],
+                    answers: updatedAnswers,
+                    isCompleted: true,
+                },
+            });
+            mutation.mutate(updatedAnswers);
+        }
+    };
+
     const handleAnswer = (answer) => {
-        const currentQuestion = questionType.questions[currentIndex];
+        const currentData = testData[questionCode];
+        const currentQuestion = questionType.questions[currentData.currentIndex];
         const isSingle = questionType.type === "single";
 
-        // Determine message content and stored value
         const displayText = isSingle && typeof answer === "object" ? `${answer.label} (${answer.value})` : answer;
-
         const answerValue = isSingle && typeof answer === "object" ? answer.value : answer;
 
         const userMsg = { type: "user", content: displayText };
         const botReply = { type: "bot", content: getBotReply(answerValue) };
+        const updatedAnswers = { ...currentData.answers, [currentQuestion.id]: answerValue };
+        const updatedMsgs = [...currentData.messages, userMsg, botReply];
 
-        const updatedAnswers = { ...answers, [currentQuestion.id]: answerValue };
-        setAnswers(updatedAnswers);
+        setTestData({
+            ...testData,
+            [questionCode]: {
+                ...currentData,
+                answers: updatedAnswers,
+                messages: updatedMsgs,
+            },
+        });
 
-        const updatedMsgs = [...messages, userMsg, botReply];
-        setMessages(updatedMsgs);
-        setShowOptions(false);
+        setTypingState((prev) => ({ ...prev, [questionCode]: true }));
 
         setTimeout(() => {
-            const nextIndex = currentIndex + 1;
-            if (nextIndex < questionType.questions.length) {
-                const nextQ = {
-                    type: "bot",
-                    content: questionType.questions[nextIndex].question,
-                };
-                setMessages([...updatedMsgs, nextQ]);
-                setCurrentIndex(nextIndex);
-                setShowOptions(true);
-            } else {
-                setMessages([...updatedMsgs, { type: "bot", content: "🎉 You've finished the questions!" }]);
-                setIsCompleted(true);
-                console.log("Final Answers:", updatedAnswers);
-                console.log(questionCode);
-
-                // api call
-                mutation.mutate(updatedAnswers);
-            }
-        }, 1000);
+            setTypingState((prev) => ({ ...prev, [questionCode]: false }));
+            handleNext(updatedAnswers, updatedMsgs);
+        }, 800);
     };
 
-    const currentQuestion = questionType.questions[currentIndex];
+    const currentData = testData[questionCode];
+    const currentQuestion = questionType.questions[currentData?.currentIndex || 0];
     const isRange = questionType.type === "range";
     const isSingle = questionType.type === "single";
-    const isMulti = questionType.type === "multi";
-
-    const handleMultiSelect = (rowIndex, label) => {
-        const updatedSelections = { ...multiSelections, [rowIndex]: label };
-        setMultiSelections(updatedSelections);
-
-        // Check if all rows for this question have a selection
-        const current = questionType.questions[currentIndex];
-        if (Object.keys(updatedSelections).length === current.options.length) {
-            // Small delay so UI updates before submit
-            setTimeout(() => {
-                handleMultiSubmit(updatedSelections);
-            }, 200);
-        }
-    };
-
-    const handleMultiSubmit = (selections = multiSelections) => {
-        const allAnswers = Object.values(selections).join(", ");
-        const currentQuestion = questionType.questions[currentIndex];
-        const userMsg = { type: "user", content: allAnswers };
-        const botReply = { type: "bot", content: getBotReply(allAnswers) };
-
-        const updatedAnswers = { ...answers, [currentQuestion.id]: allAnswers };
-        setAnswers(updatedAnswers);
-        setMessages([...messages, userMsg, botReply]);
-        setMultiSelections({});
-        setShowOptions(false);
-
-        setTimeout(() => {
-            const nextIndex = currentIndex + 1;
-            if (nextIndex < questionType.questions.length) {
-                const nextQ = { type: "bot", content: questionType.questions[nextIndex].question };
-                setMessages((prev) => [...prev, nextQ]);
-                setCurrentIndex(nextIndex);
-                setShowOptions(true);
-            } else {
-                setMessages((prev) => [...prev, { type: "bot", content: "🎉 You've completed all questions!" }]);
-                setIsCompleted(true);
-                console.log("All questions completed. Answers:", updatedAnswers);
-                mutation.mutate(updatedAnswers);
-            }
-        }, 1000);
-    };
-
-    const chunkArray = (arr, size = 4) => {
-        const chunks = [];
-        for (let i = 0; i < arr.length; i += size) {
-            chunks.push(arr.slice(i, i + size));
-        }
-        return chunks;
-    };
-
-    const renderMultiRows = () => {
-        const current = questionType.questions[currentIndex];
-        return (
-            <div className="space-y-4 text-sm text-gray-700">
-                {current.options.map((group, groupIndex) => {
-                    const [key, values] = Object.entries(group)[0];
-                    const options = values.split(",\n");
-
-                    // split options into chunks of 4
-                    const optionChunks = chunkArray(options, 4);
-
-                    return (
-                        <div key={groupIndex}>
-                            {optionChunks.map((chunk, rowIndex) => (
-                                <div
-                                    key={rowIndex}
-                                    className="mb-3"
-                                >
-                                    {/* Row label */}
-                                    <div className="mb-1 select-none font-medium text-blue-600">{groupIndex + 1}:</div>
-
-                                    {/* Pills row */}
-                                    <div className="flex flex-wrap gap-2">
-                                        {chunk.map((label, i) => (
-                                            <button
-                                                key={i}
-                                                className={`cursor-pointer rounded-full border px-4 py-1.5 text-xs transition sm:text-sm ${
-                                                    multiSelections[groupIndex] === label
-                                                        ? "border-blue-600 bg-blue-600 text-white"
-                                                        : "border-gray-300 bg-white text-gray-700 hover:bg-blue-100"
-                                                } `}
-                                                onClick={() => handleMultiSelect(groupIndex, label)}
-                                                style={{ minWidth: "70px", textAlign: "center" }}
-                                            >
-                                                {label}
-                                            </button>
-                                        ))}
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-                    );
-                })}
-            </div>
-        );
-    };
 
     return (
         <div className="flex flex-col rounded-md bg-gray-100 shadow-sm">
@@ -252,13 +147,13 @@ const QuestionScreen = ({ questionType, onBackToWelcome, setTestCompleted }) => 
                     <Home
                         size={16}
                         className="mr-1"
-                    />
+                    />{" "}
                     Home
                 </button>
             </div>
 
             <div className="custom-scrollbar flex-1 space-y-3 overflow-y-auto px-4 pr-1 pt-2 md:px-6">
-                {messages.map((msg, idx) => (
+                {currentData?.messages.map((msg, idx) => (
                     <div
                         key={idx}
                         className={`max-w-[75%] whitespace-pre-wrap break-words rounded-xl px-4 py-3 text-sm shadow-md ${
@@ -271,57 +166,57 @@ const QuestionScreen = ({ questionType, onBackToWelcome, setTestCompleted }) => 
                 <div ref={messagesEndRef} />
             </div>
 
-            {showOptions ? (
+            {!currentData?.isCompleted && (
                 <div className="mt-4 px-4 pb-3">
-                    {isRange && (
-                        <div className="space-y-3">
-                            <div className="mb-2 flex justify-between text-xs text-gray-600">
-                                <span>Strongly Disagree</span>
-                                <span>Strongly Agree</span>
-                            </div>
-                            <div className="flex items-center justify-between space-x-2">
-                                {[1, 2, 3, 4, 5].map((val) => (
-                                    <button
-                                        key={val}
-                                        onClick={() => handleAnswer(val)}
-                                        className="h-10 w-10 rounded-full border-2 bg-white text-xs font-semibold text-gray-600 transition-all duration-200 hover:scale-105 hover:border-gray-400"
-                                    >
-                                        {val}
-                                    </button>
-                                ))}
+                    {isTyping ? (
+                        <div className="pb-4">
+                            <div className="inline-flex items-center space-x-2 rounded-r-lg rounded-tl-lg bg-white px-4 py-2 text-xs text-gray-500 shadow">
+                                <span>Typing</span>
+                                <span className="flex items-center space-x-1">
+                                    <span className="block h-1 w-1 animate-bounce rounded-full bg-gray-400 [animation-delay:0ms]"></span>
+                                    <span className="block h-1 w-1 animate-bounce rounded-full bg-gray-400 [animation-delay:150ms]"></span>
+                                    <span className="block h-1 w-1 animate-bounce rounded-full bg-gray-400 [animation-delay:300ms]"></span>
+                                </span>
                             </div>
                         </div>
-                    )}
-                    {isSingle && (
-                        <div className="mt-4 space-y-2">
-                            {currentQuestion.options.map((option, index) => (
-                                <button
-                                    key={index}
-                                    onClick={() => handleAnswer(option)}
-                                    className="w-full rounded-md border border-blue-300 bg-white px-4 py-2 text-left text-sm font-medium text-gray-800 shadow-sm transition-all duration-200 hover:bg-blue-100 hover:text-blue-700"
-                                >
-                                    {`${option.value})
-                                    ${option.label}`}
-                                </button>
-                            ))}
-                        </div>
-                    )}
+                    ) : (
+                        <>
+                            {isRange && (
+                                <div className="space-y-3">
+                                    <div className="mb-2 flex justify-between text-xs text-gray-600">
+                                        <span>Strongly Disagree</span>
+                                        <span>Strongly Agree</span>
+                                    </div>
+                                    <div className="flex items-center justify-between space-x-2">
+                                        {[1, 2, 3, 4, 5].map((val) => (
+                                            <button
+                                                key={val}
+                                                onClick={() => handleAnswer(val)}
+                                                className="h-10 w-10 rounded-full border-2 bg-white text-xs font-semibold text-gray-600 transition-all duration-200 hover:scale-105 hover:border-gray-400"
+                                            >
+                                                {val}
+                                            </button>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
 
-                    {isMulti && renderMultiRows()}
+                            {isSingle && (
+                                <div className="mt-4 space-y-2">
+                                    {currentQuestion.options.map((option, index) => (
+                                        <button
+                                            key={index}
+                                            onClick={() => handleAnswer(option)}
+                                            className="w-full rounded-md border border-blue-300 bg-white px-4 py-2 text-left text-sm font-medium text-gray-800 shadow-sm transition-all duration-200 hover:bg-blue-100 hover:text-blue-700"
+                                        >
+                                            {`${option.value}) ${option.label}`}
+                                        </button>
+                                    ))}
+                                </div>
+                            )}
+                        </>
+                    )}
                 </div>
-            ) : (
-                !isCompleted && (
-                    <div className="px-6 pb-4">
-                        <div className="inline-flex items-center space-x-2 rounded-r-lg rounded-tl-lg bg-white px-4 py-2 text-xs text-gray-500 shadow">
-                            <span>Typing</span>
-                            <span className="flex items-center space-x-1">
-                                <span className="block h-1 w-1 animate-bounce rounded-full bg-gray-400 [animation-delay:0ms]"></span>
-                                <span className="block h-1 w-1 animate-bounce rounded-full bg-gray-400 [animation-delay:150ms]"></span>
-                                <span className="block h-1 w-1 animate-bounce rounded-full bg-gray-400 [animation-delay:300ms]"></span>
-                            </span>
-                        </div>
-                    </div>
-                )
             )}
 
             <div className="flex items-center justify-between border bg-green-500 px-3 pb-2 pt-3 text-sm">
@@ -333,12 +228,12 @@ const QuestionScreen = ({ questionType, onBackToWelcome, setTestCompleted }) => 
                     <ArrowLeft
                         size={16}
                         className="mr-1"
-                    />
+                    />{" "}
                     Back
                 </button>
 
                 <span className="text-white">
-                    {currentIndex + 1}/{questionType.questions.length}
+                    {currentData?.currentIndex + 1}/{questionType.questions.length}
                 </span>
             </div>
         </div>

@@ -2,21 +2,24 @@ import React, { useState } from "react";
 import { MessageCircle, X } from "lucide-react";
 import WelcomeScreen from "./WelcomeScreen";
 import QuestionScreen from "./QuestionScreen";
-import { questionTypes } from "../utils/data";
 import { get } from "../config/network";
 import apiDetails from "../config/apiDetails";
 import { useQuery } from "@tanstack/react-query";
 import useAuthStore from "../store/authStore";
+import InterestScreen from "./InterestTestScreen";
 
 const ChatBot = () => {
     const [isOpen, setIsOpen] = useState(false);
     const [currentScreen, setCurrentScreen] = useState("welcome");
     const [selectedQuestionType, setSelectedQuestionType] = useState(null);
-    const [testCompleted, setTestCompleted] = useState({ BIG5: false, LNT: false, MIT: false, TIA: false });
 
     const handleQuestionTypeSelect = (questionType) => {
-        setSelectedQuestionType(questionType);
-        setCurrentScreen("questions");
+        if (questionType.code === "TIA") {
+            setCurrentScreen("interest");
+        } else {
+            setCurrentScreen("questions");
+            setSelectedQuestionType(questionType);
+        }
     };
 
     const handleBackToWelcome = () => {
@@ -38,13 +41,11 @@ const ChatBot = () => {
             if (q.type === "RATING") {
                 return {
                     id: q.id,
-                    // type: q.type.toLowerCase(),
                     question: q.question,
                 };
             } else if (q.type === "SINGLE") {
                 return {
                     id: q.id,
-                    // type: q.type.toLowerCase(),
                     question: q.question,
                     options: [
                         q.option_a ? { value: "A", label: q.option_a } : null,
@@ -57,7 +58,6 @@ const ChatBot = () => {
             } else if (q.type === "MULTI") {
                 return {
                     id: q.id,
-                    // type: q.type.toLowerCase(),
                     question: q.question,
                     options: [
                         q.artistic ? { artistic: q.artistic } : null,
@@ -103,12 +103,38 @@ const ChatBot = () => {
     });
 
     if (error) return <p>Error: {error.message}</p>;
-    console.log(testCompleted);
 
     const authorized = useAuthStore((state) => state.authorized);
 
+    const [testData, setTestData] = useState({
+        BIG5: {
+            answers: {},
+            messages: [],
+            currentIndex: 0,
+            isCompleted: false,
+        },
+        TIA: {
+            answers: {},
+            messages: [],
+            currentIndex: 0,
+            isCompleted: false,
+        },
+        LNT: {
+            answers: {},
+            messages: [],
+            currentIndex: 0,
+            isCompleted: false,
+        },
+        MIT: {
+            answers: {},
+            messages: [],
+            currentIndex: 0,
+            isCompleted: false,
+        },
+    });
+
     return (
-        <div className="fixed bottom-4 right-4 z-50">
+        <div className="fixed bottom-4 right-4 z-40">
             {authorized && !isOpen && (
                 <button
                     onClick={() => {
@@ -127,7 +153,7 @@ const ChatBot = () => {
                         <div className="flex items-center space-x-3">
                             <div className="flex h-8 w-8 items-center justify-center rounded-full bg-white/20">🤖</div>
                             <div>
-                                <h1 className="text-lg font-bold">TestBot</h1>
+                                <h1 className="text-lg font-bold">Explore</h1>
                                 <p className="text-xs text-indigo-100">Your's Test Assistent!</p>
                             </div>
                         </div>
@@ -148,7 +174,7 @@ const ChatBot = () => {
                         {currentScreen === "welcome" ? (
                             <WelcomeScreen
                                 questionTypes={data}
-                                testCompleted={testCompleted}
+                                testData={testData}
                                 onQuestionTypeSelect={handleQuestionTypeSelect}
                                 isLoading={isLoading}
                             />
@@ -156,13 +182,21 @@ const ChatBot = () => {
                             selectedQuestionType && (
                                 <>
                                     <QuestionScreen
-                                        testCompleted={testCompleted}
                                         questionType={selectedQuestionType}
                                         onBackToWelcome={handleBackToWelcome}
-                                        setTestCompleted={setTestCompleted}
+                                        testData={testData}
+                                        setTestData={setTestData}
                                     />
                                 </>
                             )
+                        )}
+
+                        {currentScreen === "interest" && (
+                            <InterestScreen
+                                onBackToWelcome={handleBackToWelcome}
+                                testData={testData}
+                                setTestData={setTestData}
+                            />
                         )}
                     </div>
                 </div>
