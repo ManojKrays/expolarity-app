@@ -1,16 +1,21 @@
 import React, { useEffect, useRef, useState } from "react";
-import { ArrowLeft, Home } from "lucide-react";
+import { Home } from "lucide-react";
 import { InterestTest } from "../utils/data";
+import { useMutation } from "@tanstack/react-query";
+import { post } from "../config/network";
+import apiDetails from "../config/apiDetails";
+import { errorNotify, successNotify } from "../service/Messagebar";
 
 const InterestScreen = ({ onBackToWelcome, testData, setTestData }) => {
     const messagesEndRef = useRef(null);
-
     const scrollToBottom = () => messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
 
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
     const [currentOptionIndex, setCurrentOptionIndex] = useState(0);
     const [typing, setTyping] = useState(false);
+    const [timer, setTimer] = useState(0);
 
+    const timerRef = useRef(null);
     const questionBlocks = InterestTest[0].questions;
     const currentQuestion = questionBlocks[currentQuestionIndex];
     const currentRow = currentQuestion.options[currentOptionIndex];
@@ -19,27 +24,50 @@ const InterestScreen = ({ onBackToWelcome, testData, setTestData }) => {
 
     useEffect(() => {
         if (!currentData || currentData.messages.length === 0) {
+            const firstQuestion = questionBlocks[0].options[0].question;
             setTestData((prev) => ({
                 ...prev,
                 TIA: {
                     currentIndex: 0,
-                    messages: [{ type: "bot", content: currentQuestion.options[0].question }],
+                    currentOptionIndex: 0,
+                    messages: [{ type: "bot", content: firstQuestion }],
                     answers: {},
                     isCompleted: false,
+                    elapsedTime: 0,
                 },
             }));
         } else {
             setCurrentQuestionIndex(currentData.currentIndex || 0);
+            setCurrentOptionIndex(currentData.currentOptionIndex || 0);
+            setTimer(currentData.elapsedTime || 0);
         }
     }, []);
 
     useEffect(scrollToBottom, [currentData?.messages]);
 
+    useEffect(() => {
+        if (!currentData?.isCompleted) {
+            timerRef.current = setInterval(() => {
+                setTimer((prev) => {
+                    const updatedTime = prev + 1;
+                    setTestData((prevData) => ({
+                        ...prevData,
+                        TIA: {
+                            ...prevData.TIA,
+                            elapsedTime: updatedTime,
+                        },
+                    }));
+                    return updatedTime;
+                });
+            }, 1000);
+        }
+
+        return () => clearInterval(timerRef.current);
+    }, [currentData?.isCompleted]);
+
     const getBotReply = (answer) => {
         if (!answer || typeof answer !== "object") return "🧠 Got it! Let's keep going.";
-
         const label = answer.label.toLowerCase();
-
         if (label.includes("practical")) return "🛠️ You seem hands-on and grounded — that’s great!";
         if (label.includes("intuitive")) return "🔮 Trusting intuition can be a powerful asset.";
         if (label.includes("scientific")) return "🧪 A curious and analytical mind — we like that!";
@@ -52,11 +80,29 @@ const InterestScreen = ({ onBackToWelcome, testData, setTestData }) => {
         if (label.includes("help people")) return "❤️ Empathy and support — the world needs more of that.";
         if (label.includes("leadership") || label.includes("sales")) return "🎯 A natural leader with people skills!";
         if (label.includes("details")) return "🧐 Precision and attention — a rare and valuable trait.";
-
         return "✨ Interesting choice! Let’s see what comes next.";
     };
 
+    const saveAnswers = async (ans) => {
+        try {
+            const headers = { assessment: 2, user: 25 };
+            const res = await post(`${apiDetails.endPoint.saveTest}`, ans, { headers });
+            return res;
+        } catch (err) {
+            console.log(err);
+            throw err;
+        }
+    };
+
+    const mutation = useMutation({
+        mutationFn: saveAnswers,
+        onSuccess: () => successNotify("Assessment Saved!"),
+        onError: (err) => errorNotify(err.message),
+    });
+
     const handleAnswer = (answer) => {
+        if (!currentRow || !currentRow.id) return;
+
         const updatedAnswers = {
             ...currentData.answers,
             [`${currentRow.id}`]: answer,
@@ -70,37 +116,29 @@ const InterestScreen = ({ onBackToWelcome, testData, setTestData }) => {
         setTyping(true);
 
         setTimeout(() => {
+            let newQuestionIndex = currentQuestionIndex;
+            let newOptionIndex = currentOptionIndex;
+
             if (!isLastRow) {
-                newMessages.push({
-                    type: "bot",
-                    content: currentQuestion.options[currentOptionIndex + 1].question,
-                });
-
-                setCurrentOptionIndex((prev) => prev + 1);
+                newMessages.push({ type: "bot", content: currentQuestion.options[currentOptionIndex + 1].question });
+                newOptionIndex++;
             } else if (!isLastQuestion) {
-                newMessages.push({
-                    type: "bot",
-                    content: questionBlocks[currentQuestionIndex + 1].options[0].question,
-                });
-
-                setCurrentQuestionIndex((prev) => prev + 1);
-                setCurrentOptionIndex(0);
+                newMessages.push({ type: "bot", content: questionBlocks[currentQuestionIndex + 1].options[0].question });
+                newQuestionIndex++;
+                newOptionIndex = 0;
             } else {
                 const finalAnswer = Object.values(updatedAnswers).reduce((acc, item) => {
                     const code = item.code;
-                    if (!acc[code]) {
-                        acc[code] = [];
-                    }
-                    acc[code].push(item.label);
+                    if (!item || !item.code || !item.label) return acc;
+                    if (!acc[code]) acc[code] = item.label;
+                    else acc[code] += `, ${item.label}`;
                     return acc;
                 }, {});
 
-                console.log("🎯 Final Answers:", finalAnswer);
-                newMessages.push({
-                    type: "bot",
-                    content: "🎉 You've finished the questions! Great job exploring your interests.",
-                });
-                setTyping(false);
+                mutation.mutate(finalAnswer);
+
+                newMessages.push({ type: "bot", content: "🎉 You've finished the questions! Great job exploring your interests." });
+                clearInterval(timerRef.current);
             }
 
             setTestData((prev) => ({
@@ -110,30 +148,22 @@ const InterestScreen = ({ onBackToWelcome, testData, setTestData }) => {
                     answers: updatedAnswers,
                     messages: newMessages,
                     isCompleted: isLastRow && isLastQuestion,
-                    currentIndex: currentQuestionIndex,
+                    currentIndex: newQuestionIndex,
+                    currentOptionIndex: newOptionIndex,
                 },
             }));
 
+            setCurrentQuestionIndex(newQuestionIndex);
+            setCurrentOptionIndex(newOptionIndex);
             setTyping(false);
         }, 800);
     };
 
-    return (
-        <div className="flex h-full flex-col rounded-md bg-gray-100 shadow-sm">
-            <div className="flex items-center justify-between border bg-green-500 px-3 pb-2 pt-3 text-sm">
-                <button
-                    onClick={onBackToWelcome}
-                    className="flex items-center text-white duration-200 hover:underline"
-                >
-                    <Home
-                        size={16}
-                        className="mr-1"
-                    />
-                    Home
-                </button>
-            </div>
+    const formatTime = (seconds) => `${Math.floor(seconds / 60)}:${String(seconds % 60).padStart(2, "0")}`;
 
-            <div className="custom-scrollbar flex-1 space-y-3 overflow-y-auto px-4 pr-1 pt-2 md:px-6">
+    return (
+        <div className="relative flex min-h-[424px] flex-col rounded-md bg-gray-100 shadow-sm">
+            <div className="custom-scrollbar flex-1 space-y-3 overflow-y-auto px-4 pb-10 pr-1 pt-2 md:px-6">
                 {currentData?.messages.map((msg, idx) => (
                     <div
                         key={idx}
@@ -179,19 +209,11 @@ const InterestScreen = ({ onBackToWelcome, testData, setTestData }) => {
                 )}
             </div>
 
-            <div className="flex items-center justify-between border bg-green-500 px-3 pb-2 pt-3 text-sm">
-                <button
-                    onClick={onBackToWelcome}
-                    className={`flex cursor-pointer items-center text-white duration-200 hover:underline`}
-                >
-                    <ArrowLeft
-                        size={16}
-                        className="mr-1"
-                    />
-                    Back
-                </button>
+            <div className="fixed bottom-4 flex w-72 items-center justify-between rounded-b-xl border bg-green-500 px-3 pb-2 pt-3 text-sm sm:w-96">
+                <span className="text-white">{formatTime(timer)}</span>
+
                 <span className="text-white">
-                    {currentQuestionIndex + 1}/{InterestTest[0].questions.length}
+                    {currentQuestionIndex + 1}/{questionBlocks.length}
                 </span>
             </div>
         </div>

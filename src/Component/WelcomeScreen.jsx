@@ -24,7 +24,7 @@ const WelcomeScreen = ({ questionTypes, onQuestionTypeSelect, isLoading, testDat
 
                     <div className="flex w-full flex-wrap items-center justify-center gap-3">
                         {questionTypes.map((type) => {
-                            const isCompleted = testData?.[type.code]?.isCompleted === true;
+                            const isCompleted = testData?.[type.section]?.isCompleted === true;
 
                             return (
                                 <button
@@ -46,17 +46,17 @@ const WelcomeScreen = ({ questionTypes, onQuestionTypeSelect, isLoading, testDat
                                             <div className="text-left">
                                                 <h3 className="text-xs font-semibold text-gray-800">{type.title}</h3>
                                                 <p className="text-xs text-gray-400">
-                                                    {isCompleted ? "Completed ✓" : `${type.questions.length} questions`}
+                                                    {isCompleted ? "Completed ✓" : `${parseInt(type.duration.split(":")[1])} minutes`}
                                                 </p>
                                             </div>
                                         </div>
 
-                                        {isCompleted && (
+                                        {/* {isCompleted && (
                                             <CheckCircle
                                                 className="text-green-500"
                                                 size={16}
                                             />
-                                        )}
+                                        )} */}
                                     </div>
                                 </button>
                             );

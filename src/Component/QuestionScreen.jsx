@@ -1,50 +1,108 @@
 import React, { useEffect, useRef, useState } from "react";
-import { ArrowLeft, Home } from "lucide-react";
-import { post } from "../config/network";
+import { Home } from "lucide-react";
+import { get, post } from "../config/network";
 import apiDetails from "../config/apiDetails";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { successNotify, errorNotify } from "../service/Messagebar";
 
 const QuestionScreen = ({ questionType, testData, setTestData, onBackToWelcome }) => {
     const messagesEndRef = useRef(null);
-    const questionCode = questionType.code;
+    const timerRef = useRef(null);
+    const questionCode = questionType?.section;
     const [typingState, setTypingState] = useState({});
     const isTyping = typingState[questionCode];
 
-    const scrollToBottom = () => {
-        messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    const fetchQuestions = async () => {
+        const res = await get(`${apiDetails.endPoint.getQuestions}?testid=${questionType.id}`);
+        return res.data
+            .map((q) => {
+                if (q.type === "RATING") {
+                    return { id: q.id, question: q.question };
+                }
+                if (q.type === "SINGLE") {
+                    return {
+                        id: q.id,
+                        question: q.question,
+                        options: [
+                            q.option_a && { value: "A", label: q.option_a },
+                            q.option_b && { value: "B", label: q.option_b },
+                            q.option_c && { value: "C", label: q.option_c },
+                            q.option_d && { value: "D", label: q.option_d },
+                            q.option_e && { value: "E", label: q.option_e },
+                        ].filter(Boolean),
+                    };
+                }
+                return null;
+            })
+            .filter(Boolean);
     };
 
+    const { data: questions, isLoading } = useQuery({
+        queryKey: ["questions", questionType?.id],
+        queryFn: fetchQuestions,
+        enabled: !!questionType?.id,
+    });
+
     useEffect(() => {
-        if (!testData[questionCode] || testData[questionCode].messages.length === 0) {
-            const first = questionType.questions[0];
-            setTestData({
-                ...testData,
+        if (!questions || !questionCode) return;
+
+        setTestData((prev) => {
+            const alreadyInitialized = prev[questionCode]?.messages?.length > 0;
+            if (alreadyInitialized) return prev;
+
+            return {
+                ...prev,
                 [questionCode]: {
                     currentIndex: 0,
-                    messages: [{ type: "bot", content: first.question }],
+                    messages: [{ type: "bot", content: questions[0]?.question || "No question found." }],
                     answers: {},
                     isCompleted: false,
+                    timer: 0, // initialize timer
                 },
-            });
-        }
-    }, []);
+            };
+        });
+    }, [questions, questionCode, setTestData]);
 
-    useEffect(scrollToBottom, [testData[questionCode]?.messages]);
+    useEffect(() => {
+        messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    }, [testData[questionCode]?.messages]);
+
+    // Timer logic
+    useEffect(() => {
+        if (!questionCode || !questions) return;
+        const currentData = testData[questionCode];
+        if (currentData?.isCompleted) return;
+
+        timerRef.current = setInterval(() => {
+            setTestData((prev) => {
+                const currentTime = prev[questionCode]?.timer || 0;
+                return {
+                    ...prev,
+                    [questionCode]: {
+                        ...prev[questionCode],
+                        timer: currentTime + 1,
+                    },
+                };
+            });
+        }, 1000);
+
+        return () => {
+            clearInterval(timerRef.current);
+        };
+    }, [questionCode, questions, setTestData]);
 
     const saveAnswers = async (ans) => {
-        const endpointMap = {
-            BIG5: apiDetails.endPoint.personalityTest,
-            TIA: apiDetails.endPoint.intrestTest,
-            LNT: apiDetails.endPoint.skillTest,
-            MIT: apiDetails.endPoint.multipleInterest,
-        };
-
-        const apiEnd = endpointMap[questionCode];
-        if (!apiEnd) return;
-
-        const res = await post(`${apiEnd}?userId=25`, ans);
-        return res;
+        try {
+            const headers = {
+                assessment: questionType.id,
+                user: 25,
+            };
+            const res = await post(`${apiDetails.endPoint.saveTest}`, ans, { headers });
+            return res;
+        } catch (err) {
+            console.log(err);
+            throw err;
+        }
     };
 
     const mutation = useMutation({
@@ -55,10 +113,10 @@ const QuestionScreen = ({ questionType, testData, setTestData, onBackToWelcome }
 
     const getBotReply = (answer) => {
         if (typeof answer === "string") {
-            const ans = answer.toLowerCase();
-            if (ans.includes("yes")) return "👍 Noted. Let’s explore further.";
-            if (ans.includes("no")) return "🧠 Understood. Every perspective counts.";
-            if (ans.includes("maybe")) return "🤔 Ambiguity is a part of self-awareness. Let’s continue.";
+            const lower = answer.toLowerCase();
+            if (lower.includes("yes")) return "👍 Noted. Let’s explore further.";
+            if (lower.includes("no")) return "🧠 Understood. Every perspective counts.";
+            if (lower.includes("maybe")) return "🤔 Ambiguity is a part of self-awareness. Let’s continue.";
         } else if (typeof answer === "number") {
             return (
                 [
@@ -77,35 +135,35 @@ const QuestionScreen = ({ questionType, testData, setTestData, onBackToWelcome }
         const currentData = testData[questionCode];
         const nextIndex = currentData.currentIndex + 1;
 
-        if (nextIndex < questionType.questions.length) {
-            const nextQ = { type: "bot", content: questionType.questions[nextIndex].question };
-            setTestData({
-                ...testData,
+        if (nextIndex < questions.length) {
+            const nextQ = { type: "bot", content: questions[nextIndex].question };
+            setTestData((prev) => ({
+                ...prev,
                 [questionCode]: {
                     ...currentData,
                     messages: [...updatedMsgs, nextQ],
                     currentIndex: nextIndex,
                     answers: updatedAnswers,
                 },
-            });
+            }));
         } else {
-            setTestData({
-                ...testData,
+            setTestData((prev) => ({
+                ...prev,
                 [questionCode]: {
                     ...currentData,
                     messages: [...updatedMsgs, { type: "bot", content: "🎉 You've finished the questions!" }],
                     answers: updatedAnswers,
                     isCompleted: true,
                 },
-            });
+            }));
             mutation.mutate(updatedAnswers);
         }
     };
 
     const handleAnswer = (answer) => {
         const currentData = testData[questionCode];
-        const currentQuestion = questionType.questions[currentData.currentIndex];
-        const isSingle = questionType.type === "single";
+        const currentQuestion = questions[currentData.currentIndex];
+        const isSingle = questionType.type === "SINGLE";
 
         const displayText = isSingle && typeof answer === "object" ? `${answer.label} (${answer.value})` : answer;
         const answerValue = isSingle && typeof answer === "object" ? answer.value : answer;
@@ -115,14 +173,14 @@ const QuestionScreen = ({ questionType, testData, setTestData, onBackToWelcome }
         const updatedAnswers = { ...currentData.answers, [currentQuestion.id]: answerValue };
         const updatedMsgs = [...currentData.messages, userMsg, botReply];
 
-        setTestData({
-            ...testData,
+        setTestData((prev) => ({
+            ...prev,
             [questionCode]: {
                 ...currentData,
                 answers: updatedAnswers,
                 messages: updatedMsgs,
             },
-        });
+        }));
 
         setTypingState((prev) => ({ ...prev, [questionCode]: true }));
 
@@ -133,26 +191,21 @@ const QuestionScreen = ({ questionType, testData, setTestData, onBackToWelcome }
     };
 
     const currentData = testData[questionCode];
-    const currentQuestion = questionType.questions[currentData?.currentIndex || 0];
-    const isRange = questionType.type === "range";
-    const isSingle = questionType.type === "single";
+    const currentQuestion = questions?.[currentData?.currentIndex || 0];
+    const isRange = questionType.type === "RATING";
+    const isSingle = questionType.type === "SINGLE";
+
+    const formatTime = (seconds) => {
+        const m = Math.floor(seconds / 60)
+            .toString()
+            .padStart(2, "0");
+        const s = (seconds % 60).toString().padStart(2, "0");
+        return `${m}:${s}`;
+    };
 
     return (
-        <div className="flex flex-col rounded-md bg-gray-100 shadow-sm">
-            <div className="flex items-center justify-between border bg-green-500 px-3 pb-2 pt-3 text-sm">
-                <button
-                    onClick={onBackToWelcome}
-                    className="flex items-center text-white duration-200 hover:underline"
-                >
-                    <Home
-                        size={16}
-                        className="mr-1"
-                    />{" "}
-                    Home
-                </button>
-            </div>
-
-            <div className="custom-scrollbar flex-1 space-y-3 overflow-y-auto px-4 pr-1 pt-2 md:px-6">
+        <div className="flex min-h-[424px] flex-col rounded-md bg-gray-100 shadow-sm">
+            <div className="custom-scrollbar flex-1 space-y-3 overflow-y-auto px-4 pb-10 pr-1 pt-2 md:px-6">
                 {currentData?.messages.map((msg, idx) => (
                     <div
                         key={idx}
@@ -164,76 +217,65 @@ const QuestionScreen = ({ questionType, testData, setTestData, onBackToWelcome }
                     </div>
                 ))}
                 <div ref={messagesEndRef} />
-            </div>
 
-            {!currentData?.isCompleted && (
-                <div className="mt-4 px-4 pb-3">
-                    {isTyping ? (
-                        <div className="pb-4">
-                            <div className="inline-flex items-center space-x-2 rounded-r-lg rounded-tl-lg bg-white px-4 py-2 text-xs text-gray-500 shadow">
-                                <span>Typing</span>
-                                <span className="flex items-center space-x-1">
-                                    <span className="block h-1 w-1 animate-bounce rounded-full bg-gray-400 [animation-delay:0ms]"></span>
-                                    <span className="block h-1 w-1 animate-bounce rounded-full bg-gray-400 [animation-delay:150ms]"></span>
-                                    <span className="block h-1 w-1 animate-bounce rounded-full bg-gray-400 [animation-delay:300ms]"></span>
-                                </span>
+                {!currentData?.isCompleted && (
+                    <div className="mt-4 pb-10">
+                        {isTyping ? (
+                            <div className="pb-4">
+                                <div className="inline-flex items-center space-x-2 rounded-r-lg rounded-tl-lg bg-white px-4 py-2 text-xs text-gray-500 shadow">
+                                    <span>Typing</span>
+                                    <span className="flex items-center space-x-1">
+                                        <span className="block h-1 w-1 animate-bounce rounded-full bg-gray-400 [animation-delay:0ms]"></span>
+                                        <span className="block h-1 w-1 animate-bounce rounded-full bg-gray-400 [animation-delay:150ms]"></span>
+                                        <span className="block h-1 w-1 animate-bounce rounded-full bg-gray-400 [animation-delay:300ms]"></span>
+                                    </span>
+                                </div>
                             </div>
-                        </div>
-                    ) : (
-                        <>
-                            {isRange && (
-                                <div className="space-y-3">
-                                    <div className="mb-2 flex justify-between text-xs text-gray-600">
-                                        <span>Strongly Disagree</span>
-                                        <span>Strongly Agree</span>
+                        ) : (
+                            <>
+                                {isRange && (
+                                    <div className="space-y-3 px-4 pb-2">
+                                        <div className="mb-2 flex justify-between text-xs text-gray-600">
+                                            <span>Strongly Disagree</span>
+                                            <span>Strongly Agree</span>
+                                        </div>
+                                        <div className="flex items-center justify-between space-x-2">
+                                            {[1, 2, 3, 4, 5].map((val) => (
+                                                <button
+                                                    key={val}
+                                                    onClick={() => handleAnswer(val)}
+                                                    className="h-10 w-10 rounded-full border-2 bg-white text-xs font-semibold text-gray-600 transition-all duration-200 hover:scale-105 hover:border-gray-400"
+                                                >
+                                                    {val}
+                                                </button>
+                                            ))}
+                                        </div>
                                     </div>
-                                    <div className="flex items-center justify-between space-x-2">
-                                        {[1, 2, 3, 4, 5].map((val) => (
+                                )}
+
+                                {isSingle && (
+                                    <div className="mt-4 space-y-2 px-3 pb-2">
+                                        {currentQuestion?.options.map((option, index) => (
                                             <button
-                                                key={val}
-                                                onClick={() => handleAnswer(val)}
-                                                className="h-10 w-10 rounded-full border-2 bg-white text-xs font-semibold text-gray-600 transition-all duration-200 hover:scale-105 hover:border-gray-400"
+                                                key={index}
+                                                onClick={() => handleAnswer(option)}
+                                                className="w-full rounded-md border border-blue-300 bg-white px-4 py-2 text-left text-sm font-medium text-gray-800 shadow-sm transition-all duration-200 hover:bg-blue-100 hover:text-blue-700"
                                             >
-                                                {val}
+                                                {`${option.value}) ${option.label}`}
                                             </button>
                                         ))}
                                     </div>
-                                </div>
-                            )}
+                                )}
+                            </>
+                        )}
+                    </div>
+                )}
+            </div>
 
-                            {isSingle && (
-                                <div className="mt-4 space-y-2">
-                                    {currentQuestion.options.map((option, index) => (
-                                        <button
-                                            key={index}
-                                            onClick={() => handleAnswer(option)}
-                                            className="w-full rounded-md border border-blue-300 bg-white px-4 py-2 text-left text-sm font-medium text-gray-800 shadow-sm transition-all duration-200 hover:bg-blue-100 hover:text-blue-700"
-                                        >
-                                            {`${option.value}) ${option.label}`}
-                                        </button>
-                                    ))}
-                                </div>
-                            )}
-                        </>
-                    )}
-                </div>
-            )}
-
-            <div className="flex items-center justify-between border bg-green-500 px-3 pb-2 pt-3 text-sm">
-                <button
-                    onClick={onBackToWelcome}
-                    className={`flex items-center text-white duration-200 hover:underline ${mutation.isPending ? "cursor-not-allowed" : "cursor-pointer"}`}
-                    disabled={mutation.isPending}
-                >
-                    <ArrowLeft
-                        size={16}
-                        className="mr-1"
-                    />{" "}
-                    Back
-                </button>
-
+            <div className="fixed bottom-4 flex w-72 items-center justify-between rounded-b-xl border bg-green-500 px-3 pb-2 pt-3 text-sm sm:w-96">
+                <span className="text-white">{formatTime(currentData?.timer || 0)}</span>
                 <span className="text-white">
-                    {currentData?.currentIndex + 1}/{questionType.questions.length}
+                    {currentData?.currentIndex + 1}/{questions?.length || 0}
                 </span>
             </div>
         </div>

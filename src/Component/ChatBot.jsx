@@ -14,7 +14,7 @@ const ChatBot = () => {
     const [selectedQuestionType, setSelectedQuestionType] = useState(null);
 
     const handleQuestionTypeSelect = (questionType) => {
-        if (questionType.code === "TIA") {
+        if (questionType.section === "TIA") {
             setCurrentScreen("interest");
         } else {
             setCurrentScreen("questions");
@@ -28,76 +28,25 @@ const ChatBot = () => {
     };
 
     const fetchAssessment = async () => {
-        const res = await get(apiDetails.endPoint.getAssessment);
+        const res = await get(apiDetails.endPoint.getAssessments);
 
-        const sections = res.data.reduce((acc, curr) => {
-            const section = curr.section;
-            if (!acc[section]) acc[section] = [];
-            acc[section].push(curr);
-            return acc;
-        }, {});
-
-        const formatQuestion = (q) => {
-            if (q.type === "RATING") {
-                return {
-                    id: q.id,
-                    question: q.question,
-                };
-            } else if (q.type === "SINGLE") {
-                return {
-                    id: q.id,
-                    question: q.question,
-                    options: [
-                        q.option_a ? { value: "A", label: q.option_a } : null,
-                        q.option_b ? { value: "B", label: q.option_b } : null,
-                        q.option_c ? { value: "C", label: q.option_c } : null,
-                        q.option_d ? { value: "D", label: q.option_d } : null,
-                        q.option_e ? { value: "E", label: q.option_e } : null,
-                    ].filter(Boolean),
-                };
-            } else if (q.type === "MULTI") {
-                return {
-                    id: q.id,
-                    question: q.question,
-                    options: [
-                        q.artistic ? { artistic: q.artistic } : null,
-                        q.conventional ? { conventional: q.conventional } : null,
-                        q.enterprising ? { enterprising: q.enterprising } : null,
-                        q.investigative ? { investigative: q.investigative } : null,
-                        q.realistic ? { realistic: q.realistic } : null,
-                        q.social ? { social: q.social } : null,
-                    ].filter(Boolean),
-                };
-            }
-            return null;
+        const sectionColors = {
+            BIG5: { color: "bg-indigo-500", code: "BIG5" },
+            TIA: { color: "bg-pink-500", code: "TIA" },
+            LNT: { color: "bg-teal-500", code: "LNT" },
+            MIT: { color: "bg-yellow-500", code: "MIT" },
         };
 
-        const sectionMeta = {
-            BIG5: { title: "Big Five", emoji: "🧠", color: "bg-indigo-500", type: "range", code: "BIG5" },
-            TIA: { title: "TIA", emoji: "🧩", color: "bg-pink-500", type: "multi", code: "TIA" },
-            LNT: { title: "LNT", emoji: "📊", color: "bg-teal-500", type: "single", code: "LNT" },
-            MIT: { title: "MIT", emoji: "🎯", color: "bg-yellow-500", type: "range", code: "MIT" },
-        };
-
-        const final = Object.entries(sections).map(([sectionName, questions]) => {
-            const formattedQuestions = questions.map(formatQuestion).filter(Boolean);
-
-            return {
-                id: sectionName.toLowerCase(),
-                title: sectionMeta[sectionName]?.title || sectionName,
-                emoji: sectionMeta[sectionName]?.emoji || "📝",
-                color: sectionMeta[sectionName]?.color || "bg-gray-300",
-                type: sectionMeta[sectionName]?.type,
-                code: sectionMeta[sectionName]?.code,
-                questions: formattedQuestions,
-            };
-        });
+        const final = res.data.map((test) => ({
+            ...test,
+            color: sectionColors[test.section]?.color || "bg-gray-300",
+        }));
 
         return final;
     };
 
     const { data, isLoading, error, refetch } = useQuery({
-        queryKey: ["questions"],
+        queryKey: ["assments"],
         queryFn: fetchAssessment,
         enabled: false,
     });
@@ -151,7 +100,12 @@ const ChatBot = () => {
                 <div className="flex h-[500px] w-72 flex-col overflow-hidden rounded-2xl bg-white shadow-2xl sm:w-96">
                     <div className="flex flex-shrink-0 items-center justify-between bg-green-500 p-4 text-white">
                         <div className="flex items-center space-x-3">
-                            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-white/20">🤖</div>
+                            <div
+                                onClick={() => handleBackToWelcome()}
+                                className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-full bg-white/20"
+                            >
+                                🤖
+                            </div>
                             <div>
                                 <h1 className="text-lg font-bold">Explore</h1>
                                 <p className="text-xs text-indigo-100">Your's Test Assistent!</p>
@@ -170,14 +124,16 @@ const ChatBot = () => {
                         </div>
                     </div>
 
-                    <div className="min-h-0 overflow-y-auto p-4">
+                    <div className="min-h-0 overflow-y-auto">
                         {currentScreen === "welcome" ? (
-                            <WelcomeScreen
-                                questionTypes={data}
-                                testData={testData}
-                                onQuestionTypeSelect={handleQuestionTypeSelect}
-                                isLoading={isLoading}
-                            />
+                            <div className="overflow-y-auto p-4">
+                                <WelcomeScreen
+                                    questionTypes={data}
+                                    testData={testData}
+                                    onQuestionTypeSelect={handleQuestionTypeSelect}
+                                    isLoading={isLoading}
+                                />
+                            </div>
                         ) : (
                             selectedQuestionType && (
                                 <>

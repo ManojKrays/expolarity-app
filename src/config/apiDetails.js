@@ -7,16 +7,18 @@ const apiDetails = {
         register: "/students",
         login: "/login",
         googleLogin: "/google-login",
+
+        /*
         getAssessment: "/questions",
         intrestTest: "/interest",
         skillTest: "/skills",
         personalityTest: "/personality",
         multipleInterest: "/multipleInterest",
+        */
 
-        /*
         getAssessments: "/assessments",
         getQuestions: "/questions", //pass testid=2 in param
-        saveTest: "/evaluate", //pass the assessment & user in header */
+        saveTest: "/evaluate", //pass the assessmentId & userId in header
     },
 };
 
