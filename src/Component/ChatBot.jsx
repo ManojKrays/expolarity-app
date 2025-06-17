@@ -7,11 +7,42 @@ import apiDetails from "../config/apiDetails";
 import { useQuery } from "@tanstack/react-query";
 import useAuthStore from "../store/authStore";
 import InterestScreen from "./InterestTestScreen";
+import ResultScreen from "./ResultScreen";
+import BasicDetails from "./BasicDetails";
 
 const ChatBot = () => {
     const [isOpen, setIsOpen] = useState(false);
     const [currentScreen, setCurrentScreen] = useState("welcome");
     const [selectedQuestionType, setSelectedQuestionType] = useState(null);
+    const [basicForm, setBasicForm] = useState(false);
+
+    const authorized = useAuthStore((state) => state?.user?.id);
+
+    const fetchAssessment = async () => {
+        try {
+            const res = await get(apiDetails.endPoint.getAssessments);
+
+            if (res.status) {
+                const sectionColors = {
+                    BIG5: { color: "bg-indigo-500", code: "BIG5" },
+                    TIA: { color: "bg-pink-500", code: "TIA" },
+                    LNT: { color: "bg-teal-500", code: "LNT" },
+                    MIT: { color: "bg-yellow-500", code: "MIT" },
+                };
+
+                const final = res.data.map((test) => ({
+                    ...test,
+                    color: sectionColors[test.section]?.color || "bg-gray-300",
+                }));
+                return final;
+            }
+
+            return null;
+        } catch (err) {
+            console.log(err.error);
+            throw new Error(err?.error || "Failed to fetch assessments");
+        }
+    };
 
     const handleQuestionTypeSelect = (questionType) => {
         if (questionType.section === "TIA") {
@@ -27,33 +58,11 @@ const ChatBot = () => {
         setSelectedQuestionType(null);
     };
 
-    const fetchAssessment = async () => {
-        const res = await get(apiDetails.endPoint.getAssessments);
-
-        const sectionColors = {
-            BIG5: { color: "bg-indigo-500", code: "BIG5" },
-            TIA: { color: "bg-pink-500", code: "TIA" },
-            LNT: { color: "bg-teal-500", code: "LNT" },
-            MIT: { color: "bg-yellow-500", code: "MIT" },
-        };
-
-        const final = res.data.map((test) => ({
-            ...test,
-            color: sectionColors[test.section]?.color || "bg-gray-300",
-        }));
-
-        return final;
-    };
-
     const { data, isLoading, error, refetch } = useQuery({
         queryKey: ["assments"],
         queryFn: fetchAssessment,
         enabled: false,
     });
-
-    if (error) return <p>Error: {error.message}</p>;
-
-    const authorized = useAuthStore((state) => state.authorized);
 
     const [testData, setTestData] = useState({
         BIG5: {
@@ -87,8 +96,8 @@ const ChatBot = () => {
             {authorized && !isOpen && (
                 <button
                     onClick={() => {
-                        setIsOpen(true);
                         refetch();
+                        setIsOpen(true);
                     }}
                     className="rounded-full bg-green-500 p-4 text-white shadow-lg transition-all duration-300 hover:scale-110 hover:shadow-xl"
                 >
@@ -97,7 +106,7 @@ const ChatBot = () => {
             )}
 
             {isOpen && (
-                <div className="flex h-[500px] w-72 flex-col overflow-hidden rounded-2xl bg-white shadow-2xl sm:w-96">
+                <div className="flex h-[500px] w-[300px] flex-col overflow-hidden rounded-2xl bg-white shadow-2xl sm:w-96">
                     <div className="flex flex-shrink-0 items-center justify-between bg-green-500 p-4 text-white">
                         <div className="flex items-center space-x-3">
                             <div
@@ -132,6 +141,8 @@ const ChatBot = () => {
                                     testData={testData}
                                     onQuestionTypeSelect={handleQuestionTypeSelect}
                                     isLoading={isLoading}
+                                    error={error}
+                                    setCurrentScreen={setCurrentScreen}
                                 />
                             </div>
                         ) : (
@@ -147,6 +158,8 @@ const ChatBot = () => {
                             )
                         )}
 
+                        {currentScreen === "result" && <ResultScreen />}
+
                         {currentScreen === "interest" && (
                             <InterestScreen
                                 onBackToWelcome={handleBackToWelcome}
@@ -155,6 +168,12 @@ const ChatBot = () => {
                             />
                         )}
                     </div>
+                </div>
+            )}
+
+            {basicForm && (
+                <div className="fixed inset-0 z-[100] flex items-center justify-center bg-gray-400/30 backdrop-blur-sm">
+                    <BasicDetails />
                 </div>
             )}
         </div>

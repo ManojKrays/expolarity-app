@@ -1,7 +1,7 @@
 import React from "react";
 import { CheckCircle } from "lucide-react";
 
-const WelcomeScreen = ({ questionTypes, onQuestionTypeSelect, isLoading, testData }) => {
+const WelcomeScreen = ({ questionTypes, onQuestionTypeSelect, isLoading, testData, error, setCurrentScreen }) => {
     return (
         <>
             {isLoading ? (
@@ -15,6 +15,8 @@ const WelcomeScreen = ({ questionTypes, onQuestionTypeSelect, isLoading, testDat
                         </span>
                     </div>
                 </div>
+            ) : error ? (
+                <div className="mb-2 rounded bg-red-100 p-2 text-sm text-red-700">⚠️ {error.message}</div>
             ) : (
                 <div className="flex h-full flex-col space-y-4 overflow-y-auto">
                     <div className="mb-4 flex-shrink-0 text-center">
@@ -23,48 +25,65 @@ const WelcomeScreen = ({ questionTypes, onQuestionTypeSelect, isLoading, testDat
                     </div>
 
                     <div className="flex w-full flex-wrap items-center justify-center gap-3">
-                        {questionTypes.map((type) => {
-                            const isCompleted = testData?.[type.section]?.isCompleted === true;
+                        {questionTypes &&
+                            questionTypes.map((type) => {
+                                const isCompleted = testData?.[type.section]?.isCompleted === true;
 
-                            return (
-                                <button
-                                    key={type.id}
-                                    onClick={() => {
-                                        onQuestionTypeSelect(type);
-                                    }}
-                                    className={`w-full rounded-lg border-2 p-3 transition-all duration-300 hover:shadow-md sm:w-[48%] ${
-                                        isCompleted
-                                            ? "border-green-200 bg-green-50 hover:bg-green-100"
-                                            : "border-gray-200 hover:border-indigo-300 hover:bg-indigo-50"
-                                    }`}
-                                >
-                                    <div className="flex items-center justify-between">
-                                        <div className="flex items-center space-x-3">
-                                            <div className={`flex h-8 w-8 items-center justify-center rounded-full text-sm text-white ${type.color}`}>
-                                                {type.emoji}
+                                return (
+                                    <button
+                                        key={type.id}
+                                        onClick={() => {
+                                            onQuestionTypeSelect(type);
+                                        }}
+                                        className={`w-full rounded-lg border-2 p-3 transition-all duration-300 hover:shadow-md sm:w-[48%] ${
+                                            isCompleted
+                                                ? "border-green-200 bg-green-50 hover:bg-green-100"
+                                                : "border-gray-200 hover:border-indigo-300 hover:bg-indigo-50"
+                                        }`}
+                                    >
+                                        <div className="flex items-center justify-between">
+                                            <div className="flex items-center space-x-3">
+                                                <div
+                                                    className={`flex h-8 w-8 items-center justify-center rounded-full text-sm text-white ${type.color}`}
+                                                >
+                                                    {type.emoji}
+                                                </div>
+                                                <div className="text-left">
+                                                    <h3 className="text-xs font-semibold text-gray-800">{type.title}</h3>
+                                                    <p className="text-xs text-gray-400">
+                                                        {isCompleted ? "Completed ✓" : `${parseInt(type.duration.split(":")[1])} minutes`}
+                                                    </p>
+                                                </div>
                                             </div>
-                                            <div className="text-left">
-                                                <h3 className="text-xs font-semibold text-gray-800">{type.title}</h3>
-                                                <p className="text-xs text-gray-400">
-                                                    {isCompleted ? "Completed ✓" : `${parseInt(type.duration.split(":")[1])} minutes`}
-                                                </p>
-                                            </div>
-                                        </div>
 
-                                        {/* {isCompleted && (
+                                            {/* {isCompleted && (
                                             <CheckCircle
                                                 className="text-green-500"
                                                 size={16}
                                             />
                                         )} */}
-                                    </div>
-                                </button>
-                            );
-                        })}
+                                        </div>
+                                    </button>
+                                );
+                            })}
                     </div>
 
                     <div className="mt-4 flex-shrink-0 rounded-lg bg-gray-50 p-3">
-                        <p className="text-center text-xs text-gray-600">Complete all sections to see your Career Path!</p>
+                        <p className="text-center text-xs text-gray-600">
+                            Complete all sections to see your{" "}
+                            <span
+                                className="cursor-pointer text-indigo-400 underline"
+                                onClick={() => setCurrentScreen("result")}
+                            >
+                                Career Path!
+                            </span>
+                        </p>
+                    </div>
+
+                    <div>
+                        {testData && Object.values(testData).every((type) => type.isCompleted) && (
+                            <button onClick={() => setCurrentScreen("result")}>Result</button>
+                        )}
                     </div>
                 </div>
             )}

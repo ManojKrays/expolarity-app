@@ -4,7 +4,6 @@ import { CircleArrowRight, Menu, X } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import useAuthStore from "../../store/authStore";
 import profile from "../../assets/UserProfile.png";
-import { div } from "framer-motion/client";
 
 const Nav = () => {
     const navigate = useNavigate();
@@ -16,7 +15,8 @@ const Nav = () => {
         navigate("/login");
     };
 
-    const authorized = useAuthStore((state) => state.authorized);
+    const authorized = useAuthStore((state) => state?.user?.id);
+
     const logout = useAuthStore((state) => state.logout);
 
     const handleLogout = () => {
@@ -26,7 +26,7 @@ const Nav = () => {
     };
 
     return (
-        <div className="fixed z-50 w-full">
+        <div className="fixed z-40 w-full">
             <div className="relative bg-[#FBFBFB] py-4 font-mallanna">
                 <div className="flex items-center justify-between px-4 md:justify-around">
                     <div className="flex items-center gap-2">

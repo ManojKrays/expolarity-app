@@ -4,6 +4,7 @@ import { get, post } from "../config/network";
 import apiDetails from "../config/apiDetails";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { successNotify, errorNotify } from "../service/Messagebar";
+import useAuthStore from "../store/authStore";
 
 const QuestionScreen = ({ questionType, testData, setTestData, onBackToWelcome }) => {
     const messagesEndRef = useRef(null);
@@ -91,14 +92,18 @@ const QuestionScreen = ({ questionType, testData, setTestData, onBackToWelcome }
         };
     }, [questionCode, questions, setTestData]);
 
+    const userId = useAuthStore((state) => state?.user?.id);
+
     const saveAnswers = async (ans) => {
         try {
-            const headers = {
-                assessment: questionType.id,
-                user: 25,
-            };
-            const res = await post(`${apiDetails.endPoint.saveTest}`, ans, { headers });
-            return res;
+            if (userId) {
+                const headers = {
+                    assessment: questionType.id,
+                    user: userId,
+                };
+                const res = await post(`${apiDetails.endPoint.saveTest}`, ans, { headers });
+                return res;
+            }
         } catch (err) {
             console.log(err);
             throw err;
@@ -204,81 +209,98 @@ const QuestionScreen = ({ questionType, testData, setTestData, onBackToWelcome }
     };
 
     return (
-        <div className="flex min-h-[424px] flex-col rounded-md bg-gray-100 shadow-sm">
-            <div className="custom-scrollbar flex-1 space-y-3 overflow-y-auto px-4 pb-10 pr-1 pt-2 md:px-6">
-                {currentData?.messages.map((msg, idx) => (
-                    <div
-                        key={idx}
-                        className={`max-w-[75%] whitespace-pre-wrap break-words rounded-xl px-4 py-3 text-sm shadow-md ${
-                            msg.type === "user" ? "ml-auto rounded-br-none bg-blue-500 text-white" : "mr-auto rounded-bl-none bg-white text-gray-800"
-                        }`}
-                    >
-                        {msg.content}
+        <>
+            {isLoading ? (
+                <div className="px-6 pb-4">
+                    <div className="inline-flex items-center space-x-2 rounded-r-lg rounded-tl-lg bg-white px-4 py-2 text-xs text-gray-500 shadow">
+                        <span>Typing</span>
+                        <span className="flex items-center space-x-1">
+                            <span className="block h-1 w-1 animate-bounce rounded-full bg-gray-400 [animation-delay:0ms]"></span>
+                            <span className="block h-1 w-1 animate-bounce rounded-full bg-gray-400 [animation-delay:150ms]"></span>
+                            <span className="block h-1 w-1 animate-bounce rounded-full bg-gray-400 [animation-delay:300ms]"></span>
+                        </span>
                     </div>
-                ))}
-                <div ref={messagesEndRef} />
-
-                {!currentData?.isCompleted && (
-                    <div className="mt-4 pb-10">
-                        {isTyping ? (
-                            <div className="pb-4">
-                                <div className="inline-flex items-center space-x-2 rounded-r-lg rounded-tl-lg bg-white px-4 py-2 text-xs text-gray-500 shadow">
-                                    <span>Typing</span>
-                                    <span className="flex items-center space-x-1">
-                                        <span className="block h-1 w-1 animate-bounce rounded-full bg-gray-400 [animation-delay:0ms]"></span>
-                                        <span className="block h-1 w-1 animate-bounce rounded-full bg-gray-400 [animation-delay:150ms]"></span>
-                                        <span className="block h-1 w-1 animate-bounce rounded-full bg-gray-400 [animation-delay:300ms]"></span>
-                                    </span>
-                                </div>
+                </div>
+            ) : (
+                <div className="flex min-h-[424px] flex-col rounded-md bg-gray-100 shadow-sm">
+                    <div className="custom-scrollbar flex-1 space-y-3 overflow-y-auto px-4 pb-10 pr-1 pt-2 md:px-6">
+                        {currentData?.messages.map((msg, idx) => (
+                            <div
+                                key={idx}
+                                className={`max-w-[75%] whitespace-pre-wrap break-words rounded-xl px-4 py-3 text-sm shadow-md ${
+                                    msg.type === "user"
+                                        ? "ml-auto rounded-br-none bg-blue-500 text-white"
+                                        : "mr-auto rounded-bl-none bg-white text-gray-800"
+                                }`}
+                            >
+                                {msg.content}
                             </div>
-                        ) : (
-                            <>
-                                {isRange && (
-                                    <div className="space-y-3 px-4 pb-2">
-                                        <div className="mb-2 flex justify-between text-xs text-gray-600">
-                                            <span>Strongly Disagree</span>
-                                            <span>Strongly Agree</span>
-                                        </div>
-                                        <div className="flex items-center justify-between space-x-2">
-                                            {[1, 2, 3, 4, 5].map((val) => (
-                                                <button
-                                                    key={val}
-                                                    onClick={() => handleAnswer(val)}
-                                                    className="h-10 w-10 rounded-full border-2 bg-white text-xs font-semibold text-gray-600 transition-all duration-200 hover:scale-105 hover:border-gray-400"
-                                                >
-                                                    {val}
-                                                </button>
-                                            ))}
-                                        </div>
-                                    </div>
-                                )}
+                        ))}
+                        <div ref={messagesEndRef} />
 
-                                {isSingle && (
-                                    <div className="mt-4 space-y-2 px-3 pb-2">
-                                        {currentQuestion?.options.map((option, index) => (
-                                            <button
-                                                key={index}
-                                                onClick={() => handleAnswer(option)}
-                                                className="w-full rounded-md border border-blue-300 bg-white px-4 py-2 text-left text-sm font-medium text-gray-800 shadow-sm transition-all duration-200 hover:bg-blue-100 hover:text-blue-700"
-                                            >
-                                                {`${option.value}) ${option.label}`}
-                                            </button>
-                                        ))}
+                        {!currentData?.isCompleted && (
+                            <div className="mt-4 pb-10">
+                                {isTyping ? (
+                                    <div className="pb-4">
+                                        <div className="inline-flex items-center space-x-2 rounded-r-lg rounded-tl-lg bg-white px-4 py-2 text-xs text-gray-500 shadow">
+                                            <span>Typing</span>
+                                            <span className="flex items-center space-x-1">
+                                                <span className="block h-1 w-1 animate-bounce rounded-full bg-gray-400 [animation-delay:0ms]"></span>
+                                                <span className="block h-1 w-1 animate-bounce rounded-full bg-gray-400 [animation-delay:150ms]"></span>
+                                                <span className="block h-1 w-1 animate-bounce rounded-full bg-gray-400 [animation-delay:300ms]"></span>
+                                            </span>
+                                        </div>
                                     </div>
+                                ) : (
+                                    <>
+                                        {isRange && (
+                                            <div className="space-y-3 px-4 pb-2">
+                                                <div className="mb-2 flex justify-between text-xs text-gray-600">
+                                                    <span>Strongly Disagree</span>
+                                                    <span>Strongly Agree</span>
+                                                </div>
+                                                <div className="flex items-center justify-between space-x-2">
+                                                    {[1, 2, 3, 4, 5].map((val) => (
+                                                        <button
+                                                            key={val}
+                                                            onClick={() => handleAnswer(val)}
+                                                            className="h-10 w-10 rounded-full border-2 bg-white text-xs font-semibold text-gray-600 transition-all duration-200 hover:scale-105 hover:border-gray-400"
+                                                        >
+                                                            {val}
+                                                        </button>
+                                                    ))}
+                                                </div>
+                                            </div>
+                                        )}
+
+                                        {isSingle && (
+                                            <div className="mt-4 space-y-2 px-3 pb-2">
+                                                {currentQuestion?.options.map((option, index) => (
+                                                    <button
+                                                        key={index}
+                                                        onClick={() => handleAnswer(option)}
+                                                        className="w-full rounded-md border border-blue-300 bg-white px-4 py-2 text-left text-sm font-medium text-gray-800 shadow-sm transition-all duration-200 hover:bg-blue-100 hover:text-blue-700"
+                                                    >
+                                                        {`${option.value}) ${option.label}`}
+                                                    </button>
+                                                ))}
+                                            </div>
+                                        )}
+                                    </>
                                 )}
-                            </>
+                            </div>
                         )}
                     </div>
-                )}
-            </div>
 
-            <div className="fixed bottom-4 flex w-72 items-center justify-between rounded-b-xl border bg-green-500 px-3 pb-2 pt-3 text-sm sm:w-96">
-                <span className="text-white">{formatTime(currentData?.timer || 0)}</span>
-                <span className="text-white">
-                    {currentData?.currentIndex + 1}/{questions?.length || 0}
-                </span>
-            </div>
-        </div>
+                    <div className="fixed bottom-4 flex w-72 items-center justify-between rounded-b-xl border bg-green-500 px-3 pb-2 pt-3 text-sm sm:w-96">
+                        <span className="text-white">{formatTime(currentData?.timer || 0)}</span>
+                        <span className="text-white">
+                            {currentData?.currentIndex + 1}/{questions?.length || 0}
+                        </span>
+                    </div>
+                </div>
+            )}
+        </>
     );
 };
 

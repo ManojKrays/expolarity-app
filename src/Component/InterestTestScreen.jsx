@@ -5,6 +5,7 @@ import { useMutation } from "@tanstack/react-query";
 import { post } from "../config/network";
 import apiDetails from "../config/apiDetails";
 import { errorNotify, successNotify } from "../service/Messagebar";
+import useAuthStore from "../store/authStore";
 
 const InterestScreen = ({ onBackToWelcome, testData, setTestData }) => {
     const messagesEndRef = useRef(null);
@@ -83,11 +84,16 @@ const InterestScreen = ({ onBackToWelcome, testData, setTestData }) => {
         return "✨ Interesting choice! Let’s see what comes next.";
     };
 
+    const userId = useAuthStore((state) => state?.user?.id);
+    const updateUser = useAuthStore((state) => state?.updateUser);
+
     const saveAnswers = async (ans) => {
         try {
-            const headers = { assessment: 2, user: 25 };
-            const res = await post(`${apiDetails.endPoint.saveTest}`, ans, { headers });
-            return res;
+            if (userId) {
+                const headers = { assessment: 2, user: userId };
+                const res = await post(`${apiDetails.endPoint.saveTest}`, ans, { headers });
+                return res;
+            }
         } catch (err) {
             console.log(err);
             throw err;
@@ -96,7 +102,14 @@ const InterestScreen = ({ onBackToWelcome, testData, setTestData }) => {
 
     const mutation = useMutation({
         mutationFn: saveAnswers,
-        onSuccess: () => successNotify("Assessment Saved!"),
+        onSuccess: (data) => {
+            successNotify("Assessment Saved!");
+            const resultId = data?.data?.result_id;
+            if (resultId) {
+                console.log(resultId);
+                updateUser({ resultId });
+            }
+        },
         onError: (err) => errorNotify(err.message),
     });
 

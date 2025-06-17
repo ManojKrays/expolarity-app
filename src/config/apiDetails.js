@@ -19,6 +19,8 @@ const apiDetails = {
         getAssessments: "/assessments",
         getQuestions: "/questions", //pass testid=2 in param
         saveTest: "/evaluate", //pass the assessmentId & userId in header
+        saveBasics: "/students", //pass userId
+        result: "/result",
     },
 };
 

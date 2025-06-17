@@ -20,7 +20,7 @@ const Login = () => {
         setPasswordVisible((prev) => !prev);
     };
 
-    const loginUser = useAuthStore((state) => state.login);
+    const loginUser = useAuthStore((state) => state.setUser);
 
     const {
         register,
@@ -48,7 +48,7 @@ const Login = () => {
         mutationFn: login,
         onSuccess: (data) => {
             successNotify("User Successfully Login!");
-            loginUser();
+            loginUser(data?.data?.student);
             setTimeout(() => {
                 navigate("/");
             }, 1000);
@@ -66,7 +66,7 @@ const Login = () => {
 
     return (
         <div className="patternBg flex min-h-screen items-center justify-center">
-            <div className="loginBg flex w-[95%] items-center justify-center rounded-xl p-2 shadow-md sm:h-[75vh] sm:w-[90%] lg:h-[80vh] lg:w-[70%]">
+            <div className="loginBg flex w-[95%] items-center justify-center rounded-xl p-2 shadow-md sm:h-[80vh] sm:w-[90%] lg:h-[80vh] lg:w-[70%]">
                 <div className="flex w-full max-w-4xl flex-col gap-9 p-5 sm:flex-row sm:p-40 md:p-20">
                     <div className="hidden w-[400px] flex-col justify-center md:flex">
                         <p className="font-inter text-left text-3xl tracking-wider text-white">
