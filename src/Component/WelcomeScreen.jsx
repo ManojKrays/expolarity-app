@@ -73,17 +73,15 @@ const WelcomeScreen = ({ questionTypes, onQuestionTypeSelect, isLoading, testDat
                             Complete all sections to see your{" "}
                             <span
                                 className="cursor-pointer text-indigo-400 underline"
-                                onClick={() => setCurrentScreen("result")}
+                                onClick={() =>
+                                    testData && Object.values(testData).every((type) => type.isCompleted)
+                                        ? setCurrentScreen("result")
+                                        : setCurrentScreen("result")
+                                }
                             >
                                 Career Path!
                             </span>
                         </p>
-                    </div>
-
-                    <div>
-                        {testData && Object.values(testData).every((type) => type.isCompleted) && (
-                            <button onClick={() => setCurrentScreen("result")}>Result</button>
-                        )}
                     </div>
                 </div>
             )}

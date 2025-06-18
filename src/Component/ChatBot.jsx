@@ -9,12 +9,14 @@ import useAuthStore from "../store/authStore";
 import InterestScreen from "./InterestTestScreen";
 import ResultScreen from "./ResultScreen";
 import BasicDetails from "./BasicDetails";
+import CareerPathScreen from "./CareerPathScreen";
 
 const ChatBot = () => {
     const [isOpen, setIsOpen] = useState(false);
     const [currentScreen, setCurrentScreen] = useState("welcome");
     const [selectedQuestionType, setSelectedQuestionType] = useState(null);
     const [basicForm, setBasicForm] = useState(false);
+    const [selectedCareer, setSelectedCareer] = useState(null);
 
     const authorized = useAuthStore((state) => state?.user?.id);
 
@@ -92,7 +94,7 @@ const ChatBot = () => {
     });
 
     return (
-        <div className="fixed bottom-4 right-4 z-40">
+        <div className="fixed bottom-4 right-2 z-40 sm:right-4">
             {authorized && !isOpen && (
                 <button
                     onClick={() => {
@@ -158,7 +160,14 @@ const ChatBot = () => {
                             )
                         )}
 
-                        {currentScreen === "result" && <ResultScreen />}
+                        {currentScreen === "result" && (
+                            <ResultScreen
+                                setSelectedCareer={setSelectedCareer}
+                                setCurrentScreen={setCurrentScreen}
+                            />
+                        )}
+
+                        {currentScreen === "career" && <CareerPathScreen selectedCareer={selectedCareer} />}
 
                         {currentScreen === "interest" && (
                             <InterestScreen
