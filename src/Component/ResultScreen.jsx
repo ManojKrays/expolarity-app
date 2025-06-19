@@ -56,7 +56,7 @@ const ResultScreen = ({ setSelectedCareer, setCurrentScreen }) => {
     return (
         <>
             {isLoading ? (
-                <div className="mt-5 px-6 pb-4">
+                <div className="mt-5 px-6 pb-4 font-mallanna">
                     <div className="inline-flex items-center space-x-2 rounded-r-lg rounded-tl-lg bg-white px-4 py-2 text-xs text-gray-500 shadow">
                         <span>Typing</span>
                         <span className="flex items-center space-x-1">
@@ -69,7 +69,7 @@ const ResultScreen = ({ setSelectedCareer, setCurrentScreen }) => {
             ) : error ? (
                 <div className="mb-2 rounded bg-red-100 p-2 text-sm text-red-700">⚠️ {error.message}</div>
             ) : (
-                <div className="mx-auto min-h-[424px] w-full px-3 pt-2">
+                <div className="mx-auto min-h-[424px] w-full px-3 pt-2 font-mallanna">
                     <h2 className="mb-4 text-center text-lg font-semibold">Career Result</h2>
 
                     <div className="-ml-10 sm:-ml-8">

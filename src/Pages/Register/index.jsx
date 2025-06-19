@@ -85,13 +85,13 @@ const Register = () => {
 
     return (
         <div className="patternBg flex min-h-screen items-center justify-center">
-            <div className="loginBg flex h-full w-[95%] items-center justify-center overflow-hidden rounded-xl shadow-md sm:h-[98vh] sm:w-[90%] lg:w-[70%]">
-                <div className="flex w-full max-w-4xl flex-col gap-9 p-5 sm:flex-row md:p-10 lg:p-16">
+            <div className="loginBg m-4 flex h-full w-full max-w-4xl items-center justify-center overflow-hidden rounded-xl shadow-md">
+                <div className="flex w-full flex-col gap-9 border p-5 sm:flex-row md:p-10 lg:p-16">
                     <div className="hidden w-[400px] flex-col justify-center md:flex">
                         <p className="font-inter text-left text-3xl tracking-wider text-white">
                             Sign In to <br /> Expolarity.ai
                         </p>
-                        <div className="mb-4 flex justify-end">
+                        <div className="mb-4 flex justify-end py-5">
                             <img
                                 src={flyingHuman}
                                 alt="student"
@@ -110,7 +110,7 @@ const Register = () => {
                         </p>
                     </div>
 
-                    <div className="w-full md:w-[300px]">
+                    <div className="w-full">
                         <div className="mb-7 flex justify-end md:-mt-6">
                             <img
                                 src={logo}
@@ -120,146 +120,145 @@ const Register = () => {
                         </div>
 
                         <form
-                            className="flex flex-col sm:w-[300px] md:items-end"
+                            className="flex flex-col md:items-end"
                             onSubmit={handleSubmit(onSubmit)}
                         >
                             <div>
-                                {/* Name */}
-                                <div className="sm:w-[300px]">
-                                    <div className="relative">
-                                        <input
-                                            {...register("name", { required: "Name is required" })}
-                                            type="text"
-                                            className="w-full rounded-md border-gray-300 bg-[#EAF0F7] p-3 pl-10 text-sm outline-none"
-                                            placeholder="Enter Name"
-                                        />
-                                        <span className="absolute left-3 top-[50%] -translate-y-1/2 transform text-gray-400">
-                                            <LuUserRound />
-                                        </span>
+                                <div className="flex flex-col gap-4 sm:flex-row">
+                                    <div className="w-full">
+                                        <div className="relative">
+                                            <input
+                                                {...register("name", { required: "Name is required" })}
+                                                type="text"
+                                                className="w-full rounded-md border-gray-300 bg-[#EAF0F7] p-3 pl-10 text-sm outline-none"
+                                                placeholder="Enter Name"
+                                            />
+                                            <span className="absolute left-3 top-[50%] -translate-y-1/2 transform text-gray-400">
+                                                <LuUserRound />
+                                            </span>
+                                        </div>
+                                        {errors.name && <p className="text-xs text-red-500">{errors.name.message}</p>}
                                     </div>
-                                    {errors.name && <p className="text-xs text-red-500">{errors.name.message}</p>}
+
+                                    <div className="w-full">
+                                        <div className="relative">
+                                            <select
+                                                {...register("grade", {
+                                                    required: "Grade is required",
+                                                })}
+                                                className="w-full rounded-md border border-gray-300 bg-[#EAF0F7] p-3 pl-9 text-sm text-gray-400 outline-none"
+                                            >
+                                                <option value="">Grade</option>
+                                                {[5, 6, 7, 8, 9, 10, 11, 12].map((grade) => (
+                                                    <option
+                                                        key={grade}
+                                                        value={grade}
+                                                    >
+                                                        {grade}
+                                                    </option>
+                                                ))}
+                                            </select>
+                                            <span className="absolute left-3 top-[50%] -translate-y-1/2 transform text-gray-400">
+                                                <LuBook />
+                                            </span>
+                                        </div>
+                                        {errors.grade && <p className="text-xs text-red-500">{errors.grade.message}</p>}
+                                    </div>
                                 </div>
 
-                                {/* Grade */}
-                                <div className="w-full pt-4">
-                                    <div className="relative">
-                                        <select
-                                            {...register("grade", {
-                                                required: "Grade is required",
-                                            })}
-                                            className="w-full rounded-md border border-gray-300 bg-[#EAF0F7] p-3 pl-9 text-sm outline-none"
-                                        >
-                                            <option value="">Select a Grade</option>
-                                            {[5, 6, 7, 8, 9, 10, 11, 12].map((grade) => (
-                                                <option
-                                                    key={grade}
-                                                    value={grade}
-                                                >
-                                                    {grade}
-                                                </option>
-                                            ))}
-                                        </select>
-                                        <span className="absolute left-3 top-[50%] -translate-y-1/2 transform text-gray-400">
-                                            <LuBook />
-                                        </span>
+                                <div className="flex flex-col gap-4 pt-3 sm:flex-row sm:pt-4">
+                                    <div className="w-full">
+                                        <div className="relative">
+                                            <select
+                                                {...register("gender", {
+                                                    required: "Gender is required",
+                                                })}
+                                                className="w-full rounded-md border border-gray-300 bg-[#EAF0F7] p-3 pl-9 text-sm text-gray-400 outline-none"
+                                            >
+                                                <option value="">Gender</option>
+                                                <option value="Male">Male</option>
+                                                <option value="Female">Female</option>
+                                            </select>
+                                            <span className="absolute left-3 top-[50%] -translate-y-1/2 transform text-gray-400">
+                                                <LuUser />
+                                            </span>
+                                        </div>
+                                        {errors.gender && <p className="text-xs text-red-500">{errors.gender.message}</p>}
                                     </div>
-                                    {errors.grade && <p className="text-xs text-red-500">{errors.grade.message}</p>}
+
+                                    <div className="w-full">
+                                        <div className="relative">
+                                            <Controller
+                                                control={control}
+                                                name="country"
+                                                rules={{ required: "Country is required" }}
+                                                render={({ field }) => (
+                                                    <Select
+                                                        {...field}
+                                                        options={countries}
+                                                        placeholder="Country"
+                                                        styles={customStyles}
+                                                    />
+                                                )}
+                                            />
+                                            <span className="absolute left-3 top-[50%] -translate-y-1/2 transform text-gray-400">
+                                                <LuGlobe />
+                                            </span>
+                                        </div>
+                                        {errors.country && <p className="text-xs text-red-500">{errors.country.message}</p>}
+                                    </div>
                                 </div>
 
-                                {/* Gender */}
-                                <div className="w-full pt-4">
-                                    <div className="relative">
-                                        <select
-                                            {...register("gender", {
-                                                required: "Gender is required",
-                                            })}
-                                            className="w-full rounded-md border border-gray-300 bg-[#EAF0F7] p-3 pl-9 text-sm outline-none"
-                                        >
-                                            <option value="">Select Gender</option>
-                                            <option value="Male">Male</option>
-                                            <option value="Female">Female</option>
-                                        </select>
-                                        <span className="absolute left-3 top-[50%] -translate-y-1/2 transform text-gray-400">
-                                            <LuUser />
-                                        </span>
+                                <div className="flex flex-col gap-4 pt-3 sm:flex-row sm:pt-4">
+                                    <div className="relative w-full">
+                                        <div className="relative">
+                                            <input
+                                                {...register("email", {
+                                                    required: "Email is required",
+                                                    pattern: {
+                                                        value: /^\S+@\S+$/i,
+                                                        message: "Invalid email address",
+                                                    },
+                                                })}
+                                                type="email"
+                                                className="w-full rounded-md border border-gray-300 bg-[#EAF0F7] p-3 pl-10 text-sm outline-none"
+                                                placeholder="Enter Email"
+                                            />
+                                            <span className="absolute left-3 top-[50%] -translate-y-1/2 transform text-gray-400">
+                                                <LuUserRound />
+                                            </span>
+                                        </div>
+                                        {errors.email && <p className="text-xs text-red-500">{errors.email.message}</p>}
                                     </div>
-                                    {errors.gender && <p className="text-xs text-red-500">{errors.gender.message}</p>}
+
+                                    <div className="relative w-full">
+                                        <div className="relative">
+                                            <input
+                                                {...register("password", {
+                                                    required: "Password is required",
+                                                    minLength: {
+                                                        value: 6,
+                                                        message: "Password must be at least 6 characters",
+                                                    },
+                                                })}
+                                                type={passwordVisible ? "text" : "password"}
+                                                className="w-full rounded-md border border-gray-300 bg-[#EAF0F7] p-3 pl-10 pr-10 text-sm outline-none"
+                                                placeholder="••••••••"
+                                            />
+                                            <span className="absolute left-3 top-[50%] -translate-y-1/2 transform text-gray-400">
+                                                <FaLock />
+                                            </span>
+                                            <span
+                                                className="absolute right-3 top-[50%] -translate-y-1/2 transform cursor-pointer text-gray-400"
+                                                onClick={togglePasswordVisibility}
+                                            >
+                                                {passwordVisible ? <FaEyeSlash /> : <FaEye />}
+                                            </span>
+                                        </div>
+                                        {errors.password && <p className="text-xs text-red-500">{errors.password.message}</p>}
+                                    </div>
                                 </div>
 
-                                {/* Country */}
-                                <div className="w-full pt-4">
-                                    <div className="relative">
-                                        <Controller
-                                            control={control}
-                                            name="country"
-                                            rules={{ required: "Country is required" }}
-                                            render={({ field }) => (
-                                                <Select
-                                                    {...field}
-                                                    options={countries}
-                                                    placeholder="Select your country"
-                                                    styles={customStyles}
-                                                />
-                                            )}
-                                        />
-                                        <span className="absolute left-3 top-[50%] -translate-y-1/2 transform text-gray-400">
-                                            <LuGlobe />
-                                        </span>
-                                    </div>
-                                    {errors.country && <p className="text-xs text-red-500">{errors.country.message}</p>}
-                                </div>
-
-                                {/* Email */}
-                                <div className="relative w-full pt-4">
-                                    <div className="relative">
-                                        <input
-                                            {...register("email", {
-                                                required: "Email is required",
-                                                pattern: {
-                                                    value: /^\S+@\S+$/i,
-                                                    message: "Invalid email address",
-                                                },
-                                            })}
-                                            type="email"
-                                            className="w-full rounded-md border border-gray-300 bg-[#EAF0F7] p-3 pl-10 text-sm outline-none"
-                                            placeholder="Enter Email"
-                                        />
-                                        <span className="absolute left-3 top-[50%] -translate-y-1/2 transform text-gray-400">
-                                            <LuUserRound />
-                                        </span>
-                                    </div>
-                                    {errors.email && <p className="text-xs text-red-500">{errors.email.message}</p>}
-                                </div>
-
-                                {/* Password */}
-                                <div className="relative w-full pt-4">
-                                    <div className="relative">
-                                        <input
-                                            {...register("password", {
-                                                required: "Password is required",
-                                                minLength: {
-                                                    value: 6,
-                                                    message: "Password must be at least 6 characters",
-                                                },
-                                            })}
-                                            type={passwordVisible ? "text" : "password"}
-                                            className="w-full rounded-md border border-gray-300 bg-[#EAF0F7] p-3 pl-10 pr-10 text-sm outline-none"
-                                            placeholder="••••••••"
-                                        />
-                                        <span className="absolute left-3 top-[50%] -translate-y-1/2 transform text-gray-400">
-                                            <FaLock />
-                                        </span>
-                                        <span
-                                            className="absolute right-3 top-[50%] -translate-y-1/2 transform cursor-pointer text-gray-400"
-                                            onClick={togglePasswordVisibility}
-                                        >
-                                            {passwordVisible ? <FaEyeSlash /> : <FaEye />}
-                                        </span>
-                                    </div>
-                                    {errors.password && <p className="text-xs text-red-500">{errors.password.message}</p>}
-                                </div>
-
-                                {/* Submit Button */}
                                 <div className="font-gilory flex items-center py-5">
                                     <div className="flex-grow border-t border-[#DFDFDF]"></div>
                                     <span className="mx-4 flex-shrink text-xs text-white">Click to Register</span>

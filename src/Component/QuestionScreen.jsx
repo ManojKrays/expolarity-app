@@ -1,12 +1,15 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Home } from "lucide-react";
+import { CircleArrowLeft, Home } from "lucide-react";
 import { get, post } from "../config/network";
 import apiDetails from "../config/apiDetails";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { successNotify, errorNotify } from "../service/Messagebar";
 import useAuthStore from "../store/authStore";
+import hourGlass from "../assets/hourGlass.gif";
 
 const QuestionScreen = ({ questionType, testData, setTestData, onBackToWelcome }) => {
+    const user = useAuthStore((state) => state.user);
+
     const messagesEndRef = useRef(null);
     const timerRef = useRef(null);
     const questionCode = questionType?.section;
@@ -116,7 +119,7 @@ const QuestionScreen = ({ questionType, testData, setTestData, onBackToWelcome }
         onError: (err) => errorNotify(err.message),
     });
 
-    const getBotReply = (answer) => {
+    const getBotReply1 = (answer) => {
         if (typeof answer === "string") {
             const lower = answer.toLowerCase();
             if (lower.includes("yes")) return "👍 Noted. Let’s explore further.";
@@ -134,6 +137,26 @@ const QuestionScreen = ({ questionType, testData, setTestData, onBackToWelcome }
             );
         }
         return "📘 Thank you. Let’s proceed.";
+    };
+
+    const getBotReply = (answer) => {
+        if (typeof answer === "string") {
+            const lower = answer.toLowerCase();
+            if (lower.includes("yes")) return "Great! I'm excited to learn more about you.";
+            if (lower.includes("no")) return "No worries, everyone sees things differently. Let's keep going.";
+            if (lower.includes("maybe")) return "That’s okay! Figuring things out is part of the journey.";
+        } else if (typeof answer === "number") {
+            return (
+                [
+                    "You really don’t agree — and that’s totally fine. It helps us understand you better.",
+                    "You disagree — got it. Your opinion matters here.",
+                    "You’re not sure — staying in the middle is completely okay.",
+                    "You agree — thanks for being open with your thoughts.",
+                    "You really agree — love that confidence! Let’s keep going.",
+                ][answer - 1] || "Thanks for your answer! Let’s move to the next one."
+            );
+        }
+        return "Thanks for sharing! Let's keep learning more about you.";
     };
 
     const handleNext = (updatedAnswers, updatedMsgs) => {
@@ -156,7 +179,10 @@ const QuestionScreen = ({ questionType, testData, setTestData, onBackToWelcome }
                 ...prev,
                 [questionCode]: {
                     ...currentData,
-                    messages: [...updatedMsgs, { type: "bot", content: "🎉 You've finished the questions!" }],
+                    messages: [
+                        ...updatedMsgs,
+                        { type: "bot", content: `Well done${" "} ${user.name}! You’ve unlocked the next step. Go to Home to start the next test.` },
+                    ],
                     answers: updatedAnswers,
                     isCompleted: true,
                 },
@@ -211,8 +237,8 @@ const QuestionScreen = ({ questionType, testData, setTestData, onBackToWelcome }
     return (
         <>
             {isLoading ? (
-                <div className="px-6 pb-4">
-                    <div className="inline-flex items-center space-x-2 rounded-r-lg rounded-tl-lg bg-white px-4 py-2 text-xs text-gray-500 shadow">
+                <div className="px-6 pb-4 font-mallanna">
+                    <div className="inline-flex items-center space-x-2 rounded-r-lg rounded-tl-lg bg-white px-4 py-2 font-mallanna text-xs text-gray-500 shadow">
                         <span>Typing</span>
                         <span className="flex items-center space-x-1">
                             <span className="block h-1 w-1 animate-bounce rounded-full bg-gray-400 [animation-delay:0ms]"></span>
@@ -222,15 +248,24 @@ const QuestionScreen = ({ questionType, testData, setTestData, onBackToWelcome }
                     </div>
                 </div>
             ) : (
-                <div className="flex min-h-[424px] flex-col rounded-md bg-gray-100 shadow-sm">
-                    <div className="custom-scrollbar flex-1 space-y-3 overflow-y-auto px-4 pb-10 pr-1 pt-2 md:px-6">
+                <div className="relative flex min-h-[424px] flex-col rounded-md bg-gray-100 font-mallanna shadow-sm">
+                    <div className="sticky top-0 z-10 flex justify-end pr-5 pt-2">
+                        <div className="absolute flex flex-col items-center">
+                            <img
+                                src={hourGlass}
+                                alt="hourGlass"
+                                className="h-10 w-10"
+                            />
+                            <span className="text-xs text-green-600">{formatTime(currentData?.timer || 0)}</span>
+                        </div>
+                    </div>
+
+                    <div className="custom-scrollbar flex-1 space-y-3 overflow-y-auto px-4 pb-10 pr-1 md:px-6">
                         {currentData?.messages.map((msg, idx) => (
                             <div
                                 key={idx}
                                 className={`max-w-[75%] whitespace-pre-wrap break-words rounded-xl px-4 py-3 text-sm shadow-md ${
-                                    msg.type === "user"
-                                        ? "ml-auto rounded-br-none bg-blue-500 text-white"
-                                        : "mr-auto rounded-bl-none bg-white text-gray-800"
+                                    msg.type === "user" ? "ml-auto rounded-br-none bg-green-200" : "mr-auto rounded-bl-none bg-white text-gray-800"
                                 }`}
                             >
                                 {msg.content}
@@ -290,12 +325,24 @@ const QuestionScreen = ({ questionType, testData, setTestData, onBackToWelcome }
                                 )}
                             </div>
                         )}
+
+                        {currentData?.isCompleted && (
+                            <div className="flex items-center justify-center pb-3">
+                                <button
+                                    className="flex items-center justify-center gap-2 rounded-md bg-green-500 px-2 py-1 text-white"
+                                    onClick={() => onBackToWelcome()}
+                                >
+                                    <Home size={14} />
+                                    Home
+                                </button>
+                            </div>
+                        )}
                     </div>
 
                     <div className="fixed bottom-4 flex w-72 items-center justify-between rounded-b-xl border bg-green-500 px-3 pb-2 pt-3 text-sm sm:w-96">
-                        <span className="text-white">{formatTime(currentData?.timer || 0)}</span>
+                        {/* <span className="text-white">{formatTime(currentData?.timer || 0)}</span> */}
                         <span className="text-white">
-                            {currentData?.currentIndex + 1}/{questions?.length || 0}
+                            Questions - {currentData?.currentIndex + 1}/{questions?.length || 0}
                         </span>
                     </div>
                 </div>

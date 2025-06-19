@@ -6,10 +6,13 @@ import { post } from "../config/network";
 import apiDetails from "../config/apiDetails";
 import { errorNotify, successNotify } from "../service/Messagebar";
 import useAuthStore from "../store/authStore";
+import hourGlass from "../assets/hourGlass.gif";
 
 const InterestScreen = ({ onBackToWelcome, testData, setTestData }) => {
     const messagesEndRef = useRef(null);
     const scrollToBottom = () => messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+
+    const user = useAuthStore((state) => state.user);
 
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
     const [currentOptionIndex, setCurrentOptionIndex] = useState(0);
@@ -67,21 +70,25 @@ const InterestScreen = ({ onBackToWelcome, testData, setTestData }) => {
     }, [currentData?.isCompleted]);
 
     const getBotReply = (answer) => {
-        if (!answer || typeof answer !== "object") return "🧠 Got it! Let's keep going.";
+        if (!answer || typeof answer !== "object") return "Got it! Let’s keep moving and see what else we find.";
+
         const label = answer.label.toLowerCase();
-        if (label.includes("practical")) return "🛠️ You seem hands-on and grounded — that’s great!";
-        if (label.includes("intuitive")) return "🔮 Trusting intuition can be a powerful asset.";
-        if (label.includes("scientific")) return "🧪 A curious and analytical mind — we like that!";
-        if (label.includes("insightful")) return "🌟 Deep thinking brings deep understanding.";
-        if (label.includes("projects")) return "🚀 A go-getter! You like to take initiative.";
-        if (label.includes("paper work")) return "📄 Diligence in detail is a solid strength.";
-        if (label.includes("write") || label.includes("poetry") || label.includes("music")) return "🎨 You’ve got a creative spirit!";
-        if (label.includes("calculations")) return "🔢 Logic and numbers are your tools!";
-        if (label.includes("tinker")) return "🔧 A builder at heart — love the hands-on approach.";
-        if (label.includes("help people")) return "❤️ Empathy and support — the world needs more of that.";
-        if (label.includes("leadership") || label.includes("sales")) return "🎯 A natural leader with people skills!";
-        if (label.includes("details")) return "🧐 Precision and attention — a rare and valuable trait.";
-        return "✨ Interesting choice! Let’s see what comes next.";
+
+        if (label.includes("practical")) return "You seem like someone who likes getting things done — that's a strong skill!";
+        if (label.includes("intuitive")) return "Trusting your gut often leads to great insights. That’s a cool strength!";
+        if (label.includes("scientific")) return "You’ve got a curious, thinking mind — science suits you well!";
+        if (label.includes("insightful")) return "You think deeply — that kind of reflection is powerful.";
+        if (label.includes("projects")) return "You love jumping into action — that energy can take you far!";
+        if (label.includes("paper work")) return "You’ve got focus and patience — not many people enjoy the details like you do!";
+        if (label.includes("write") || label.includes("poetry") || label.includes("music"))
+            return "You've got a creative heart — that's something special!";
+        if (label.includes("calculations")) return "Numbers and logic come naturally to you — that’s a strong foundation.";
+        if (label.includes("tinker")) return "You like figuring things out hands-on — a real problem solver!";
+        if (label.includes("help people")) return "You care about others — that’s a beautiful and powerful quality.";
+        if (label.includes("leadership") || label.includes("sales")) return "You seem confident with people — a born leader, maybe!";
+        if (label.includes("details")) return "You’ve got a sharp eye — that kind of focus is rare and important.";
+
+        return "That tells me something interesting about you! Let’s keep going.";
     };
 
     const userId = useAuthStore((state) => state?.user?.id);
@@ -150,7 +157,10 @@ const InterestScreen = ({ onBackToWelcome, testData, setTestData }) => {
 
                 mutation.mutate(finalAnswer);
 
-                newMessages.push({ type: "bot", content: "🎉 You've finished the questions! Great job exploring your interests." });
+                newMessages.push({
+                    type: "bot",
+                    content: `Well done${" "} ${user.name}! You’ve unlocked the next step. Go to Home to start the next test.`,
+                });
                 clearInterval(timerRef.current);
             }
 
@@ -175,7 +185,18 @@ const InterestScreen = ({ onBackToWelcome, testData, setTestData }) => {
     const formatTime = (seconds) => `${Math.floor(seconds / 60)}:${String(seconds % 60).padStart(2, "0")}`;
 
     return (
-        <div className="relative flex min-h-[424px] flex-col rounded-md bg-gray-100 shadow-sm">
+        <div className="relative flex min-h-[424px] flex-col rounded-md bg-gray-100 font-mallanna shadow-sm">
+            <div className="sticky top-0 z-10 flex justify-end pr-5 pt-2">
+                <div className="absolute flex flex-col items-center">
+                    <img
+                        src={hourGlass}
+                        alt="hourGlass"
+                        className="h-10 w-10"
+                    />
+                    <span className="text-xs text-green-600">{formatTime(timer)}</span>
+                </div>
+            </div>
+
             <div className="custom-scrollbar flex-1 space-y-3 overflow-y-auto px-4 pb-10 pr-1 pt-2 md:px-6">
                 {currentData?.messages.map((msg, idx) => (
                     <div
@@ -208,6 +229,18 @@ const InterestScreen = ({ onBackToWelcome, testData, setTestData }) => {
                     </div>
                 )}
 
+                {currentData?.isCompleted && (
+                    <div className="flex items-center justify-center pb-3">
+                        <button
+                            className="flex items-center justify-center gap-2 rounded-md bg-green-500 px-2 py-1 text-white"
+                            onClick={() => onBackToWelcome()}
+                        >
+                            <Home size={14} />
+                            Home
+                        </button>
+                    </div>
+                )}
+
                 {typing && (
                     <div className="mt-2 pb-3">
                         <div className="inline-flex items-center space-x-2 rounded-r-lg rounded-tl-lg bg-white px-4 py-2 text-xs text-gray-500 shadow">
@@ -223,10 +256,10 @@ const InterestScreen = ({ onBackToWelcome, testData, setTestData }) => {
             </div>
 
             <div className="fixed bottom-4 flex w-72 items-center justify-between rounded-b-xl border bg-green-500 px-3 pb-2 pt-3 text-sm sm:w-96">
-                <span className="text-white">{formatTime(timer)}</span>
+                {/* <span className="text-white">{formatTime(timer)}</span> */}
 
                 <span className="text-white">
-                    {currentQuestionIndex + 1}/{questionBlocks.length}
+                    Question Set - {currentQuestionIndex + 1}/{questionBlocks.length}
                 </span>
             </div>
         </div>

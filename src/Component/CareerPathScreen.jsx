@@ -39,7 +39,7 @@ const CareerPathScreen = ({ selectedCareer }) => {
         if (!data) return <div className="text-center text-gray-500">No data available.</div>;
 
         return (
-            <div className="mx-auto max-w-4xl space-y-6 rounded-2xl bg-white p-6 text-gray-800 shadow-md">
+            <div className="mx-auto max-w-4xl space-y-6 rounded-2xl bg-white p-6 font-mallanna text-gray-800 shadow-md">
                 <h1 className="text-3xl font-bold text-blue-600">{data.career}</h1>
 
                 <section>
@@ -158,7 +158,7 @@ const CareerPathScreen = ({ selectedCareer }) => {
     return (
         <>
             {isLoading ? (
-                <div className="mt-5 px-6 pb-4">
+                <div className="mt-5 px-6 pb-4 font-mallanna">
                     <div className="inline-flex items-center space-x-2 rounded-r-lg rounded-tl-lg bg-white px-4 py-2 text-xs text-gray-500 shadow">
                         <span>Typing</span>
                         <span className="flex items-center space-x-1">

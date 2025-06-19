@@ -10,6 +10,7 @@ import InterestScreen from "./InterestTestScreen";
 import ResultScreen from "./ResultScreen";
 import BasicDetails from "./BasicDetails";
 import CareerPathScreen from "./CareerPathScreen";
+import bot from "../assets/bot-logo1.png";
 
 const ChatBot = () => {
     const [isOpen, setIsOpen] = useState(false);
@@ -94,7 +95,7 @@ const ChatBot = () => {
     });
 
     return (
-        <div className="fixed bottom-4 right-2 z-40 sm:right-4">
+        <div className="fixed bottom-4 right-2 z-40 font-mallanna sm:right-4">
             {authorized && !isOpen && (
                 <button
                     onClick={() => {
@@ -113,13 +114,17 @@ const ChatBot = () => {
                         <div className="flex items-center space-x-3">
                             <div
                                 onClick={() => handleBackToWelcome()}
-                                className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-full bg-white/20"
+                                className="flex h-12 w-12 items-center rounded-full bg-white"
                             >
-                                🤖
+                                <img
+                                    src={bot}
+                                    alt="bot"
+                                    className="h-10 cursor-pointer rounded-full object-cover"
+                                />
                             </div>
                             <div>
-                                <h1 className="text-lg font-bold">Explore</h1>
-                                <p className="text-xs text-indigo-100">Your's Test Assistent!</p>
+                                <h1 className="text-lg font-bold">Xplora</h1>
+                                <p className="text-xs text-indigo-100">Your Career Assistant!</p>
                             </div>
                         </div>
                         <div className="flex items-center space-x-2">
