@@ -9,12 +9,17 @@ import hourGlass from "../assets/hourGlass.gif";
 
 const QuestionScreen = ({ questionType, testData, setTestData, onBackToWelcome }) => {
     const user = useAuthStore((state) => state.user);
+    const userId = useAuthStore((state) => state?.user?.id);
 
     const messagesEndRef = useRef(null);
-    const timerRef = useRef(null);
     const questionCode = questionType?.section;
     const [typingState, setTypingState] = useState({});
     const isTyping = typingState[questionCode];
+
+    const [timer, setTimer] = useState(0);
+    const timerRef = useRef(null);
+
+    const currentData = testData[questionCode];
 
     const fetchQuestions = async () => {
         const res = await get(`${apiDetails.endPoint.getQuestions}?testid=${questionType.id}`);
@@ -50,52 +55,50 @@ const QuestionScreen = ({ questionType, testData, setTestData, onBackToWelcome }
     useEffect(() => {
         if (!questions || !questionCode) return;
 
-        setTestData((prev) => {
-            const alreadyInitialized = prev[questionCode]?.messages?.length > 0;
-            if (alreadyInitialized) return prev;
+        if (!currentData || currentData.messages.length === 0) {
+            setTestData((prev) => {
+                const alreadyInitialized = prev[questionCode]?.messages?.length > 0;
+                if (alreadyInitialized) return prev;
 
-            return {
-                ...prev,
-                [questionCode]: {
-                    currentIndex: 0,
-                    messages: [{ type: "bot", content: questions[0]?.question || "No question found." }],
-                    answers: {},
-                    isCompleted: false,
-                    timer: 0, // initialize timer
-                },
-            };
-        });
+                return {
+                    ...prev,
+                    [questionCode]: {
+                        currentIndex: 0,
+                        messages: [{ type: "bot", content: questions[0]?.question || "No question found." }],
+                        answers: {},
+                        isCompleted: false,
+                        elapsedTime: 0,
+                    },
+                };
+            });
+        } else {
+            setTimer(currentData.elapsedTime || 0);
+        }
     }, [questions, questionCode, setTestData]);
 
     useEffect(() => {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
     }, [testData[questionCode]?.messages]);
 
-    // Timer logic
     useEffect(() => {
-        if (!questionCode || !questions) return;
-        const currentData = testData[questionCode];
-        if (currentData?.isCompleted) return;
+        if (!currentData?.isCompleted) {
+            timerRef.current = setInterval(() => {
+                setTimer((prev) => {
+                    const updatedTime = prev + 1;
+                    setTestData((prevData) => ({
+                        ...prevData,
+                        [questionCode]: {
+                            ...prevData[questionCode],
+                            elapsedTime: updatedTime,
+                        },
+                    }));
+                    return updatedTime;
+                });
+            }, 1000);
+        }
 
-        timerRef.current = setInterval(() => {
-            setTestData((prev) => {
-                const currentTime = prev[questionCode]?.timer || 0;
-                return {
-                    ...prev,
-                    [questionCode]: {
-                        ...prev[questionCode],
-                        timer: currentTime + 1,
-                    },
-                };
-            });
-        }, 1000);
-
-        return () => {
-            clearInterval(timerRef.current);
-        };
-    }, [questionCode, questions, setTestData]);
-
-    const userId = useAuthStore((state) => state?.user?.id);
+        return () => clearInterval(timerRef.current);
+    }, [currentData?.isCompleted, questionCode, setTestData]);
 
     const saveAnswers = async (ans) => {
         try {
@@ -118,26 +121,6 @@ const QuestionScreen = ({ questionType, testData, setTestData, onBackToWelcome }
         onSuccess: () => successNotify("Assessment Saved!"),
         onError: (err) => errorNotify(err.message),
     });
-
-    const getBotReply1 = (answer) => {
-        if (typeof answer === "string") {
-            const lower = answer.toLowerCase();
-            if (lower.includes("yes")) return "👍 Noted. Let’s explore further.";
-            if (lower.includes("no")) return "🧠 Understood. Every perspective counts.";
-            if (lower.includes("maybe")) return "🤔 Ambiguity is a part of self-awareness. Let’s continue.";
-        } else if (typeof answer === "number") {
-            return (
-                [
-                    "🟥 You strongly disagreed — thank you for your clarity.",
-                    "🔵 You disagreed. Your self-awareness is appreciated.",
-                    "🟡 A neutral stance — staying balanced is also insightful.",
-                    "🟢 You agreed. Thanks for reflecting openly.",
-                    "🟩 Strong agreement — your confidence is noted. Let’s continue.",
-                ][answer - 1] || "📘 Thanks! Let’s keep going."
-            );
-        }
-        return "📘 Thank you. Let’s proceed.";
-    };
 
     const getBotReply = (answer) => {
         if (typeof answer === "string") {
@@ -188,6 +171,7 @@ const QuestionScreen = ({ questionType, testData, setTestData, onBackToWelcome }
                 },
             }));
             mutation.mutate(updatedAnswers);
+            clearInterval(timerRef.current);
         }
     };
 
@@ -221,18 +205,11 @@ const QuestionScreen = ({ questionType, testData, setTestData, onBackToWelcome }
         }, 800);
     };
 
-    const currentData = testData[questionCode];
+    const formatTime = (seconds) => `${Math.floor(seconds / 60)}:${String(seconds % 60).padStart(2, "0")}`;
+
     const currentQuestion = questions?.[currentData?.currentIndex || 0];
     const isRange = questionType.type === "RATING";
     const isSingle = questionType.type === "SINGLE";
-
-    const formatTime = (seconds) => {
-        const m = Math.floor(seconds / 60)
-            .toString()
-            .padStart(2, "0");
-        const s = (seconds % 60).toString().padStart(2, "0");
-        return `${m}:${s}`;
-    };
 
     return (
         <>
@@ -256,7 +233,7 @@ const QuestionScreen = ({ questionType, testData, setTestData, onBackToWelcome }
                                 alt="hourGlass"
                                 className="h-10 w-10"
                             />
-                            <span className="text-xs text-green-600">{formatTime(currentData?.timer || 0)}</span>
+                            <span className="text-xs text-green-600">{formatTime(timer)}</span>
                         </div>
                     </div>
 
@@ -265,7 +242,7 @@ const QuestionScreen = ({ questionType, testData, setTestData, onBackToWelcome }
                             <div
                                 key={idx}
                                 className={`max-w-[75%] whitespace-pre-wrap break-words rounded-xl px-4 py-3 text-sm shadow-md ${
-                                    msg.type === "user" ? "ml-auto rounded-br-none bg-green-200" : "mr-auto rounded-bl-none bg-white text-gray-800"
+                                    msg.type === "user" ? "ml-auto rounded-br-none bg-sky-200" : "mr-auto rounded-bl-none bg-white text-gray-800"
                                 }`}
                             >
                                 {msg.content}
@@ -340,7 +317,6 @@ const QuestionScreen = ({ questionType, testData, setTestData, onBackToWelcome }
                     </div>
 
                     <div className="fixed bottom-4 flex w-72 items-center justify-between rounded-b-xl border bg-green-500 px-3 pb-2 pt-3 text-sm sm:w-96">
-                        {/* <span className="text-white">{formatTime(currentData?.timer || 0)}</span> */}
                         <span className="text-white">
                             Questions - {currentData?.currentIndex + 1}/{questions?.length || 0}
                         </span>

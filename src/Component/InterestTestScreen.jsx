@@ -202,7 +202,7 @@ const InterestScreen = ({ onBackToWelcome, testData, setTestData }) => {
                     <div
                         key={idx}
                         className={`max-w-[75%] whitespace-pre-wrap break-words rounded-xl px-4 py-2 text-sm shadow-sm ${
-                            msg.type === "user" ? "ml-auto rounded-br-none bg-blue-500 text-white" : "mr-auto rounded-bl-none bg-white text-gray-800"
+                            msg.type === "user" ? "ml-auto rounded-br-none bg-sky-200" : "mr-auto rounded-bl-none bg-white text-gray-800"
                         }`}
                     >
                         {msg.content}

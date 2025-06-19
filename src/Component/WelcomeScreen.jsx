@@ -99,7 +99,7 @@ const WelcomeScreen = ({ questionTypes, onQuestionTypeSelect, isLoading, testDat
 
                     <div className="flex gap-3">
                         <button
-                            className="flex-1 rounded-lg bg-green-500 p-3 text-center font-mallanna text-xs text-white"
+                            className="flex-1 rounded-lg bg-[#EAB308] px-3 py-2.5 text-center font-mallanna text-sm text-white"
                             onClick={() =>
                                 testData && Object.values(testData).every((type) => type.isCompleted)
                                     ? setCurrentScreen("result")
@@ -111,13 +111,13 @@ const WelcomeScreen = ({ questionTypes, onQuestionTypeSelect, isLoading, testDat
 
                         <button
                             onClick={() => navigateToMentor()}
-                            className="flex-1 rounded-lg bg-green-500 p-3 text-center font-mallanna text-xs text-white"
+                            className="flex-1 rounded-lg bg-[#EAB308] px-3 py-2.5 text-center font-mallanna text-sm text-white"
                         >
                             Talk to a mentor
                         </button>
                     </div>
 
-                    <div className="absolute bottom-1 mx-auto w-[90%] text-center">
+                    <div className="sticky bottom-0 mx-auto w-[90%] text-center">
                         <p className="text-[9px] text-gray-600">Note:You can retake any test anytime. Your results will be updated automatically.</p>
                     </div>
                 </div>

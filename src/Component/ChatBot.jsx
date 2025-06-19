@@ -11,6 +11,7 @@ import ResultScreen from "./ResultScreen";
 import BasicDetails from "./BasicDetails";
 import CareerPathScreen from "./CareerPathScreen";
 import bot from "../assets/bot-logo1.png";
+import { useNavigate } from "react-router-dom";
 
 const ChatBot = () => {
     const [isOpen, setIsOpen] = useState(false);
@@ -20,6 +21,7 @@ const ChatBot = () => {
     const [selectedCareer, setSelectedCareer] = useState(null);
 
     const authorized = useAuthStore((state) => state?.user?.id);
+    const navigate = useNavigate();
 
     const fetchAssessment = async () => {
         try {
@@ -96,11 +98,15 @@ const ChatBot = () => {
 
     return (
         <div className="fixed bottom-4 right-2 z-40 font-mallanna sm:right-4">
-            {authorized && !isOpen && (
+            {!isOpen && (
                 <button
                     onClick={() => {
-                        refetch();
-                        setIsOpen(true);
+                        if (authorized) {
+                            refetch();
+                            setIsOpen(true);
+                        } else {
+                            navigate("/login");
+                        }
                     }}
                     className="rounded-full bg-green-500 p-4 text-white shadow-lg transition-all duration-300 hover:scale-110 hover:shadow-xl"
                 >
