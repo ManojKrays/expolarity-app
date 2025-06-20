@@ -1,11 +1,14 @@
 import React from "react";
 import mobile from "../../assets/mobile.svg";
 import { CircleArrowRight } from "lucide-react";
+import useAuthStore from "../../store/authStore";
 
-const Banner = () => {
+const Banner = ({ setIsOpen }) => {
     const NavigateToApp = () => {
         window.open("https://expolarity-app.onrender.com/login", "_blank");
     };
+
+    const user = useAuthStore((state) => state?.user?.id);
 
     return (
         <div className="bg-green-500 px-[10%] font-mallanna">
@@ -19,7 +22,9 @@ const Banner = () => {
                         <button
                             type="button"
                             className="mt-5 flex w-[145px] cursor-pointer items-center justify-center gap-3 rounded-full border border-green-500 bg-white px-2 py-2 font-semibold text-green-500 duration-300 hover:bg-green-600 hover:text-white"
-                            onClick={() => NavigateToApp()}
+                            onClick={() => {
+                                user ? setIsOpen(true) : NavigateToApp();
+                            }}
                         >
                             Take the test
                             <CircleArrowRight

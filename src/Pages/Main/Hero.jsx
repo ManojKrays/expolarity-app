@@ -1,11 +1,14 @@
 import React, { useRef } from "react";
 import hero from "../../assets/HeroChildren.svg";
 import { CircleArrowRight, CircleCheck } from "lucide-react";
+import useAuthStore from "../../store/authStore";
 
-const Hero = () => {
+const Hero = ({ setIsOpen }) => {
     const NavigateToApp = () => {
         window.open("https://expolarity-app.onrender.com/login", "_blank");
     };
+
+    const user = useAuthStore((state) => state.user.id);
 
     return (
         <div className="px-[5%] pt-[80px] font-mallanna">
@@ -30,7 +33,9 @@ const Hero = () => {
                         ))}
                     </ul>
                     <button
-                        onClick={() => NavigateToApp()}
+                        onClick={() => {
+                            user ? setIsOpen(true) : NavigateToApp();
+                        }}
                         type="button"
                         className="mt-5 flex w-[145px] cursor-pointer items-center justify-center gap-3 rounded-full border border-green-500 bg-green-500 px-2 py-2 font-semibold text-white duration-300 hover:bg-white hover:text-green-500"
                     >

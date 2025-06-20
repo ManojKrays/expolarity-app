@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import Nav from "./Nav";
 import Hero from "./Hero";
 import WhyUs from "./WhyUs";
@@ -20,12 +20,17 @@ const Main = () => {
         refs[section]?.current?.scrollIntoView({ behavior: "smooth" });
     };
 
+    const [isOpen, setIsOpen] = useState(false);
+
     return (
         <div>
             <Nav scrollToSection={scrollToSection} />
-            <ChatBot />
+            <ChatBot
+                setIsOpen={setIsOpen}
+                isOpen={isOpen}
+            />
             <div ref={refs.Home}>
-                <Hero />
+                <Hero setIsOpen={setIsOpen} />
             </div>
             <div ref={refs["Why Us"]}>
                 <WhyUs />
@@ -33,7 +38,7 @@ const Main = () => {
             <div ref={refs.Testimonials}>
                 <Testimonials />
             </div>
-            <Banner />
+            <Banner setIsOpen={setIsOpen} />
             <div ref={refs.Blogs}>
                 <Blogs />
             </div>

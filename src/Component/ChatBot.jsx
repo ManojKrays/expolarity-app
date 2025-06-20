@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { MessageCircle, X } from "lucide-react";
 import WelcomeScreen from "./WelcomeScreen";
 import QuestionScreen from "./QuestionScreen";
@@ -13,8 +13,7 @@ import CareerPathScreen from "./CareerPathScreen";
 import bot from "../assets/bot-logo1.png";
 import { useNavigate } from "react-router-dom";
 
-const ChatBot = () => {
-    const [isOpen, setIsOpen] = useState(false);
+const ChatBot = ({ setIsOpen, isOpen }) => {
     const [currentScreen, setCurrentScreen] = useState("welcome");
     const [selectedQuestionType, setSelectedQuestionType] = useState(null);
     const [basicForm, setBasicForm] = useState(false);
@@ -95,6 +94,10 @@ const ChatBot = () => {
             isCompleted: false,
         },
     });
+
+    useEffect(() => {
+        refetch();
+    }, [isOpen]);
 
     return (
         <div className="fixed bottom-4 right-2 z-40 font-mallanna sm:right-4">
