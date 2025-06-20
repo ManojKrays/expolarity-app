@@ -6,7 +6,7 @@ const WelcomeScreen = ({ questionTypes, onQuestionTypeSelect, isLoading, testDat
     const user = useAuthStore((state) => state.user);
 
     const navigateToMentor = async (e) => {
-        window.location.href = `https://mentorboosters.com/`;
+        window.open("https://mentorboosters.com/", "_blank");
     };
 
     return (

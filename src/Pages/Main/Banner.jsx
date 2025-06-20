@@ -4,7 +4,7 @@ import { CircleArrowRight } from "lucide-react";
 
 const Banner = () => {
     const NavigateToApp = () => {
-        window.location.href = "https://zurtle-school-app.onrender.com/login";
+        window.open("https://expolarity-app.onrender.com/login", "_blank");
     };
 
     return (

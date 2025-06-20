@@ -44,6 +44,13 @@ const CareerPathScreen = ({ selectedCareer }) => {
 
                 <section>
                     <p className="text-justify text-lg italic">{data.introduction}</p>
+
+                    <img
+                        src={data.roadmapImage || data.roadmapImageUrl}
+                        alt="Career Roadmap"
+                        className="mt-4 w-full rounded-lg shadow"
+                    />
+
                     <p className="mt-2 text-justify">{data.whyThisCareerIsGreat}</p>
                 </section>
 
@@ -145,12 +152,6 @@ const CareerPathScreen = ({ selectedCareer }) => {
                         ))}
                     </ul>
                 </section>
-
-                <img
-                    src={data.roadmapImage || data.roadmapImageUrl}
-                    alt="Career Roadmap"
-                    className="mt-4 w-full rounded-lg shadow"
-                />
             </div>
         );
     };

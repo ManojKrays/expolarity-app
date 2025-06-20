@@ -54,7 +54,7 @@ const Login = () => {
             }, 1000);
         },
         onError: (error) => {
-            const message = error?.response?.data?.message || error.message || "Login failed";
+            const message = error.message || "Login failed";
             errorNotify(message);
         },
     });
@@ -66,8 +66,8 @@ const Login = () => {
 
     return (
         <div className="patternBg flex min-h-screen items-center justify-center">
-            <div className="loginBg flex w-[95%] items-center justify-center rounded-xl p-2 shadow-md sm:h-[80vh] sm:w-[90%] lg:h-[80vh] lg:w-[70%]">
-                <div className="flex w-full max-w-4xl flex-col gap-9 p-5 sm:flex-row sm:p-40 md:p-20">
+            <div className="loginBg flex w-[95%] max-w-4xl items-center justify-center rounded-xl p-2 shadow-md">
+                <div className="flex w-full flex-col gap-9 p-5 sm:flex-row md:p-10 lg:p-12">
                     <div className="hidden w-[400px] flex-col justify-center md:flex">
                         <p className="font-inter text-left text-3xl tracking-wider text-white">
                             Sign In to <br /> Expolarity.ai
@@ -105,7 +105,7 @@ const Login = () => {
                             onSubmit={handleSubmit(onSubmit)}
                         >
                             <div className="relative w-full">
-                                {errors.emailId && <p className="pb-0.5 text-xs text-white">{errors.email.message}*</p>}
+                                {errors.emailId && <p className="pb-0.5 text-xs text-red-500">{errors.emailId.message}*</p>}
 
                                 <div className="relative">
                                     <input
@@ -129,7 +129,7 @@ const Login = () => {
                             </div>
 
                             <div className="relative w-full pt-4">
-                                {errors.password && <p className="pb-0.5 text-xs text-white">{errors.password.message}*</p>}
+                                {errors.password && <p className="pb-0.5 text-xs text-red-500">{errors.password.message}*</p>}
 
                                 <div className="relative">
                                     <input

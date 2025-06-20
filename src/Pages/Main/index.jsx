@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 import Nav from "./Nav";
 import Hero from "./Hero";
 import WhyUs from "./WhyUs";
@@ -9,15 +9,34 @@ import Footer from "./Footer";
 import ChatBot from "../../Component/ChatBot";
 
 const Main = () => {
+    const refs = {
+        Home: useRef(null),
+        "Why Us": useRef(null),
+        Testimonials: useRef(null),
+        Blogs: useRef(null),
+    };
+
+    const scrollToSection = (section) => {
+        refs[section]?.current?.scrollIntoView({ behavior: "smooth" });
+    };
+
     return (
         <div>
-            <Nav />
+            <Nav scrollToSection={scrollToSection} />
             <ChatBot />
-            <Hero />
-            <WhyUs />
-            <Testimonials />
+            <div ref={refs.Home}>
+                <Hero />
+            </div>
+            <div ref={refs["Why Us"]}>
+                <WhyUs />
+            </div>
+            <div ref={refs.Testimonials}>
+                <Testimonials />
+            </div>
             <Banner />
-            <Blogs />
+            <div ref={refs.Blogs}>
+                <Blogs />
+            </div>
             <Footer />
         </div>
     );

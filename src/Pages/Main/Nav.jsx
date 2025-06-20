@@ -5,18 +5,16 @@ import { useNavigate } from "react-router-dom";
 import useAuthStore from "../../store/authStore";
 import profile from "../../assets/UserProfile.png";
 
-const Nav = () => {
+const Nav = ({ scrollToSection }) => {
     const navigate = useNavigate();
     const [menuOpen, setMenuOpen] = useState(false);
     const [profileOpen, setProfileOpen] = useState(false);
 
     const NavigateToApp = () => {
-        // window.location.href = "https://zurtle-school-app.onrender.com/";
         navigate("/login");
     };
 
     const authorized = useAuthStore((state) => state?.user?.id);
-
     const logout = useAuthStore((state) => state.logout);
 
     const handleLogout = () => {
@@ -96,10 +94,11 @@ const Nav = () => {
                     </div>
 
                     <ul className="hidden gap-5 text-[16px] md:flex">
-                        {["Career", "Assessment", "Test", "Blogs", "Testimonials"].map((item) => (
+                        {["Home", "Why Us", "Testimonials", "Blogs"].map((item) => (
                             <li
                                 key={item}
                                 className="cursor-pointer duration-200 hover:text-green-500"
+                                onClick={() => scrollToSection(item)}
                             >
                                 {item}
                             </li>
@@ -148,10 +147,11 @@ const Nav = () => {
 
                 <div className={`overflow-hidden transition-all duration-300 md:hidden ${menuOpen ? "max-h-[500px]" : "max-h-0"}`}>
                     <ul className="flex flex-col items-center gap-4 py-4">
-                        {["Career", "Assessment", "Test", "Blogs", "Testimonials"].map((item) => (
+                        {["Home", "Why Us", "Testimonials", "Blogs"].map((item) => (
                             <li
                                 key={item}
                                 className="cursor-pointer text-[16px] duration-200 hover:text-green-500"
+                                onClick={() => scrollToSection(item)}
                             >
                                 {item}
                             </li>

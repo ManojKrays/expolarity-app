@@ -1,10 +1,10 @@
-import React from "react";
+import React, { useRef } from "react";
 import hero from "../../assets/HeroChildren.svg";
 import { CircleArrowRight, CircleCheck } from "lucide-react";
 
 const Hero = () => {
     const NavigateToApp = () => {
-        window.location.href = "https://zurtle-school-app.onrender.com/login";
+        window.open("https://expolarity-app.onrender.com/login", "_blank");
     };
 
     return (

@@ -214,7 +214,7 @@ const QuestionScreen = ({ questionType, testData, setTestData, onBackToWelcome }
     return (
         <>
             {isLoading ? (
-                <div className="px-6 pb-4 font-mallanna">
+                <div className="min-h-[424px] flex-col rounded-md bg-gray-100 px-6">
                     <div className="inline-flex items-center space-x-2 rounded-r-lg rounded-tl-lg bg-white px-4 py-2 font-mallanna text-xs text-gray-500 shadow">
                         <span>Typing</span>
                         <span className="flex items-center space-x-1">
