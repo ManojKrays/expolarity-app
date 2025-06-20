@@ -48,25 +48,29 @@ const Register = () => {
         }),
     };
 
+    const gradeOptions = [5, 6, 7, 8, 9, 10, 11, 12].map((num) => ({
+        value: num,
+        label: num.toString(),
+    }));
+
     const registerUser = async (data) => {
         try {
             const res = await post(apiDetails.endPoint.register, data);
-            if (res.data.status) {
+            if (res.status) {
                 return res.data;
             }
+            throw new Error(res.data.message || "Register failed");
         } catch (err) {
-            console.log(err);
+            throw new Error(err.message || "Register failed");
         }
     };
 
     const mutation = useMutation({
         mutationFn: registerUser,
         onSuccess: (data) => {
-            successNotify("User Registers Successfully!");
-            setTimeout(() => {
-                navigate("/login");
-                console.log("User created:", data);
-            }, 1000);
+            successNotify(data.message || "Registered successfully. Please check your email to activate your account.");
+
+            navigate("/login");
         },
         onError: (error) => {
             errorNotify(error.message);
@@ -77,9 +81,10 @@ const Register = () => {
     const onSubmit = async (data) => {
         const formData = {
             ...data,
+            grade: data.grade?.value || "",
+            gender: data.gender?.value || "",
             country: data.country?.label || "",
         };
-        console.log("Submitted data:", formData);
         mutation.mutate(formData);
     };
 
@@ -120,7 +125,7 @@ const Register = () => {
                         </div>
 
                         <form
-                            className="flex flex-col md:items-end"
+                            className="flex flex-col font-mallanna md:items-end"
                             onSubmit={handleSubmit(onSubmit)}
                         >
                             <div>
@@ -142,22 +147,20 @@ const Register = () => {
 
                                     <div className="w-full">
                                         <div className="relative">
-                                            <select
-                                                {...register("grade", {
-                                                    required: "Grade is required",
-                                                })}
-                                                className="w-full rounded-md border border-gray-300 bg-[#EAF0F7] p-3 pl-9 text-sm text-gray-400 outline-none"
-                                            >
-                                                <option value="">Grade</option>
-                                                {[5, 6, 7, 8, 9, 10, 11, 12].map((grade) => (
-                                                    <option
-                                                        key={grade}
-                                                        value={grade}
-                                                    >
-                                                        {grade}
-                                                    </option>
-                                                ))}
-                                            </select>
+                                            <Controller
+                                                control={control}
+                                                name="grade"
+                                                rules={{ required: "Grade is required" }}
+                                                render={({ field }) => (
+                                                    <Select
+                                                        {...field}
+                                                        options={gradeOptions}
+                                                        placeholder="Grade"
+                                                        styles={customStyles}
+                                                    />
+                                                )}
+                                            />
+
                                             <span className="absolute left-3 top-[50%] -translate-y-1/2 transform text-gray-400">
                                                 <LuBook />
                                             </span>
@@ -169,16 +172,23 @@ const Register = () => {
                                 <div className="flex flex-col gap-4 pt-3 sm:flex-row sm:pt-4">
                                     <div className="w-full">
                                         <div className="relative">
-                                            <select
-                                                {...register("gender", {
-                                                    required: "Gender is required",
-                                                })}
-                                                className="w-full rounded-md border border-gray-300 bg-[#EAF0F7] p-3 pl-9 text-sm text-gray-400 outline-none"
-                                            >
-                                                <option value="">Gender</option>
-                                                <option value="Male">Male</option>
-                                                <option value="Female">Female</option>
-                                            </select>
+                                            <Controller
+                                                control={control}
+                                                name="gender"
+                                                rules={{ required: "Gender is required" }}
+                                                render={({ field }) => (
+                                                    <Select
+                                                        {...field}
+                                                        options={[
+                                                            { label: "Male", value: "Male" },
+                                                            { label: "Female", value: "Female" },
+                                                        ]}
+                                                        placeholder="Gender"
+                                                        styles={customStyles}
+                                                    />
+                                                )}
+                                            />
+
                                             <span className="absolute left-3 top-[50%] -translate-y-1/2 transform text-gray-400">
                                                 <LuUser />
                                             </span>
@@ -267,6 +277,7 @@ const Register = () => {
 
                                 <button
                                     type="submit"
+                                    disabled={mutation.isPending}
                                     className="gilory-medium w-full cursor-pointer rounded-[8px] bg-[#38B76C] p-2 text-center text-white"
                                 >
                                     {mutation.isPending ? "Loading..." : "Sign Up"}

@@ -116,9 +116,18 @@ const QuestionScreen = ({ questionType, testData, setTestData, onBackToWelcome }
         }
     };
 
+    const updateUser = useAuthStore((state) => state?.updateUser);
+
     const mutation = useMutation({
         mutationFn: saveAnswers,
-        onSuccess: () => successNotify("Assessment Saved!"),
+        onSuccess: () => {
+            successNotify("Assessment Saved!");
+            const currentAssessments = user?.assessments ? user.assessments.split(",") : [];
+            if (!currentAssessments.includes(String(questionType.id))) {
+                currentAssessments.push(String(questionType.id));
+            }
+            updateUser({ assessments: currentAssessments.join(",") });
+        },
         onError: (err) => errorNotify(err.message),
     });
 

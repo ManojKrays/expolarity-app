@@ -14,29 +14,59 @@ import { errorNotify, successNotify } from "../../service/Messagebar";
 import useAuthStore from "../../store/authStore";
 
 const Login = () => {
+    const loginUser = useAuthStore((state) => state.setUser);
     const navigate = useNavigate();
     const [passwordVisible, setPasswordVisible] = useState(false);
+    const [verified, setVerified] = useState(null);
+    const [verificationLoading, setVerificationLoading] = useState(false);
+
     const togglePasswordVisibility = () => {
         setPasswordVisible((prev) => !prev);
     };
-
-    const loginUser = useAuthStore((state) => state.setUser);
 
     const {
         register,
         handleSubmit,
         formState: { errors },
+        getValues,
     } = useForm();
 
     const googleLogin = async (e) => {
         window.location.href = `${apiDetails.baseUrl}${apiDetails.apis.googleLogin}`;
     };
 
+    const sendVerification = async () => {
+        setVerificationLoading(true);
+        try {
+            const email = getValues("emailId");
+
+            if (!email) {
+                errorNotify("Please enter your email first");
+                return;
+            }
+            const data = {
+                email,
+            };
+
+            const res = await post(apiDetails.endPoint.sendVerification, data);
+            setVerificationLoading(false);
+            if (res.status === 200) {
+                successNotify("Verification link sent to your email please verify!");
+                setVerified(true);
+            }
+        } catch (err) {
+            console.log("error", err);
+            setVerificationLoading(false);
+        } finally {
+            setVerificationLoading(false);
+        }
+    };
+
     const login = async (data) => {
         try {
             const res = await post(apiDetails.endPoint.login, data);
             if (res.status) {
-                return res;
+                return res.data;
             }
             throw new Error(res.data.message || "Login failed");
         } catch (err) {
@@ -47,11 +77,17 @@ const Login = () => {
     const mutation = useMutation({
         mutationFn: login,
         onSuccess: (data) => {
-            successNotify("User Successfully Login!");
-            loginUser(data?.data?.student);
-            setTimeout(() => {
-                navigate("/");
-            }, 1000);
+            loginUser(data?.student);
+            if (data?.student?.status != "Unverified") {
+                successNotify("User Successfully Login!");
+                setVerified(true);
+                setTimeout(() => {
+                    navigate("/");
+                }, 1000);
+            } else {
+                setVerified(false);
+                errorNotify("Please Verify Your Email");
+            }
         },
         onError: (error) => {
             const message = error.message || "Login failed";
@@ -60,7 +96,6 @@ const Login = () => {
     });
 
     const onSubmit = async (data) => {
-        // console.log("Submitted data:", data);
         mutation.mutate(data);
     };
 
@@ -101,7 +136,7 @@ const Login = () => {
                         </div>
 
                         <form
-                            className="flex flex-col md:w-[300px] md:items-end"
+                            className="flex flex-col font-mallanna md:w-[300px] md:items-end"
                             onSubmit={handleSubmit(onSubmit)}
                         >
                             <div className="relative w-full">
@@ -127,6 +162,18 @@ const Login = () => {
                                     </span>
                                 </div>
                             </div>
+
+                            {verified === false && (
+                                <div className="flex items-end justify-end">
+                                    <button
+                                        type="button"
+                                        onClick={() => sendVerification()}
+                                        className="mt-1.5 w-[110px] cursor-pointer rounded-md bg-blue-600 px-2 py-1.5 text-xs text-white"
+                                    >
+                                        {verificationLoading ? "Loading..." : "Send Verification"}
+                                    </button>
+                                </div>
+                            )}
 
                             <div className="relative w-full pt-4">
                                 {errors.password && <p className="pb-0.5 text-xs text-red-500">{errors.password.message}*</p>}
@@ -162,24 +209,25 @@ const Login = () => {
                             <div className="mt-9 w-full rounded-[8px] bg-[#38B76C] text-center">
                                 <button
                                     type="submit"
+                                    disabled={mutation.isPending}
                                     className="gilory-medium w-full cursor-pointer p-2 text-white"
                                 >
                                     {mutation.isPending ? "Loading..." : "Sign In"}
                                 </button>
                             </div>
-
-                            <p className="font-gilory flex cursor-pointer items-center justify-center gap-1 pt-2 text-xs text-[#C7C7C7] md:hidden">
-                                Don't have an Account Click here to
-                                <Link
-                                    to={"/register"}
-                                    className="cursor-pointer text-[#38B76C] underline"
-                                >
-                                    Register
-                                </Link>
-                            </p>
                         </form>
 
-                        <div className="font-gilory flex items-center py-9">
+                        <p className="font-gilory flex cursor-pointer items-center justify-center gap-1 pt-2 text-xs text-[#C7C7C7]">
+                            If you don’t have an account, click
+                            <Link
+                                to={"/register"}
+                                className="cursor-pointer text-[#38B76C] underline"
+                            >
+                                here!
+                            </Link>
+                        </p>
+
+                        <div className="flex items-center pb-9 pt-5 font-mallanna">
                             <div className="flex-grow border-t border-[#DFDFDF]"></div>
                             <span className="mx-4 flex-shrink text-xs text-white">Or continue with</span>
                             <div className="flex-grow border-t border-[#DFDFDF]"></div>
@@ -187,7 +235,7 @@ const Login = () => {
 
                         <div
                             // onClick={() => googleLogin()}
-                            className="gilory-medium flex cursor-pointer items-center justify-center gap-3 rounded-[8px] bg-white p-2 py-3"
+                            className="flex cursor-pointer items-center justify-center gap-3 rounded-[8px] bg-white p-2 py-3 font-mallanna"
                         >
                             <img
                                 src={google}

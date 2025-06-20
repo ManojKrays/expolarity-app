@@ -114,7 +114,9 @@ const InterestScreen = ({ onBackToWelcome, testData, setTestData }) => {
             const resultId = data?.data?.result_id;
             if (resultId) {
                 console.log(resultId);
-                updateUser({ resultId });
+                const currentAssessments = user?.assessments ? user.assessments.split(",") : [];
+                currentAssessments.push("2");
+                updateUser({ assessments: currentAssessments.join(",") });
             }
         },
         onError: (err) => errorNotify(err.message),

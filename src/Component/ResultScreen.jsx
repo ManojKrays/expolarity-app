@@ -6,7 +6,7 @@ import apiDetails from "../config/apiDetails";
 import { useQuery } from "@tanstack/react-query";
 
 const ResultScreen = ({ setSelectedCareer, setCurrentScreen }) => {
-    const resultId = useAuthStore((state) => state?.user?.resultId);
+    const resultId = useAuthStore((state) => state?.user?.id);
     const [riasecvalues, setRiasecValues] = useState([]);
     const [recommendation, setRecommandation] = useState(null);
     const [jobs, setJobs] = useState([]);

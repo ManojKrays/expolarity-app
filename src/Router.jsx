@@ -5,6 +5,7 @@ import Career from "./Pages/Career/Career.jsx";
 import Main from "./Pages/Main";
 import Login from "./Pages/Login/index.jsx";
 import Register from "./Pages/Register/index.jsx";
+import EmailVerify from "./Pages/EmailVerify.jsx";
 
 const Router = () => {
     return (
@@ -14,15 +15,17 @@ const Router = () => {
                     path="/"
                     element={<Main />}
                 />
-
                 <Route
                     path="/login"
                     element={<Login />}
                 />
-
                 <Route
                     path="/register"
                     element={<Register />}
+                />
+                <Route
+                    path="/activate"
+                    element={<EmailVerify />}
                 />
                 <Route
                     path="/career"
