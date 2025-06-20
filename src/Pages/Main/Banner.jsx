@@ -2,10 +2,17 @@ import React from "react";
 import mobile from "../../assets/mobile.svg";
 import { CircleArrowRight } from "lucide-react";
 import useAuthStore from "../../store/authStore";
+import { useNavigate } from "react-router-dom";
+import { successNotify } from "../../service/Messagebar";
 
 const Banner = ({ setIsOpen }) => {
+    const navigate = useNavigate();
+
     const NavigateToApp = () => {
-        window.open("https://expolarity-app.onrender.com/login", "_blank");
+        successNotify("Please Login to take the test");
+        setTimeout(() => {
+            navigate("/login");
+        }, 1500);
     };
 
     const user = useAuthStore((state) => state?.user?.id);

@@ -2,13 +2,20 @@ import React, { useRef } from "react";
 import hero from "../../assets/HeroChildren.svg";
 import { CircleArrowRight, CircleCheck } from "lucide-react";
 import useAuthStore from "../../store/authStore";
+import { useNavigate } from "react-router-dom";
+import { successNotify } from "../../service/Messagebar";
 
 const Hero = ({ setIsOpen }) => {
+    const navigate = useNavigate();
+
     const NavigateToApp = () => {
-        window.open("https://expolarity-app.onrender.com/login", "_blank");
+        successNotify("Please Login to take the test");
+        setTimeout(() => {
+            navigate("/login");
+        }, 1500);
     };
 
-    const user = useAuthStore((state) => state.user.id);
+    const user = useAuthStore((state) => state?.user?.id);
 
     return (
         <div className="px-[5%] pt-[80px] font-mallanna">
