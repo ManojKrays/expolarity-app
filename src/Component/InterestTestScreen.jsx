@@ -189,7 +189,7 @@ const InterestScreen = ({ onBackToWelcome, testData, setTestData }) => {
     return (
         <div className="relative flex flex-col rounded-md bg-gray-100 font-mallanna">
             <div className="sticky top-0 z-30 flex justify-end pr-5 pt-2">
-                <div className="absolute flex flex-col items-center">
+                <div className="fixed flex flex-col items-center">
                     <img
                         src={hourGlass}
                         alt="hourGlass"
@@ -198,7 +198,7 @@ const InterestScreen = ({ onBackToWelcome, testData, setTestData }) => {
                     <span className="text-xs text-green-600">{formatTime(timer)}</span>
                 </div>
 
-                <div className="fixed right-0 top-1 flex items-center justify-between rounded-md bg-green-500 px-3 pb-2 pt-3 text-sm md:right-14 md:top-1.5">
+                <div className="fixed right-0 top-1 flex items-center justify-between rounded-md bg-green-500 px-3 pb-2 pt-3 text-sm md:right-1 md:top-1.5 lg:right-14">
                     <span className="text-white">
                         Question Set - {currentQuestionIndex + 1}/{questionBlocks.length}
                     </span>
