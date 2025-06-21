@@ -188,7 +188,7 @@ const InterestScreen = ({ onBackToWelcome, testData, setTestData }) => {
 
     return (
         <div className="relative flex flex-col rounded-md bg-gray-100 font-mallanna">
-            <div className="sticky top-0 z-10 flex justify-end pr-5 pt-2">
+            <div className="sticky top-0 z-30 flex justify-end pr-5 pt-2">
                 <div className="absolute flex flex-col items-center">
                     <img
                         src={hourGlass}
@@ -196,6 +196,12 @@ const InterestScreen = ({ onBackToWelcome, testData, setTestData }) => {
                         className="h-10 w-10"
                     />
                     <span className="text-xs text-green-600">{formatTime(timer)}</span>
+                </div>
+
+                <div className="fixed right-0 top-1 flex items-center justify-between rounded-md bg-green-500 px-3 pb-2 pt-3 text-sm md:right-14 md:top-1.5">
+                    <span className="text-white">
+                        Question Set - {currentQuestionIndex + 1}/{questionBlocks.length}
+                    </span>
                 </div>
             </div>
 
@@ -212,39 +218,8 @@ const InterestScreen = ({ onBackToWelcome, testData, setTestData }) => {
                 ))}
                 <div ref={messagesEndRef} />
 
-                {!currentData?.isCompleted && !typing && (
-                    <div className="grid grid-cols-3 gap-2 px-4 py-3">
-                        {currentRow?.data?.map((opt, idx) => (
-                            <button
-                                key={idx}
-                                onClick={() => handleAnswer(opt)}
-                                className="flex flex-col items-center justify-center rounded-lg border border-gray-200 bg-white px-2 py-2 text-[11px] text-gray-700 hover:bg-gray-100"
-                            >
-                                <img
-                                    src={opt.image}
-                                    alt={opt.label}
-                                    className="mb-1 h-8 w-8 object-contain"
-                                />
-                                <span className="text-center leading-tight">{opt.label}</span>
-                            </button>
-                        ))}
-                    </div>
-                )}
-
-                {currentData?.isCompleted && (
-                    <div className="flex items-center justify-center pb-3">
-                        <button
-                            className="flex items-center justify-center gap-2 rounded-md bg-green-500 px-2 py-1 text-white"
-                            onClick={() => onBackToWelcome()}
-                        >
-                            <Home size={14} />
-                            Home
-                        </button>
-                    </div>
-                )}
-
                 {typing && (
-                    <div className="mt-2 pb-3">
+                    <div className="mt-2 pb-5">
                         <div className="inline-flex items-center space-x-2 rounded-r-lg rounded-tl-lg bg-white px-4 py-2 text-xs text-gray-500 shadow">
                             <span>Typing</span>
                             <span className="flex items-center space-x-1">
@@ -255,12 +230,50 @@ const InterestScreen = ({ onBackToWelcome, testData, setTestData }) => {
                         </div>
                     </div>
                 )}
+
+                <div className="pb-10">
+                    {!currentData?.isCompleted && !typing && (
+                        <div className="grid grid-cols-3 gap-2 px-4 py-3">
+                            {currentRow?.data?.map((opt, idx) => (
+                                <button
+                                    key={idx}
+                                    onClick={() => handleAnswer(opt)}
+                                    className="flex flex-col items-center justify-center rounded-lg border border-gray-200 bg-white px-2 py-2 text-[11px] text-gray-700 hover:bg-gray-100"
+                                >
+                                    <img
+                                        src={opt.image}
+                                        alt={opt.label}
+                                        className="mb-1 h-8 w-8 object-contain"
+                                    />
+                                    <span className="text-center leading-tight">{opt.label}</span>
+                                </button>
+                            ))}
+                        </div>
+                    )}
+                </div>
+
+                {currentData?.isCompleted && (
+                    <div className="flex items-center justify-center pb-10">
+                        <button
+                            className="flex items-center justify-center gap-2 rounded-md bg-green-500 px-2 py-1 text-white"
+                            onClick={() => onBackToWelcome()}
+                        >
+                            <Home size={14} />
+                            Home
+                        </button>
+                    </div>
+                )}
             </div>
 
-            <div className="fixed bottom-4 flex items-center justify-between border bg-green-500 px-3 pb-2 pt-3 text-sm">
-                <span className="text-white">
-                    Question Set - {currentQuestionIndex + 1}/{questionBlocks.length}
-                </span>
+            <div className="fixed bottom-2 w-full px-4 md:w-[80%] md:px-6 lg:w-[67%]">
+                <input
+                    type="text"
+                    name=""
+                    id=""
+                    placeholder="Ask anything..."
+                    className="w-full rounded-md border bg-white p-2 py-4 shadow-sm outline-none"
+                    disabled={true}
+                />
             </div>
         </div>
     );

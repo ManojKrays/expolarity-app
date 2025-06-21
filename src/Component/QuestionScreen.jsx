@@ -235,7 +235,7 @@ const QuestionScreen = ({ questionType, testData, setTestData, onBackToWelcome }
                 </div>
             ) : (
                 <div className="relative flex flex-col rounded-md pt-2 font-mallanna lg:pt-0">
-                    <div className="sticky top-0 z-50 flex justify-end pr-5 pt-2">
+                    <div className="sticky top-0 z-30 flex justify-end pr-5 pt-2">
                         <div className="absolute flex flex-col items-center">
                             <img
                                 src={hourGlass}
@@ -319,7 +319,7 @@ const QuestionScreen = ({ questionType, testData, setTestData, onBackToWelcome }
                         )}
 
                         {currentData?.isCompleted && (
-                            <div className="flex items-center justify-center pb-3">
+                            <div className="flex items-center justify-center pb-8">
                                 <button
                                     className="flex items-center justify-center gap-2 rounded-md bg-green-500 px-2 py-1 text-white"
                                     onClick={() => onBackToWelcome()}
