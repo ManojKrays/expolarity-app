@@ -97,11 +97,11 @@ const Assessment = () => {
 
             <div className="flex">
                 <div
-                    className={`fixed z-50 h-screen max-w-xs bg-green-500 shadow-lg transition-transform duration-300 md:static md:flex md:w-[20%] md:translate-x-0 ${
+                    className={`fixed z-50 h-[100dvh] max-w-xs bg-green-500 shadow-lg transition-transform duration-300 md:static md:flex md:w-[20%] md:translate-x-0 ${
                         sidebarOpen ? "translate-x-0" : "-translate-x-full"
                     }`}
                 >
-                    <div className="flex h-full w-full flex-col justify-between">
+                    <div className="flex h-screen w-full flex-col justify-between">
                         <div>
                             <div className="flex items-center space-x-3 p-4 pb-5 md:flex-col lg:flex-row">
                                 <div
@@ -167,7 +167,7 @@ const Assessment = () => {
 
                 <div className="h-screen flex-1 overflow-y-auto bg-gray-100 pt-10 lg:px-20">
                     {currentScreen === "welcome" && (
-                        <div className="w-full p-4 lg:p-0">
+                        <div className="w-full px-4 md:px-5 lg:p-0">
                             <WelcomeScreen
                                 questionTypes={data}
                                 testData={testData}

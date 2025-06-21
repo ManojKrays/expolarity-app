@@ -46,7 +46,7 @@ const WelcomeScreen = ({ questionTypes, onQuestionTypeSelect, isLoading, testDat
             ) : error ? (
                 <div className="mb-2 rounded bg-red-100 p-2 text-sm text-red-700">⚠️ {error.message}</div>
             ) : (
-                <div className="relative flex h-full flex-col space-y-4 overflow-y-auto pt-8 font-mallanna">
+                <div className="relative flex h-full flex-col space-y-4 overflow-y-auto pt-5 font-mallanna md:pt-0">
                     {messages.map((msg, idx) => (
                         <div
                             key={idx}
