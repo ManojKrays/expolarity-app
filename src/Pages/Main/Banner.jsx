@@ -5,7 +5,7 @@ import useAuthStore from "../../store/authStore";
 import { useNavigate } from "react-router-dom";
 import { successNotify } from "../../service/Messagebar";
 
-const Banner = ({ setIsOpen }) => {
+const Banner = () => {
     const navigate = useNavigate();
 
     const NavigateToApp = () => {
@@ -30,7 +30,7 @@ const Banner = ({ setIsOpen }) => {
                             type="button"
                             className="mt-5 flex w-[145px] cursor-pointer items-center justify-center gap-3 rounded-full border border-green-500 bg-white px-2 py-2 font-semibold text-green-500 duration-300 hover:bg-green-600 hover:text-white"
                             onClick={() => {
-                                user ? setIsOpen(true) : NavigateToApp();
+                                user ? navigate("/Assessment") : NavigateToApp();
                             }}
                         >
                             Take the test

@@ -82,7 +82,7 @@ const Login = () => {
                 successNotify("User Successfully Login!");
                 setVerified(true);
                 setTimeout(() => {
-                    navigate("/");
+                    navigate("/Assessment");
                 }, 1000);
             } else {
                 setVerified(false);

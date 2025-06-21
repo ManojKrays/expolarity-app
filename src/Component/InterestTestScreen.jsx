@@ -187,7 +187,7 @@ const InterestScreen = ({ onBackToWelcome, testData, setTestData }) => {
     const formatTime = (seconds) => `${Math.floor(seconds / 60)}:${String(seconds % 60).padStart(2, "0")}`;
 
     return (
-        <div className="relative flex min-h-[424px] flex-col rounded-md bg-gray-100 font-mallanna shadow-sm">
+        <div className="relative flex flex-col rounded-md bg-gray-100 font-mallanna">
             <div className="sticky top-0 z-10 flex justify-end pr-5 pt-2">
                 <div className="absolute flex flex-col items-center">
                     <img
@@ -257,9 +257,7 @@ const InterestScreen = ({ onBackToWelcome, testData, setTestData }) => {
                 )}
             </div>
 
-            <div className="fixed bottom-4 flex w-72 items-center justify-between rounded-b-xl border bg-green-500 px-3 pb-2 pt-3 text-sm sm:w-96">
-                {/* <span className="text-white">{formatTime(timer)}</span> */}
-
+            <div className="fixed bottom-4 flex items-center justify-between border bg-green-500 px-3 pb-2 pt-3 text-sm">
                 <span className="text-white">
                     Question Set - {currentQuestionIndex + 1}/{questionBlocks.length}
                 </span>

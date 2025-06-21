@@ -5,7 +5,7 @@ import useAuthStore from "../../store/authStore";
 import { useNavigate } from "react-router-dom";
 import { successNotify } from "../../service/Messagebar";
 
-const Hero = ({ setIsOpen }) => {
+const Hero = () => {
     const navigate = useNavigate();
 
     const NavigateToApp = () => {
@@ -41,7 +41,7 @@ const Hero = ({ setIsOpen }) => {
                     </ul>
                     <button
                         onClick={() => {
-                            user ? setIsOpen(true) : NavigateToApp();
+                            user ? navigate("/Assessment") : NavigateToApp();
                         }}
                         type="button"
                         className="mt-5 flex w-[145px] cursor-pointer items-center justify-center gap-3 rounded-full border border-green-500 bg-green-500 px-2 py-2 font-semibold text-white duration-300 hover:bg-white hover:text-green-500"

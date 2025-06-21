@@ -20,17 +20,15 @@ const Main = () => {
         refs[section]?.current?.scrollIntoView({ behavior: "smooth" });
     };
 
-    const [isOpen, setIsOpen] = useState(false);
-
     return (
         <div>
             <Nav scrollToSection={scrollToSection} />
-            <ChatBot
+            {/* <ChatBot
                 setIsOpen={setIsOpen}
                 isOpen={isOpen}
-            />
+            /> */}
             <div ref={refs.Home}>
-                <Hero setIsOpen={setIsOpen} />
+                <Hero />
             </div>
             <div ref={refs["Why Us"]}>
                 <WhyUs />
@@ -38,7 +36,7 @@ const Main = () => {
             <div ref={refs.Testimonials}>
                 <Testimonials />
             </div>
-            <Banner setIsOpen={setIsOpen} />
+            <Banner />
             <div ref={refs.Blogs}>
                 <Blogs />
             </div>

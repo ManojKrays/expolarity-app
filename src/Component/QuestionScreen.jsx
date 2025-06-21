@@ -234,8 +234,8 @@ const QuestionScreen = ({ questionType, testData, setTestData, onBackToWelcome }
                     </div>
                 </div>
             ) : (
-                <div className="relative flex min-h-[424px] flex-col rounded-md bg-gray-100 font-mallanna shadow-sm">
-                    <div className="sticky top-0 z-10 flex justify-end pr-5 pt-2">
+                <div className="relative flex flex-col rounded-md pt-2 font-mallanna lg:pt-0">
+                    <div className="sticky top-0 z-50 flex justify-end pr-5 pt-2">
                         <div className="absolute flex flex-col items-center">
                             <img
                                 src={hourGlass}
@@ -243,6 +243,12 @@ const QuestionScreen = ({ questionType, testData, setTestData, onBackToWelcome }
                                 className="h-10 w-10"
                             />
                             <span className="text-xs text-green-600">{formatTime(timer)}</span>
+                        </div>
+
+                        <div className="fixed right-0 top-1 flex items-center justify-between rounded-md bg-green-500 px-3 pb-2 pt-3 text-sm md:right-14 md:top-1.5">
+                            <span className="text-white">
+                                Questions - {currentData?.currentIndex + 1}/{questions?.length || 0}
+                            </span>
                         </div>
                     </div>
 
@@ -275,7 +281,7 @@ const QuestionScreen = ({ questionType, testData, setTestData, onBackToWelcome }
                                 ) : (
                                     <>
                                         {isRange && (
-                                            <div className="space-y-3 px-4 pb-2">
+                                            <div className="ml-auto space-y-3 px-4 pb-2 md:max-w-[40%]">
                                                 <div className="mb-2 flex justify-between text-xs text-gray-600">
                                                     <span>Strongly Disagree</span>
                                                     <span>Strongly Agree</span>
@@ -295,7 +301,7 @@ const QuestionScreen = ({ questionType, testData, setTestData, onBackToWelcome }
                                         )}
 
                                         {isSingle && (
-                                            <div className="mt-4 space-y-2 px-3 pb-2">
+                                            <div className="ml-auto mt-4 max-w-[75%] space-y-2 px-3 pb-2">
                                                 {currentQuestion?.options.map((option, index) => (
                                                     <button
                                                         key={index}
@@ -325,10 +331,15 @@ const QuestionScreen = ({ questionType, testData, setTestData, onBackToWelcome }
                         )}
                     </div>
 
-                    <div className="fixed bottom-4 flex w-72 items-center justify-between rounded-b-xl border bg-green-500 px-3 pb-2 pt-3 text-sm sm:w-96">
-                        <span className="text-white">
-                            Questions - {currentData?.currentIndex + 1}/{questions?.length || 0}
-                        </span>
+                    <div className="fixed bottom-2 w-full px-4 md:w-[80%] md:px-6 lg:w-[67%]">
+                        <input
+                            type="text"
+                            name=""
+                            id=""
+                            placeholder="Ask anything..."
+                            className="w-full rounded-md border bg-white p-2 py-4 shadow-sm outline-none"
+                            disabled={true}
+                        />
                     </div>
                 </div>
             )}
