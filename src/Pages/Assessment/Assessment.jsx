@@ -10,6 +10,7 @@ import ResultScreen from "../../Component/ResultScreen";
 import { Home, LogOut, Settings, User, Menu } from "lucide-react";
 import useAuthStore from "../../store/authStore";
 import { useNavigate } from "react-router-dom";
+import CareerPathScreen from "../../component/CareerPathScreen";
 
 const Assessment = () => {
     const navigate = useNavigate();
@@ -135,7 +136,7 @@ const Assessment = () => {
                                             setSidebarOpen(false);
                                         }}
                                         className={
-                                            `flex cursor-pointer items-center gap-2 p-3 font-medium text-white duration-300 hover:bg-gray-100 hover:text-gray-700`
+                                            `flex cursor-pointer items-center gap-2 p-3 text-[15px] font-medium text-white duration-300 hover:bg-gray-100 hover:text-gray-700`
                                             //     ${
                                             //     currentScreen === item.id ? "bg-gray-100 text-gray-700" : "text-white"
                                             // }
