@@ -10,7 +10,7 @@ import ResultScreen from "../../Component/ResultScreen";
 import { Home, LogOut, Settings, User, Menu } from "lucide-react";
 import useAuthStore from "../../store/authStore";
 import { useNavigate } from "react-router-dom";
-import CareerPathScreen from "../../component/CareerPathScreen";
+import CareerPathScreen from "../../Component/CareerPathScreen";
 
 const Assessment = () => {
     const navigate = useNavigate();
