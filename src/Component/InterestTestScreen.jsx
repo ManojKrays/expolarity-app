@@ -7,6 +7,7 @@ import apiDetails from "../config/apiDetails";
 import { errorNotify, successNotify } from "../service/Messagebar";
 import useAuthStore from "../store/authStore";
 import hourGlass from "../assets/hourGlass.gif";
+import useUnsavedChangesWarning from "../hooks/useUnsavedChangesWarning";
 
 const InterestScreen = ({ onBackToWelcome, testData, setTestData }) => {
     const messagesEndRef = useRef(null);
@@ -185,6 +186,10 @@ const InterestScreen = ({ onBackToWelcome, testData, setTestData }) => {
     };
 
     const formatTime = (seconds) => `${Math.floor(seconds / 60)}:${String(seconds % 60).padStart(2, "0")}`;
+
+    const isDirty = !currentData?.isCompleted;
+
+    useUnsavedChangesWarning(isDirty);
 
     return (
         <div className="relative flex flex-col rounded-md bg-gray-100 font-mallanna">

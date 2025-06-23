@@ -1,10 +1,25 @@
 import React from "react";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import Main from "./Pages/Main";
 import Login from "./Pages/Login/index.jsx";
 import Register from "./Pages/Register/index.jsx";
 import EmailVerify from "./Pages/EmailVerify.jsx";
 import Assessment from "./Pages/Assessment/Assessment.jsx";
+import useAuthStore from "./store/authStore.js";
+
+const ProtectedRoute = ({ children }) => {
+    const user = useAuthStore((state) => state.user);
+
+    if (user) {
+        return (
+            <Navigate
+                to="/"
+                replace
+            />
+        );
+    }
+    return children;
+};
 
 const Router = () => {
     return (
@@ -16,11 +31,19 @@ const Router = () => {
                 />
                 <Route
                     path="/login"
-                    element={<Login />}
+                    element={
+                        <ProtectedRoute>
+                            <Login />
+                        </ProtectedRoute>
+                    }
                 />
                 <Route
                     path="/register"
-                    element={<Register />}
+                    element={
+                        <ProtectedRoute>
+                            <Register />
+                        </ProtectedRoute>
+                    }
                 />
                 <Route
                     path="/activate"

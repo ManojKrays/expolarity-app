@@ -6,6 +6,7 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { successNotify, errorNotify } from "../service/Messagebar";
 import useAuthStore from "../store/authStore";
 import hourGlass from "../assets/hourGlass.gif";
+import useUnsavedChangesWarning from "../hooks/useUnsavedChangesWarning";
 
 const QuestionScreen = ({ questionType, testData, setTestData, onBackToWelcome }) => {
     const user = useAuthStore((state) => state.user);
@@ -219,6 +220,10 @@ const QuestionScreen = ({ questionType, testData, setTestData, onBackToWelcome }
     const currentQuestion = questions?.[currentData?.currentIndex || 0];
     const isRange = questionType.type === "RATING";
     const isSingle = questionType.type === "SINGLE";
+
+    const isDirty = !currentData?.isCompleted;
+
+    useUnsavedChangesWarning(isDirty);
 
     return (
         <>
