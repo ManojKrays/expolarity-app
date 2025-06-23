@@ -2,16 +2,29 @@ import React, { useState } from "react";
 import logoImg from "../../assets/logo.png";
 import { CircleArrowRight, Menu, X } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import useAuthStore from "../../store/authStore";
+import profile from "../../assets/UserProfile.png";
 
-const Nav = () => {
+const Nav = ({ scrollToSection }) => {
+    const navigate = useNavigate();
     const [menuOpen, setMenuOpen] = useState(false);
+    const [profileOpen, setProfileOpen] = useState(false);
 
     const NavigateToApp = () => {
-        window.location.href = "https://zurtle-school-app.onrender.com/";
+        navigate("/login");
+    };
+
+    const authorized = useAuthStore((state) => state?.user?.id);
+    const logout = useAuthStore((state) => state.logout);
+
+    const handleLogout = () => {
+        logout();
+        localStorage.clear();
+        navigate("/login");
     };
 
     return (
-        <div className="fixed z-50 w-full">
+        <div className="fixed z-40 w-full">
             <div className="relative bg-[#FBFBFB] py-4 font-mallanna">
                 <div className="flex items-center justify-between px-4 md:justify-around">
                     <div className="flex items-center gap-2">
@@ -27,16 +40,44 @@ const Nav = () => {
                     </div>
 
                     <div className="flex items-center gap-3 md:hidden">
-                        <button
-                            onClick={() => NavigateToApp()}
-                            className="flex items-center gap-1 rounded-full border border-green-500 px-3 py-1 text-green-600 duration-300 hover:bg-green-500 hover:text-white"
-                        >
-                            Login
-                            <CircleArrowRight
-                                className="fill-green-500 text-white"
-                                size={20}
-                            />
-                        </button>
+                        {authorized ? (
+                            <div className="relative">
+                                <button
+                                    className="flex cursor-pointer items-center gap-3 rounded-full"
+                                    onClick={() => setProfileOpen(!profileOpen)}
+                                >
+                                    <img
+                                        src={profile}
+                                        alt="Profile"
+                                        className="h-8 w-8 rounded-full object-cover"
+                                    />
+                                </button>
+
+                                {profileOpen && (
+                                    <div className="absolute right-0.5 top-10 z-50 h-[50px] w-[100px] rounded-md bg-white p-2 shadow-sm">
+                                        <button
+                                            onClick={() => handleLogout()}
+                                            type="button"
+                                            className="flex items-center gap-1 border border-green-500 px-3 py-1 text-green-600 duration-300 hover:bg-green-500 hover:text-white"
+                                        >
+                                            Logout
+                                        </button>
+                                    </div>
+                                )}
+                            </div>
+                        ) : (
+                            <button
+                                onClick={() => NavigateToApp()}
+                                className="flex items-center gap-1 rounded-full border border-green-500 px-3 py-1 text-green-600 duration-300 hover:bg-green-500 hover:text-white"
+                            >
+                                Login
+                                <CircleArrowRight
+                                    className="fill-green-500 text-white"
+                                    size={20}
+                                />
+                            </button>
+                        )}
+
                         <button onClick={() => setMenuOpen(!menuOpen)}>
                             {menuOpen ? (
                                 <X
@@ -53,37 +94,64 @@ const Nav = () => {
                     </div>
 
                     <ul className="hidden gap-5 text-[16px] md:flex">
-                        {["Career", "Assessment", "Test", "Blogs", "Testimonials"].map((item) => (
+                        {["Home", "Why Us", "Testimonials", "Blogs"].map((item) => (
                             <li
                                 key={item}
                                 className="cursor-pointer duration-200 hover:text-green-500"
+                                onClick={() => scrollToSection(item)}
                             >
                                 {item}
                             </li>
                         ))}
                     </ul>
 
-                    <div className="hidden cursor-pointer rounded-full border border-green-500 px-4 py-1 text-green-500 duration-300 hover:bg-green-500 hover:text-white md:flex">
-                        <button
-                            onClick={() => NavigateToApp()}
-                            type="button"
-                            className="flex items-center gap-3"
-                        >
-                            Login
-                            <CircleArrowRight
-                                className="fill-green-500 text-white"
-                                size={28}
-                            />
-                        </button>
+                    <div className="hidden cursor-pointer md:flex">
+                        {authorized ? (
+                            <div className="relative">
+                                <button className="flex cursor-pointer items-center gap-3 rounded-full">
+                                    <img
+                                        onClick={() => setProfileOpen(!profileOpen)}
+                                        src={profile}
+                                        alt="Profile"
+                                        className="h-8 w-8 rounded-full object-cover"
+                                    />
+                                </button>
+
+                                {profileOpen && (
+                                    <div className="absolute right-0.5 top-10 z-50 h-[50px] w-[100px] rounded-md bg-white p-2 shadow-sm">
+                                        <button
+                                            onClick={() => handleLogout()}
+                                            type="button"
+                                            className="flex items-center gap-1 border border-green-500 px-3 py-1 text-green-600 duration-300 hover:bg-green-500 hover:text-white"
+                                        >
+                                            Logout
+                                        </button>
+                                    </div>
+                                )}
+                            </div>
+                        ) : (
+                            <button
+                                onClick={() => NavigateToApp()}
+                                type="button"
+                                className="flex items-center gap-3 rounded-full border border-green-500 px-4 py-1 text-green-500 duration-300 hover:bg-green-500 hover:text-white"
+                            >
+                                Login
+                                <CircleArrowRight
+                                    className="fill-green-500 text-white"
+                                    size={28}
+                                />
+                            </button>
+                        )}
                     </div>
                 </div>
 
                 <div className={`overflow-hidden transition-all duration-300 md:hidden ${menuOpen ? "max-h-[500px]" : "max-h-0"}`}>
                     <ul className="flex flex-col items-center gap-4 py-4">
-                        {["Career", "Assessment", "Test", "Blogs", "Testimonials"].map((item) => (
+                        {["Home", "Why Us", "Testimonials", "Blogs"].map((item) => (
                             <li
                                 key={item}
                                 className="cursor-pointer text-[16px] duration-200 hover:text-green-500"
+                                onClick={() => scrollToSection(item)}
                             >
                                 {item}
                             </li>

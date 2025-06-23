@@ -1,11 +1,21 @@
-import React from "react";
+import React, { useRef } from "react";
 import hero from "../../assets/HeroChildren.svg";
 import { CircleArrowRight, CircleCheck } from "lucide-react";
+import useAuthStore from "../../store/authStore";
+import { useNavigate } from "react-router-dom";
+import { successNotify } from "../../service/Messagebar";
 
 const Hero = () => {
+    const navigate = useNavigate();
+
     const NavigateToApp = () => {
-        window.location.href = "https://zurtle-school-app.onrender.com/";
+        successNotify("Please Login to take the test");
+        setTimeout(() => {
+            navigate("/login");
+        }, 1500);
     };
+
+    const user = useAuthStore((state) => state?.user?.id);
 
     return (
         <div className="px-[5%] pt-[80px] font-mallanna">
@@ -30,7 +40,9 @@ const Hero = () => {
                         ))}
                     </ul>
                     <button
-                        onClick={() => NavigateToApp()}
+                        onClick={() => {
+                            user ? navigate("/Assessment") : NavigateToApp();
+                        }}
                         type="button"
                         className="mt-5 flex w-[145px] cursor-pointer items-center justify-center gap-3 rounded-full border border-green-500 bg-green-500 px-2 py-2 font-semibold text-white duration-300 hover:bg-white hover:text-green-500"
                     >
