@@ -50,7 +50,7 @@ const WelcomeScreen = ({ questionTypes, onQuestionTypeSelect, isLoading, testDat
                     {messages.map((msg, idx) => (
                         <div
                             key={idx}
-                            className={`whitespace-pre-wrap break-words rounded-xl px-4 py-2 text-[14px] shadow-sm md:max-w-[50%] ${
+                            className={`whitespace-pre-wrap break-words rounded-xl px-4 py-2 text-[15px] shadow-sm md:max-w-[50%] ${
                                 msg.type === "user" ? "ml-auto rounded-br-none bg-sky-200" : "mr-auto rounded-bl-none bg-white text-gray-800"
                             }`}
                         >
@@ -83,8 +83,8 @@ const WelcomeScreen = ({ questionTypes, onQuestionTypeSelect, isLoading, testDat
                                                     {type.emoji}
                                                 </div>
                                                 <div className="text-left">
-                                                    <h3 className="text-[13px] font-semibold text-gray-800">{type.title}</h3>
-                                                    <p className="text-[13px] text-gray-400">
+                                                    <h3 className="text-[14px] font-semibold text-gray-800">{type.title}</h3>
+                                                    <p className="text-[14px] text-gray-400">
                                                         {isTestDone ? "Completed" : `${parseInt(type.duration.split(":")[1])} minutes`}
                                                     </p>
                                                 </div>
@@ -105,7 +105,7 @@ const WelcomeScreen = ({ questionTypes, onQuestionTypeSelect, isLoading, testDat
                     {allCompleted && (
                         <div className="pb-5 md:w-[50%]">
                             <div
-                                className={`text-gray-800" mr-auto whitespace-pre-wrap break-words rounded-xl rounded-bl-none bg-white px-4 py-2 text-[14px] shadow-sm`}
+                                className={`text-gray-800" mr-auto whitespace-pre-wrap break-words rounded-xl rounded-bl-none bg-white px-4 py-2 text-[15px] shadow-sm`}
                             >
                                 You’ve completed all the tests. Click on 'Get Career Results' to see the careers that match your personality, skills,
                                 and interests.
@@ -113,7 +113,7 @@ const WelcomeScreen = ({ questionTypes, onQuestionTypeSelect, isLoading, testDat
 
                             <div className="flex gap-3 pt-4">
                                 <button
-                                    className="flex-1 rounded-lg bg-[#EAB308] px-3 py-2.5 text-center font-mallanna text-sm text-white"
+                                    className="flex-1 rounded-lg bg-[#EAB308] px-3 py-2.5 text-center font-mallanna text-[16px] text-white"
                                     onClick={() => setCurrentScreen("result")}
                                 >
                                     Get Career Results
