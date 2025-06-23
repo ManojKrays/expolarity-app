@@ -100,7 +100,7 @@ const Login = () => {
     };
 
     return (
-        <div className="patternBg flex min-h-screen items-center justify-center">
+        <div className="patternBg flex min-h-[100dvh] items-center justify-center">
             <div className="loginBg flex w-[95%] max-w-4xl items-center justify-center rounded-xl p-2 shadow-md">
                 <div className="flex w-full flex-col gap-9 p-5 sm:flex-row md:p-10 lg:p-12">
                     <div className="hidden w-[400px] flex-col justify-center md:flex">

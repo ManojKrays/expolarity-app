@@ -89,7 +89,7 @@ const Register = () => {
     };
 
     return (
-        <div className="patternBg flex min-h-screen items-center justify-center">
+        <div className="patternBg flex min-h-[100dvh] items-center justify-center">
             <div className="loginBg m-4 flex h-full w-full max-w-4xl items-center justify-center overflow-hidden rounded-xl shadow-md">
                 <div className="flex w-full flex-col gap-9 border p-5 sm:flex-row md:p-10 lg:p-16">
                     <div className="hidden w-[400px] flex-col justify-center md:flex">

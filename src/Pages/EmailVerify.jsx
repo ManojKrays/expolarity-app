@@ -45,7 +45,7 @@ const EmailVerify = () => {
     }, []);
 
     return (
-        <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 px-4 font-mallanna">
+        <div className="flex min-h-[100dvh] items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 px-4 font-mallanna">
             <div className="w-full max-w-md rounded-2xl bg-white p-8 text-center shadow-xl">
                 <div className="mb-6">
                     <CheckCircle className="mx-auto mb-4 h-20 w-20 text-green-500" />

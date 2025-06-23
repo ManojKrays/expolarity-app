@@ -223,8 +223,8 @@ const QuestionScreen = ({ questionType, testData, setTestData, onBackToWelcome }
     return (
         <>
             {isLoading ? (
-                <div className="min-h-[424px] flex-col rounded-md bg-gray-100 px-6">
-                    <div className="inline-flex items-center space-x-2 rounded-r-lg rounded-tl-lg bg-white px-4 py-2 font-mallanna text-xs text-gray-500 shadow">
+                <div className="min-h-[424px] flex-col rounded-md bg-gray-100 px-6 pt-5 md:pt-0">
+                    <div className="inline-flex items-center space-x-2 rounded-r-lg rounded-tl-lg bg-white px-4 py-2 font-mallanna text-[15px] text-gray-500 shadow">
                         <span>Typing</span>
                         <span className="flex items-center space-x-1">
                             <span className="block h-1 w-1 animate-bounce rounded-full bg-gray-400 [animation-delay:0ms]"></span>
@@ -235,7 +235,7 @@ const QuestionScreen = ({ questionType, testData, setTestData, onBackToWelcome }
                 </div>
             ) : (
                 <div className="relative flex flex-col rounded-md pt-2 font-mallanna lg:pt-0">
-                    <div className="sticky top-0 z-30 flex justify-end pr-5 pt-2">
+                    {/* <div className="sticky top-0 z-30 flex justify-end pr-5 pt-2">
                         <div className="fixed flex flex-col items-center">
                             <img
                                 src={hourGlass}
@@ -250,13 +250,30 @@ const QuestionScreen = ({ questionType, testData, setTestData, onBackToWelcome }
                                 Questions - {currentData?.currentIndex + 1}/{questions?.length || 0}
                             </span>
                         </div>
+                    </div> */}
+
+                    <div>
+                        <div className="fixed right-2 top-14 z-30 flex flex-col items-center">
+                            <img
+                                src={hourGlass}
+                                alt="hourGlass"
+                                className="h-10 w-10"
+                            />
+                            <span className="text-xs text-green-600">{formatTime(timer)}</span>
+                        </div>
+
+                        <div className="fixed right-2 top-2 z-30 flex items-center justify-between rounded-md bg-green-500 px-3 py-2 text-sm">
+                            <span className="text-white">
+                                Questions - {currentData?.currentIndex + 1}/{questions?.length || 0}
+                            </span>
+                        </div>
                     </div>
 
-                    <div className="custom-scrollbar flex-1 space-y-3 overflow-y-auto px-4 pb-10 pr-1 md:px-6">
+                    <div className="custom-scrollbar scrollable flex-1 space-y-3 overflow-y-auto px-4 pb-10 pr-1 pt-3 md:px-6">
                         {currentData?.messages.map((msg, idx) => (
                             <div
                                 key={idx}
-                                className={`max-w-[75%] whitespace-pre-wrap break-words rounded-xl px-4 py-3 text-sm shadow-md ${
+                                className={`max-w-[75%] whitespace-pre-wrap break-words rounded-xl px-4 py-3 text-[16px] shadow-md ${
                                     msg.type === "user" ? "ml-auto rounded-br-none bg-sky-200" : "mr-auto rounded-bl-none bg-white text-gray-800"
                                 }`}
                             >
@@ -269,7 +286,7 @@ const QuestionScreen = ({ questionType, testData, setTestData, onBackToWelcome }
                             <div className="mt-4 pb-10">
                                 {isTyping ? (
                                     <div className="pb-4">
-                                        <div className="inline-flex items-center space-x-2 rounded-r-lg rounded-tl-lg bg-white px-4 py-2 text-xs text-gray-500 shadow">
+                                        <div className="inline-flex items-center space-x-2 rounded-r-lg rounded-tl-lg bg-white px-4 py-2 text-[16px] text-gray-500 shadow">
                                             <span>Typing</span>
                                             <span className="flex items-center space-x-1">
                                                 <span className="block h-1 w-1 animate-bounce rounded-full bg-gray-400 [animation-delay:0ms]"></span>
@@ -281,8 +298,8 @@ const QuestionScreen = ({ questionType, testData, setTestData, onBackToWelcome }
                                 ) : (
                                     <>
                                         {isRange && (
-                                            <div className="ml-auto space-y-3 px-4 pb-2 md:max-w-[40%]">
-                                                <div className="mb-2 flex justify-between text-xs text-gray-600">
+                                            <div className="ml-auto space-y-3 px-4 pb-2 font-mallanna md:max-w-[40%]">
+                                                <div className="mb-2 flex justify-between text-[14px] text-gray-600">
                                                     <span>Strongly Disagree</span>
                                                     <span>Strongly Agree</span>
                                                 </div>
@@ -291,7 +308,7 @@ const QuestionScreen = ({ questionType, testData, setTestData, onBackToWelcome }
                                                         <button
                                                             key={val}
                                                             onClick={() => handleAnswer(val)}
-                                                            className="h-10 w-10 rounded-full border-2 bg-white text-xs font-semibold text-gray-600 transition-all duration-200 hover:scale-105 hover:border-gray-400"
+                                                            className="h-10 w-10 rounded-full border-2 bg-white text-[14px] font-semibold text-gray-600 transition-all duration-200 hover:scale-105 hover:border-gray-400"
                                                         >
                                                             {val}
                                                         </button>
@@ -306,7 +323,7 @@ const QuestionScreen = ({ questionType, testData, setTestData, onBackToWelcome }
                                                     <button
                                                         key={index}
                                                         onClick={() => handleAnswer(option)}
-                                                        className="w-full rounded-md border border-blue-300 bg-white px-4 py-2 text-left text-sm font-medium text-gray-800 shadow-sm transition-all duration-200 hover:bg-blue-100 hover:text-blue-700"
+                                                        className="w-full rounded-md border border-blue-300 bg-white px-4 py-2 text-left text-[15px] font-medium text-gray-800 shadow-sm transition-all duration-200 hover:bg-blue-100 hover:text-blue-700"
                                                     >
                                                         {`${option.value}) ${option.label}`}
                                                     </button>

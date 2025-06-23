@@ -188,7 +188,7 @@ const InterestScreen = ({ onBackToWelcome, testData, setTestData }) => {
 
     return (
         <div className="relative flex flex-col rounded-md bg-gray-100 font-mallanna">
-            <div className="sticky top-0 z-30 flex justify-end pr-5 pt-2">
+            {/* <div className="sticky top-0 z-30 flex justify-end pr-5 pt-2">
                 <div className="fixed flex flex-col items-center">
                     <img
                         src={hourGlass}
@@ -203,13 +203,30 @@ const InterestScreen = ({ onBackToWelcome, testData, setTestData }) => {
                         Question Set - {currentQuestionIndex + 1}/{questionBlocks.length}
                     </span>
                 </div>
+            </div> */}
+
+            <div>
+                <div className="fixed right-2 top-14 z-30 flex flex-col items-center">
+                    <img
+                        src={hourGlass}
+                        alt="hourGlass"
+                        className="h-10 w-10"
+                    />
+                    <span className="text-xs text-green-600">{formatTime(timer)}</span>
+                </div>
+
+                <div className="fixed right-2 top-2 z-30 flex items-center justify-between rounded-md bg-green-500 px-3 py-2 text-sm">
+                    <span className="text-white">
+                        Question Set - {currentQuestionIndex + 1}/{questionBlocks.length}
+                    </span>
+                </div>
             </div>
 
-            <div className="custom-scrollbar flex-1 space-y-3 overflow-y-auto px-4 pb-10 pr-1 pt-2 md:px-6">
+            <div className="custom-scrollbar flex-1 space-y-3 overflow-y-auto px-4 pb-10 pr-1 pt-5 md:px-6">
                 {currentData?.messages.map((msg, idx) => (
                     <div
                         key={idx}
-                        className={`max-w-[75%] whitespace-pre-wrap break-words rounded-xl px-4 py-2 text-sm shadow-sm ${
+                        className={`max-w-[75%] whitespace-pre-wrap break-words rounded-xl px-4 py-2 text-[16px] shadow-sm ${
                             msg.type === "user" ? "ml-auto rounded-br-none bg-sky-200" : "mr-auto rounded-bl-none bg-white text-gray-800"
                         }`}
                     >
@@ -220,7 +237,7 @@ const InterestScreen = ({ onBackToWelcome, testData, setTestData }) => {
 
                 {typing && (
                     <div className="mt-2 pb-5">
-                        <div className="inline-flex items-center space-x-2 rounded-r-lg rounded-tl-lg bg-white px-4 py-2 text-xs text-gray-500 shadow">
+                        <div className="inline-flex items-center space-x-2 rounded-r-lg rounded-tl-lg bg-white px-4 py-2 text-[15px] text-gray-500 shadow">
                             <span>Typing</span>
                             <span className="flex items-center space-x-1">
                                 <span className="block h-1 w-1 animate-bounce rounded-full bg-gray-400 [animation-delay:0ms]" />
@@ -238,7 +255,7 @@ const InterestScreen = ({ onBackToWelcome, testData, setTestData }) => {
                                 <button
                                     key={idx}
                                     onClick={() => handleAnswer(opt)}
-                                    className="flex flex-col items-center justify-center rounded-lg border border-gray-200 bg-white px-2 py-2 text-[11px] text-gray-700 hover:bg-gray-100"
+                                    className="flex flex-col items-center justify-center rounded-lg border border-gray-200 bg-white px-2 py-2 text-[14px] text-gray-700 hover:bg-gray-100"
                                 >
                                     <img
                                         src={opt.image}

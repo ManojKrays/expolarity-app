@@ -33,8 +33,8 @@ const WelcomeScreen = ({ questionTypes, onQuestionTypeSelect, isLoading, testDat
     return (
         <>
             {isLoading ? (
-                <div className="px-6 pb-4 font-mallanna">
-                    <div className="inline-flex items-center space-x-2 rounded-r-lg rounded-tl-lg bg-white px-4 py-2 text-xs text-gray-500 shadow">
+                <div className="px-6 pb-4 pt-5 font-mallanna md:pt-0">
+                    <div className="inline-flex items-center space-x-2 rounded-r-lg rounded-tl-lg bg-white px-4 py-2 text-[15px] text-gray-500 shadow">
                         <span>Typing</span>
                         <span className="flex items-center space-x-1">
                             <span className="block h-1 w-1 animate-bounce rounded-full bg-gray-400 [animation-delay:0ms]"></span>
@@ -46,11 +46,11 @@ const WelcomeScreen = ({ questionTypes, onQuestionTypeSelect, isLoading, testDat
             ) : error ? (
                 <div className="mb-2 rounded bg-red-100 p-2 text-sm text-red-700">⚠️ {error.message}</div>
             ) : (
-                <div className="relative flex h-full flex-col space-y-4 overflow-y-auto pt-5 font-mallanna md:pt-0">
+                <div className="scrollable relative flex h-full flex-col space-y-4 overflow-y-auto pt-5 font-mallanna md:pt-0">
                     {messages.map((msg, idx) => (
                         <div
                             key={idx}
-                            className={`whitespace-pre-wrap break-words rounded-xl px-4 py-2 text-sm shadow-sm md:max-w-[50%] ${
+                            className={`whitespace-pre-wrap break-words rounded-xl px-4 py-2 text-[14px] shadow-sm md:max-w-[50%] ${
                                 msg.type === "user" ? "ml-auto rounded-br-none bg-sky-200" : "mr-auto rounded-bl-none bg-white text-gray-800"
                             }`}
                         >
@@ -83,8 +83,8 @@ const WelcomeScreen = ({ questionTypes, onQuestionTypeSelect, isLoading, testDat
                                                     {type.emoji}
                                                 </div>
                                                 <div className="text-left">
-                                                    <h3 className="text-xs font-semibold text-gray-800">{type.title}</h3>
-                                                    <p className="text-xs text-gray-400">
+                                                    <h3 className="text-[13px] font-semibold text-gray-800">{type.title}</h3>
+                                                    <p className="text-[13px] text-gray-400">
                                                         {isTestDone ? "Completed" : `${parseInt(type.duration.split(":")[1])} minutes`}
                                                     </p>
                                                 </div>
@@ -103,9 +103,9 @@ const WelcomeScreen = ({ questionTypes, onQuestionTypeSelect, isLoading, testDat
                     </div>
 
                     {allCompleted && (
-                        <div className="md:w-[50%]">
+                        <div className="pb-5 md:w-[50%]">
                             <div
-                                className={`text-gray-800" mr-auto whitespace-pre-wrap break-words rounded-xl rounded-bl-none bg-white px-4 py-2 text-sm shadow-sm`}
+                                className={`text-gray-800" mr-auto whitespace-pre-wrap break-words rounded-xl rounded-bl-none bg-white px-4 py-2 text-[14px] shadow-sm`}
                             >
                                 You’ve completed all the tests. Click on 'Get Career Results' to see the careers that match your personality, skills,
                                 and interests.

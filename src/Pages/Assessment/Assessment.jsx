@@ -83,7 +83,7 @@ const Assessment = () => {
     };
 
     return (
-        <div className="relative min-h-screen w-full font-mallanna">
+        <div className="relative min-h-[100dvh] w-full font-mallanna">
             <div className="fixed top-0 z-20 flex w-full items-center justify-between bg-green-500 p-3 md:hidden">
                 <div className="flex items-center space-x-2 font-bold text-white">
                     <Menu
@@ -101,7 +101,7 @@ const Assessment = () => {
                         sidebarOpen ? "translate-x-0" : "-translate-x-full"
                     }`}
                 >
-                    <div className="flex h-screen w-full flex-col justify-between">
+                    <div className="flex h-[100dvh] w-full flex-col justify-between">
                         <div>
                             <div className="flex items-center space-x-3 p-4 pb-5 md:flex-col lg:flex-row">
                                 <div
@@ -165,7 +165,7 @@ const Assessment = () => {
                     ></div>
                 )}
 
-                <div className="h-screen flex-1 overflow-y-auto bg-gray-100 pt-10 lg:px-20">
+                <div className="scrollable h-[100dvh] flex-1 overflow-y-auto bg-gray-100 pt-10 lg:px-20">
                     {currentScreen === "welcome" && (
                         <div className="w-full px-4 md:px-5 lg:p-0">
                             <WelcomeScreen
