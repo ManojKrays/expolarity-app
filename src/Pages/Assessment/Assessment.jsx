@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import bot from "../../assets/bot-logo1.png";
+import bot from "../../assets/xpolar.png";
 import WelcomeScreen from "../../Component/WelcomeScreen";
 import QuestionScreen from "../../Component/QuestionScreen";
 import InterestScreen from "../../Component/InterestTestScreen";
@@ -98,7 +98,7 @@ const Assessment = () => {
 
             <div className="flex">
                 <div
-                    className={`fixed z-50 h-[100dvh] max-w-xs bg-green-500 shadow-lg transition-transform duration-300 md:static md:flex md:w-[20%] md:translate-x-0 ${
+                    className={`fixed z-50 h-[100dvh] max-w-xs bg-[#12703C] shadow-lg transition-transform duration-300 md:static md:flex md:w-[20%] md:translate-x-0 ${
                         sidebarOpen ? "translate-x-0" : "-translate-x-full"
                     }`}
                 >
@@ -107,10 +107,10 @@ const Assessment = () => {
                             <div className="flex items-center space-x-3 p-4 pb-5 md:flex-col lg:flex-row">
                                 <div
                                     onClick={() => {
-                                        handleBackToWelcome();
+                                        navigate("/");
                                         setSidebarOpen(false);
                                     }}
-                                    className="flex h-12 w-12 items-center justify-center rounded-full bg-white"
+                                    className="flex h-11 w-11 items-center justify-center rounded-full bg-gray-400"
                                 >
                                     <img
                                         src={bot}
@@ -135,12 +135,7 @@ const Assessment = () => {
                                             setCurrentScreen(item.id);
                                             setSidebarOpen(false);
                                         }}
-                                        className={
-                                            `flex cursor-pointer items-center gap-2 p-3 text-[15px] font-medium text-white duration-300 hover:bg-gray-100 hover:text-gray-700`
-                                            //     ${
-                                            //     currentScreen === item.id ? "bg-gray-100 text-gray-700" : "text-white"
-                                            // }
-                                        }
+                                        className={`flex cursor-pointer items-center gap-2 p-3 text-[15px] font-medium text-white duration-300 hover:bg-gray-100 hover:text-gray-700`}
                                     >
                                         <Icon size={15} />
                                         {item.label}
@@ -150,7 +145,7 @@ const Assessment = () => {
                         </div>
 
                         <div
-                            className="flex cursor-pointer items-center gap-2 p-3 text-white duration-300 hover:bg-green-300 hover:text-gray-700"
+                            className="flex cursor-pointer items-center gap-2 p-3 text-white duration-300 hover:bg-gray-100 hover:text-gray-700"
                             onClick={() => handleLogout()}
                         >
                             <LogOut size={15} />
