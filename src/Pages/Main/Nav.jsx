@@ -44,7 +44,7 @@ const Nav = ({ scrollToSection }) => {
                         />
                         <div className="flex flex-col">
                             <h1 className="text-2xl text-green-600">Expolarity.Ai</h1>
-                            <p className="-mt-1 text-[9px] text-green-500">EMPOWERING CAREER GROWT</p>
+                            <p className="-mt-1 text-[9px] text-green-500">EMPOWERING CAREER GROWTH</p>
                         </div>
                     </div>
 
