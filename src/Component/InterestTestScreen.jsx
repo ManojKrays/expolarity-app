@@ -8,6 +8,8 @@ import { errorNotify, successNotify } from "../service/Messagebar";
 import useAuthStore from "../store/authStore";
 import hourGlass from "../assets/hourGlass.gif";
 import useUnsavedChangesWarning from "../hooks/useUnsavedChangesWarning";
+import userImg from "../assets/UserProfile.png";
+import bot from "../assets/xpolar.png";
 
 const InterestScreen = ({ onBackToWelcome, testData, setTestData }) => {
     const messagesEndRef = useRef(null);
@@ -193,23 +195,6 @@ const InterestScreen = ({ onBackToWelcome, testData, setTestData }) => {
 
     return (
         <div className="relative flex flex-col rounded-md bg-gray-100 font-mallanna">
-            {/* <div className="sticky top-0 z-30 flex justify-end pr-5 pt-2">
-                <div className="fixed flex flex-col items-center">
-                    <img
-                        src={hourGlass}
-                        alt="hourGlass"
-                        className="h-10 w-10"
-                    />
-                    <span className="text-xs text-green-600">{formatTime(timer)}</span>
-                </div>
-
-                <div className="fixed right-0 top-1 flex items-center justify-between rounded-md bg-green-500 px-3 pb-2 pt-3 text-sm md:right-1 md:top-1.5 lg:right-14">
-                    <span className="text-white">
-                        Question Set - {currentQuestionIndex + 1}/{questionBlocks.length}
-                    </span>
-                </div>
-            </div> */}
-
             <div>
                 <div className="fixed right-2 top-14 z-30 flex flex-col items-center">
                     <img
@@ -228,7 +213,7 @@ const InterestScreen = ({ onBackToWelcome, testData, setTestData }) => {
             </div>
 
             <div className="custom-scrollbar flex-1 space-y-3 overflow-y-auto px-4 pb-10 pr-1 pt-5 md:px-6">
-                {currentData?.messages.map((msg, idx) => (
+                {/* {currentData?.messages.map((msg, idx) => (
                     <div
                         key={idx}
                         className={`max-w-[75%] whitespace-pre-wrap break-words rounded-xl px-4 py-2 text-[16px] shadow-sm ${
@@ -237,11 +222,60 @@ const InterestScreen = ({ onBackToWelcome, testData, setTestData }) => {
                     >
                         {msg.content}
                     </div>
-                ))}
+                ))} */}
+
+                {currentData?.messages.map((msg, idx) => {
+                    const isBot = msg.type === "bot";
+                    const isLastBot = isBot && (idx === currentData.messages.length - 1 || currentData.messages[idx + 1]?.type !== "bot");
+
+                    return (
+                        <div
+                            key={idx}
+                            className={`flex max-w-[75%] items-end space-x-2 ${
+                                msg.type === "user" ? "ml-auto flex-row-reverse space-x-reverse" : "mr-auto"
+                            }`}
+                        >
+                            <div className="h-8 w-8 flex-shrink-0 overflow-hidden rounded-full">
+                                {isBot && isLastBot ? (
+                                    <img
+                                        src={bot}
+                                        alt="bot icon"
+                                        className="h-8 w-8"
+                                    />
+                                ) : isBot ? (
+                                    <div className="h-8 w-8" />
+                                ) : msg.type === "user" ? (
+                                    <img
+                                        src={userImg}
+                                        alt="user icon"
+                                        className="h-8 w-8"
+                                    />
+                                ) : null}
+                            </div>
+
+                            <div
+                                className={`whitespace-pre-wrap break-words rounded-xl px-4 py-2 text-[16px] shadow-sm ${
+                                    msg.type === "user" ? "rounded-br-none bg-sky-200 text-gray-800" : "rounded-bl-none bg-white text-gray-800"
+                                }`}
+                            >
+                                {msg.content}
+                            </div>
+                        </div>
+                    );
+                })}
+
                 <div ref={messagesEndRef} />
 
                 {typing && (
-                    <div className="mt-2 pb-5">
+                    <div className="mt-2 flex items-center gap-3 pb-5">
+                        <div className="h-8 w-8 flex-shrink-0 overflow-hidden rounded-full">
+                            <img
+                                src={bot}
+                                alt="bot icon"
+                                className="h-8 w-8"
+                            />
+                        </div>
+
                         <div className="inline-flex items-center space-x-2 rounded-r-lg rounded-tl-lg bg-white px-4 py-2 text-[15px] text-gray-500 shadow">
                             <span>Typing</span>
                             <span className="flex items-center space-x-1">

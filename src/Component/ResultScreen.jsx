@@ -118,6 +118,7 @@ const ResultScreen = ({ setSelectedCareer, setCurrentScreen }) => {
                             <p className="text-justify text-base font-semibold text-indigo-800">
                                 Based on your personality, skills, and interests, here are the career paths that best match your unique potential!
                             </p>
+                            <p className="text-[12px] leading-relaxed text-gray-700">Click on each careers to know more about them.</p>
                             <div className="flex flex-wrap gap-3 pt-3">
                                 {(jobs.length <= 6 ? jobs : jobs.slice(0, 6)).map((career, idx) => (
                                     <div

@@ -7,6 +7,8 @@ import { successNotify, errorNotify } from "../service/Messagebar";
 import useAuthStore from "../store/authStore";
 import hourGlass from "../assets/hourGlass.gif";
 import useUnsavedChangesWarning from "../hooks/useUnsavedChangesWarning";
+import userImg from "../assets/UserProfile.png";
+import bot from "../assets/xpolar.png";
 
 const QuestionScreen = ({ questionType, testData, setTestData, onBackToWelcome }) => {
     const user = useAuthStore((state) => state.user);
@@ -229,34 +231,27 @@ const QuestionScreen = ({ questionType, testData, setTestData, onBackToWelcome }
         <>
             {isLoading ? (
                 <div className="min-h-[424px] flex-col rounded-md bg-gray-100 px-6 pt-5 md:pt-0">
-                    <div className="inline-flex items-center space-x-2 rounded-r-lg rounded-tl-lg bg-white px-4 py-2 font-mallanna text-[15px] text-gray-500 shadow">
-                        <span>Typing</span>
-                        <span className="flex items-center space-x-1">
-                            <span className="block h-1 w-1 animate-bounce rounded-full bg-gray-400 [animation-delay:0ms]"></span>
-                            <span className="block h-1 w-1 animate-bounce rounded-full bg-gray-400 [animation-delay:150ms]"></span>
-                            <span className="block h-1 w-1 animate-bounce rounded-full bg-gray-400 [animation-delay:300ms]"></span>
-                        </span>
+                    <div className="mt-2 flex items-center gap-3 pb-5">
+                        <div className="h-8 w-8 flex-shrink-0 overflow-hidden rounded-full">
+                            <img
+                                src={bot}
+                                alt="bot icon"
+                                className="h-8 w-8"
+                            />
+                        </div>
+
+                        <div className="inline-flex items-center space-x-2 rounded-r-lg rounded-tl-lg bg-white px-4 py-2 font-mallanna text-[15px] text-gray-500 shadow">
+                            <span>Typing</span>
+                            <span className="flex items-center space-x-1">
+                                <span className="block h-1 w-1 animate-bounce rounded-full bg-gray-400 [animation-delay:0ms]"></span>
+                                <span className="block h-1 w-1 animate-bounce rounded-full bg-gray-400 [animation-delay:150ms]"></span>
+                                <span className="block h-1 w-1 animate-bounce rounded-full bg-gray-400 [animation-delay:300ms]"></span>
+                            </span>
+                        </div>
                     </div>
                 </div>
             ) : (
                 <div className="relative flex flex-col rounded-md pt-2 font-mallanna lg:pt-0">
-                    {/* <div className="sticky top-0 z-30 flex justify-end pr-5 pt-2">
-                        <div className="fixed flex flex-col items-center">
-                            <img
-                                src={hourGlass}
-                                alt="hourGlass"
-                                className="h-10 w-10"
-                            />
-                            <span className="text-xs text-green-600">{formatTime(timer)}</span>
-                        </div>
-
-                        <div className="fixed right-0 top-1 flex items-center justify-between rounded-md bg-green-500 px-3 pb-2 pt-3 text-sm md:right-1 md:top-1.5 lg:right-14">
-                            <span className="text-white">
-                                Questions - {currentData?.currentIndex + 1}/{questions?.length || 0}
-                            </span>
-                        </div>
-                    </div> */}
-
                     <div>
                         <div className="fixed right-2 top-14 z-30 flex flex-col items-center">
                             <img
@@ -264,10 +259,10 @@ const QuestionScreen = ({ questionType, testData, setTestData, onBackToWelcome }
                                 alt="hourGlass"
                                 className="h-10 w-10"
                             />
-                            <span className="text-xs text-green-600">{formatTime(timer)}</span>
+                            <span className="text-xs text-[#12703C]">{formatTime(timer)}</span>
                         </div>
 
-                        <div className="fixed right-2 top-2 z-30 flex items-center justify-between rounded-md bg-green-500 px-3 py-2 text-sm">
+                        <div className="fixed right-2 top-2 z-30 flex items-center justify-between rounded-md bg-[#12703C] px-3 py-2 text-sm">
                             <span className="text-white">
                                 Questions - {currentData?.currentIndex + 1}/{questions?.length || 0}
                             </span>
@@ -275,22 +270,57 @@ const QuestionScreen = ({ questionType, testData, setTestData, onBackToWelcome }
                     </div>
 
                     <div className="custom-scrollbar scrollable flex-1 space-y-3 overflow-y-auto px-4 pb-10 pr-1 pt-3 md:px-6">
-                        {currentData?.messages.map((msg, idx) => (
-                            <div
-                                key={idx}
-                                className={`max-w-[75%] whitespace-pre-wrap break-words rounded-xl px-4 py-3 text-[16px] shadow-md ${
-                                    msg.type === "user" ? "ml-auto rounded-br-none bg-sky-200" : "mr-auto rounded-bl-none bg-white text-gray-800"
-                                }`}
-                            >
-                                {msg.content}
-                            </div>
-                        ))}
+                        {currentData?.messages.map((msg, idx) => {
+                            const isBot = msg.type === "bot";
+                            const isLastBot = isBot && (idx === currentData.messages.length - 1 || currentData.messages[idx + 1]?.type !== "bot");
+
+                            return (
+                                <div
+                                    key={idx}
+                                    className={`flex max-w-[75%] items-end space-x-2 ${msg.type === "user" ? "ml-auto flex-row-reverse space-x-reverse" : "mr-auto"}`}
+                                >
+                                    <div className="h-8 w-8 flex-shrink-0 overflow-hidden rounded-full">
+                                        {isBot && isLastBot && (
+                                            <img
+                                                src={bot}
+                                                alt="bot icon"
+                                                className="h-8 w-8"
+                                            />
+                                        )}
+                                        {msg.type === "user" && (
+                                            <img
+                                                src={userImg}
+                                                alt="user icon"
+                                                className="h-8 w-8"
+                                            />
+                                        )}
+                                    </div>
+                                    <div
+                                        className={`whitespace-pre-wrap break-words rounded-xl px-4 py-2 text-[16px] shadow-sm ${
+                                            msg.type === "user"
+                                                ? "rounded-br-none bg-sky-200 text-gray-800"
+                                                : "rounded-bl-none bg-white text-gray-800"
+                                        }`}
+                                    >
+                                        {msg.content}
+                                    </div>
+                                </div>
+                            );
+                        })}
+
                         <div ref={messagesEndRef} />
 
                         {!currentData?.isCompleted && (
                             <div className="mt-4 pb-10">
                                 {isTyping ? (
-                                    <div className="pb-4">
+                                    <div className="mt-2 flex items-center gap-3 pb-5">
+                                        <div className="h-8 w-8 flex-shrink-0 overflow-hidden rounded-full">
+                                            <img
+                                                src={bot}
+                                                alt="bot icon"
+                                                className="h-8 w-8"
+                                            />
+                                        </div>
                                         <div className="inline-flex items-center space-x-2 rounded-r-lg rounded-tl-lg bg-white px-4 py-2 text-[16px] text-gray-500 shadow">
                                             <span>Typing</span>
                                             <span className="flex items-center space-x-1">
