@@ -82,66 +82,88 @@ import volunteer from "../assets/images/volunteer.png";
 import political from "../assets/images/political.png";
 import details from "../assets/images/details.png";
 
+import blog1 from "../assets/blog1.png";
+import blog2 from "../assets/blog2.png";
+import blog3 from "../assets/blog3.png";
+
+import kid1 from "../assets/testimonials/kid1.jpg";
+import kid2 from "../assets/testimonials/kid2.jpg";
+import kid3 from "../assets/testimonials/kid3.webp";
+import kid4 from "../assets/testimonials/kid4.jpg";
+import kid5 from "../assets/testimonials/kid5.webp";
+import kid6 from "../assets/testimonials/kid6.jpg";
+import parent1 from "../assets/testimonials/parent1.jpg";
+import parent2 from "../assets/testimonials/parent2.jpg";
+
 export const testimonialsData = [
     {
         name: "Aarav Mehta",
         text: "The career test helped me understand what I’m good at. I now know I want to be an engineer!",
         location: "Mumbai, India",
-        photo: "https://randomuser.me/api/portraits/men/21.jpg",
+        photo: kid1,
     },
     {
         name: "Sneha Reddy",
         text: "As a parent, I found this platform extremely helpful in guiding my daughter’s career interest early on.",
         location: "Hyderabad, India",
-        photo: "https://randomuser.me/api/portraits/women/44.jpg",
+        photo: parent1,
     },
     {
         name: "Karan Patel",
         text: "I used to be confused about my future, but after the test, I discovered my interest in creative fields.",
         location: "Ahmedabad, India",
-        photo: "https://randomuser.me/api/portraits/men/36.jpg",
+        photo: kid2,
     },
     {
         name: "Priya Singh",
         text: "This tool gave us so much clarity. It’s a must-have for every student exploring career options.",
         location: "Delhi, India",
-        photo: "https://randomuser.me/api/portraits/women/68.jpg",
+        photo: kid4,
     },
     {
         name: "Rahul Nair",
         text: "I was surprised at how accurate the suggestions were! I’m now focused on science and tech careers.",
         location: "Kochi, India",
-        photo: "https://randomuser.me/api/portraits/men/52.jpg",
+        photo: kid5,
     },
     {
         name: "Megha Verma",
         text: "The test results gave my son a clear roadmap. He’s more confident about his future choices now.",
         location: "Pune, India",
-        photo: "https://randomuser.me/api/portraits/women/29.jpg",
+        photo: kid3,
     },
     {
         name: "Ankit Sharma",
         text: "Very user-friendly and informative. Helped me identify my strengths and interests early.",
         location: "Jaipur, India",
-        photo: "https://randomuser.me/api/portraits/men/42.jpg",
+        photo: kid6,
     },
     {
         name: "Divya Raj",
         text: "Thanks to this platform, my daughter discovered her passion for design. Truly a valuable tool.",
         location: "Chennai, India",
-        photo: "https://randomuser.me/api/portraits/women/50.jpg",
+        photo: parent2,
+    },
+];
+
+export const blogData = [
+    {
+        title: "Why Taking a Career Test Is Like Using a Map for Life",
+        description: "Understand how career assessments help identify the right career fit and how students can benefit from them.",
+        image: blog1,
+        path: "/blog1",
     },
     {
-        name: "Ishaan Dutta",
-        text: "The career test helped me explore new fields I hadn’t considered before. I’m excited for the future!",
-        location: "Kolkata, India",
-        photo: "https://randomuser.me/api/portraits/men/60.jpg",
+        title: "How to Find Your Strengths (Even If You’re Still Figuring Things Out)",
+        description: "Explore practical tips and guidance for students to identify their strengths and choose the right career track early in life.",
+        image: blog2,
+        path: "/blog2",
     },
     {
-        name: "Ritika Malhotra",
-        text: "As a teacher, I recommend this to all my students. It’s simple, insightful, and empowering.",
-        location: "Bangalore, India",
-        photo: "https://randomuser.me/api/portraits/women/61.jpg",
+        title: "5 Things to Do Now That Will Help Your Future Career",
+        description: "A breakdown of essential 21st-century skills that children should cultivate to thrive in any career field.",
+        image: blog3,
+        path: "/blog3",
     },
 ];
 

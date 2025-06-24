@@ -1,9 +1,9 @@
 import React from "react";
 import logoImg from "../../assets/logo.png";
 
-function Footer() {
+function Footer({ scrollToSection }) {
     return (
-        <div className="flex flex-col">
+        <div className="flex flex-col font-mallanna">
             <div className="bg-[#EDFCF5] py-5">
                 <div className="flex items-center justify-center gap-2">
                     <img
@@ -18,10 +18,11 @@ function Footer() {
                 </div>
 
                 <ul className="flex flex-wrap items-center justify-center gap-5 pt-3 text-[16px]">
-                    {["Career", "Assessment", "Test", "Blogs", "Testimonials"].map((item) => (
+                    {["Home", "Why Us", "Testimonials", "Blogs"].map((item) => (
                         <li
                             key={item}
                             className="cursor-pointer duration-200 hover:text-green-500"
+                            onClick={() => scrollToSection(item)}
                         >
                             {item}
                         </li>

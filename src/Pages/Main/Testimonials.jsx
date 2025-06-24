@@ -25,7 +25,7 @@ const Testimonials = () => {
         <div className="px-[9%] py-8 font-mallanna">
             <div className="text-center">
                 <p className="text-[30px] font-semibold text-green-500">Testimonials</p>
-                <p>What our students are saying about us.</p>
+                <p>What our students and parents are saying about us.</p>
             </div>
 
             <div className="grid grid-cols-1 gap-6 px-4 pt-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">

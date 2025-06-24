@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import logoImg from "../../assets/logo.png";
 import { CircleArrowRight, Menu, X } from "lucide-react";
 import { useNavigate } from "react-router-dom";
@@ -9,6 +9,12 @@ const Nav = ({ scrollToSection }) => {
     const navigate = useNavigate();
     const [menuOpen, setMenuOpen] = useState(false);
     const [profileOpen, setProfileOpen] = useState(false);
+    const [currentPath, setCurrentPath] = useState(null);
+
+    useEffect(() => {
+        const path = window.location.pathname;
+        setCurrentPath(path);
+    }, []);
 
     const NavigateToApp = () => {
         navigate("/login");
@@ -27,7 +33,10 @@ const Nav = ({ scrollToSection }) => {
         <div className="fixed z-40 w-full">
             <div className="relative bg-[#FBFBFB] py-4 font-mallanna">
                 <div className="flex items-center justify-between px-4 md:justify-around">
-                    <div className="flex items-center gap-2">
+                    <div
+                        className="flex cursor-pointer items-center gap-2"
+                        onClick={() => navigate("/")}
+                    >
                         <img
                             src={logoImg}
                             alt="Logo"
@@ -94,15 +103,25 @@ const Nav = ({ scrollToSection }) => {
                     </div>
 
                     <ul className="hidden gap-5 text-[16px] md:flex">
-                        {["Home", "Why Us", "Testimonials", "Blogs"].map((item) => (
-                            <li
-                                key={item}
-                                className="cursor-pointer duration-200 hover:text-green-500"
-                                onClick={() => scrollToSection(item)}
-                            >
-                                {item}
-                            </li>
-                        ))}
+                        {currentPath === "/"
+                            ? ["Home", "Why Us", "Testimonials", "Blogs"].map((item) => (
+                                  <li
+                                      key={item}
+                                      className="cursor-pointer duration-200 hover:text-green-500"
+                                      onClick={() => scrollToSection(item)}
+                                  >
+                                      {item}
+                                  </li>
+                              ))
+                            : ["Home"].map((item) => (
+                                  <li
+                                      key={item}
+                                      className="cursor-pointer duration-200 hover:text-green-500"
+                                      onClick={() => navigate("/")}
+                                  >
+                                      {item}
+                                  </li>
+                              ))}
                     </ul>
 
                     <div className="hidden cursor-pointer md:flex">
@@ -147,15 +166,25 @@ const Nav = ({ scrollToSection }) => {
 
                 <div className={`overflow-hidden transition-all duration-300 md:hidden ${menuOpen ? "max-h-[500px]" : "max-h-0"}`}>
                     <ul className="flex flex-col items-center gap-4 py-4">
-                        {["Home", "Why Us", "Testimonials", "Blogs"].map((item) => (
-                            <li
-                                key={item}
-                                className="cursor-pointer text-[16px] duration-200 hover:text-green-500"
-                                onClick={() => scrollToSection(item)}
-                            >
-                                {item}
-                            </li>
-                        ))}
+                        {currentPath === "/"
+                            ? ["Home", "Why Us", "Testimonials", "Blogs"].map((item) => (
+                                  <li
+                                      key={item}
+                                      className="cursor-pointer text-[16px] duration-200 hover:text-green-500"
+                                      onClick={() => scrollToSection(item)}
+                                  >
+                                      {item}
+                                  </li>
+                              ))
+                            : ["Home"].map((item) => (
+                                  <li
+                                      key={item}
+                                      className="cursor-pointer duration-200 hover:text-green-500"
+                                      onClick={() => navigate("/")}
+                                  >
+                                      {item}
+                                  </li>
+                              ))}
                     </ul>
                 </div>
             </div>
