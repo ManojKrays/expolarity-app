@@ -202,10 +202,10 @@ const InterestScreen = ({ onBackToWelcome, testData, setTestData }) => {
                         alt="hourGlass"
                         className="h-10 w-10"
                     />
-                    <span className="text-xs text-green-600">{formatTime(timer)}</span>
+                    <span className="text-xs text-[#12703C]">{formatTime(timer)}</span>
                 </div>
 
-                <div className="fixed right-2 top-2 z-30 flex items-center justify-between rounded-md bg-green-500 px-3 py-2 text-sm">
+                <div className="fixed right-2 top-2 z-30 flex items-center justify-between rounded-md bg-[#12703C] px-3 py-2 text-sm">
                     <span className="text-white">
                         Question Set - {currentQuestionIndex + 1}/{questionBlocks.length}
                     </span>
@@ -213,17 +213,6 @@ const InterestScreen = ({ onBackToWelcome, testData, setTestData }) => {
             </div>
 
             <div className="custom-scrollbar flex-1 space-y-3 overflow-y-auto px-4 pb-10 pr-1 pt-5 md:px-6">
-                {/* {currentData?.messages.map((msg, idx) => (
-                    <div
-                        key={idx}
-                        className={`max-w-[75%] whitespace-pre-wrap break-words rounded-xl px-4 py-2 text-[16px] shadow-sm ${
-                            msg.type === "user" ? "ml-auto rounded-br-none bg-sky-200" : "mr-auto rounded-bl-none bg-white text-gray-800"
-                        }`}
-                    >
-                        {msg.content}
-                    </div>
-                ))} */}
-
                 {currentData?.messages.map((msg, idx) => {
                     const isBot = msg.type === "bot";
                     const isLastBot = isBot && (idx === currentData.messages.length - 1 || currentData.messages[idx + 1]?.type !== "bot");
