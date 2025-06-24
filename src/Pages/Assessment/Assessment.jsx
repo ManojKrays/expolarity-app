@@ -85,7 +85,7 @@ const Assessment = () => {
 
     return (
         <div className="relative min-h-[100dvh] w-full font-mallanna">
-            <div className="fixed top-0 z-20 flex w-full items-center justify-between bg-green-500 p-3 md:hidden">
+            <div className="fixed top-0 z-20 flex w-full items-center justify-between bg-[#12703C] p-3 md:hidden">
                 <div className="flex items-center space-x-2 font-bold text-white">
                     <Menu
                         size={20}
