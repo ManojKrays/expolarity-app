@@ -9,8 +9,8 @@ const WhyUs = () => {
             <div className="mx-auto text-center md:w-[50%]">
                 <h2 className="text-center text-[30px] font-semibold text-green-500">Why Choose Expolarity.AI</h2>
                 <p className="">
-                    Lorem ipsum dolor sit amet consectetur, adipisicing elit. Hic vero officia iusto eum explicabo magni nobis alias vel a? Nam,
-                    neque.
+                    Expolarity.AI offers science-backed, personalized career guidance using AI-driven psychometrics to match skills, interests, and
+                    potential effectively.
                 </p>
             </div>
 
@@ -23,10 +23,7 @@ const WhyUs = () => {
                     />
                     <div className="py-2">
                         <p className="text-2xl font-semibold">Proven Methods</p>
-                        <p>
-                            Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ut asperiores, consequuntur nesciunt praesentium corporis ea
-                            ducimus molestiae cumque. Quia, temporibus ex!
-                        </p>
+                        <p>Expolarity.AI uses proven psychometric science and AI to guide students toward careers that fit their true potential.</p>
                     </div>
                 </div>
 
@@ -39,8 +36,8 @@ const WhyUs = () => {
                     <div className="py-2">
                         <p className="text-2xl font-semibold">Quick and Easy</p>
                         <p>
-                            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Pariatur quae, impedit quam officiis eveniet tempora repudiandae
-                            odio hic neque? Optio ducimus nesciunt similique.
+                            Taking our tests is quick and easy, engaging, chat-based questions guide you through personalized assessments in just a
+                            few minutes.
                         </p>
                     </div>
                 </div>
@@ -54,8 +51,8 @@ const WhyUs = () => {
                     <div className="py-2">
                         <p className="text-2xl font-semibold">Secure & Confidentials</p>
                         <p>
-                            Lorem ipsum dolor sit amet consectetur, adipisicing elit. Distinctio officia excepturi doloribus consequuntur sapiente,
-                            amet tenetur doloremque cupiditate rerum laboriosam ipsam.
+                            We prioritize your privacy, every test and personal detail is securely stored, confidential, and never shared. Your data
+                            belongs only to you.
                         </p>
                     </div>
                 </div>

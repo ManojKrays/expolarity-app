@@ -23,7 +23,7 @@ const Banner = () => {
                 <div className="py-8 text-center text-white">
                     <h2 className="text-[30px] font-semibold">Want to learn more about assessment?</h2>
                     <p className="text-xl">Call us straight away we are glad to help you</p>
-                    <p className="font-semibold">+91 9876543210</p>
+                    <p className="font-semibold">+91 8778540194</p>
 
                     <div className="flex items-center justify-center">
                         <button

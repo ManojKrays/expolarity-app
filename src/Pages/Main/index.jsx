@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Nav from "./Nav";
 import Hero from "./Hero";
 import WhyUs from "./WhyUs";
@@ -20,13 +20,13 @@ const Main = () => {
         refs[section]?.current?.scrollIntoView({ behavior: "smooth" });
     };
 
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, []);
+
     return (
         <div>
             <Nav scrollToSection={scrollToSection} />
-            {/* <ChatBot
-                setIsOpen={setIsOpen}
-                isOpen={isOpen}
-            /> */}
             <div ref={refs.Home}>
                 <Hero />
             </div>
@@ -40,7 +40,7 @@ const Main = () => {
             <div ref={refs.Blogs}>
                 <Blogs />
             </div>
-            <Footer />
+            <Footer scrollToSection={scrollToSection} />
         </div>
     );
 };

@@ -24,9 +24,9 @@ const Hero = () => {
                     <h2 className="text-[45px] font-bold leading-[1.2]">
                         Find Your Perfect <br /> <span className="text-green-500">Career Match</span> Today
                     </h2>
-                    <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Aliquid, quaerat. Dolore, adipisci provident</p>
+                    <p>Discover careers perfectly matched to your strengths, interests, personality traits, goals, and growth potential.</p>
                     <ul className="space-y-2">
-                        {["Personality Assessment", "Intrest Assessment", "Skill Assessment", "Apptitude Evaluvation"].map((item) => (
+                        {["Personality Assessment", "Intrest Assessment", "Skill Assessment", "Multiple Intelligence test"].map((item) => (
                             <li
                                 key={item}
                                 className="flex items-center gap-1"

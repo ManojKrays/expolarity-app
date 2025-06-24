@@ -6,6 +6,9 @@ import Register from "./Pages/Register/index.jsx";
 import EmailVerify from "./Pages/EmailVerify.jsx";
 import Assessment from "./Pages/Assessment/Assessment.jsx";
 import useAuthStore from "./store/authStore.js";
+import Blog3 from "./Pages/Blogs/Blog3.jsx";
+import Blog2 from "./Pages/Blogs/Blog2.jsx";
+import Blog1 from "./Pages/Blogs/Blog1.jsx";
 
 const ProtectedRoute = ({ children }) => {
     const user = useAuthStore((state) => state.user);
@@ -48,6 +51,21 @@ const Router = () => {
                 <Route
                     path="/activate"
                     element={<EmailVerify />}
+                />
+
+                <Route
+                    path="/blog1"
+                    element={<Blog1 />}
+                />
+
+                <Route
+                    path="/blog2"
+                    element={<Blog2 />}
+                />
+
+                <Route
+                    path="/blog3"
+                    element={<Blog3 />}
                 />
 
                 <Route
