@@ -55,6 +55,8 @@
 @tailwind components;
 @tailwind utilities;
 
+
+
 .launchBg {
     background: url("./assets/bg3.jpg");
     background-repeat: no-repeat;
@@ -69,3 +71,4 @@
     transform: translate(-50%, -50%);
     position: absolute;
 }
+
