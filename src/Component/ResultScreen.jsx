@@ -7,7 +7,6 @@ import { useQuery } from "@tanstack/react-query";
 import { ArrowLeft, Sparkles, CheckCircle } from "lucide-react";
 import { Link } from "react-router-dom";
 
-
 const ResultScreen = ({ setSelectedCareer, setCurrentScreen }) => {
     const resultId = useAuthStore((state) => state?.user?.id);
     const [riasecvalues, setRiasecValues] = useState([]);
@@ -73,16 +72,9 @@ const ResultScreen = ({ setSelectedCareer, setCurrentScreen }) => {
                 <div className="mb-2 rounded bg-red-100 p-2 text-sm text-red-700">⚠️ {error.message}</div>
             ) : (
                 <div className="mx-auto min-h-[424px] w-full px-3 pt-2 font-mallanna">
-                    <div className="mb-8 flex items-center gap-4">
-                        <Link to="/">
-                        <button className="border px-2 py-2 rounded">
-    <ArrowLeft className="h-4 w-4" />
-  </button>
-                        </Link>
-                        <div>
-                            <h1 className="text-foreground text-3xl font-bold"> Your Career Results</h1>
-                            <p className="pb-10 text-[#12703C]">Below is you Career Result</p>
-                        </div>
+                    <div>
+                        <h1 className="text-foreground text-3xl font-bold"> Your Career Results</h1>
+                        <p className="pb-10 text-[#12703C]">Below is you Career Result</p>
                     </div>
 
                     {/* Test Summary Card */}

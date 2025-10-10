@@ -194,7 +194,7 @@ const InterestScreen = ({ onBackToWelcome, testData, setTestData }) => {
     useUnsavedChangesWarning(isDirty);
 
     return (
-        <div className="relative flex flex-col rounded-md bg-gray-100 font-mallanna">
+        <div className="relative flex flex-col rounded-md font-mallanna">
             <div>
                 <div className="fixed right-2 top-14 z-30 flex flex-col items-center">
                     <img
@@ -244,7 +244,7 @@ const InterestScreen = ({ onBackToWelcome, testData, setTestData }) => {
 
                             <div
                                 className={`whitespace-pre-wrap break-words rounded-xl px-4 py-2 text-[16px] shadow-sm ${
-                                    msg.type === "user" ? "rounded-br-none bg-sky-200 text-gray-800" : "rounded-bl-none bg-white text-gray-800"
+                                    msg.type === "user" ? "rounded-br-none bg-[#12703C] text-white " : "rounded-bl-none bg-[#C9E9CE] text-gray-800"
                                 }`}
                             >
                                 {msg.content}
@@ -283,7 +283,7 @@ const InterestScreen = ({ onBackToWelcome, testData, setTestData }) => {
                                 <button
                                     key={idx}
                                     onClick={() => handleAnswer(opt)}
-                                    className="flex flex-col items-center justify-center rounded-lg border border-gray-200 bg-white px-2 py-2 text-[14px] text-gray-700 hover:bg-gray-100"
+                                    className="flex flex-col items-center justify-center rounded-lg border border-[#12703C]  bg-white px-2 py-2 text-[14px] text-gray-700 hover:bg-gray-100"
                                 >
                                     <img
                                         src={opt.image}

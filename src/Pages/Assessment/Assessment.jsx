@@ -95,10 +95,10 @@ const Assessment = () => {
                     <span>Xplora</span>
                 </div>
             </div>
-
             <div className="flex">
                 <div
-                    className={`fixed z-50 h-[100dvh] max-w-xs bg-[#12703C] shadow-lg transition-transform duration-300 md:static md:flex md:w-[20%] md:translate-x-0 ${
+                    style={{ backgroundImage: `url("src/assets/bg.png")` }}
+                    className={`fixed z-50 h-[100dvh] max-w-xs shadow-lg transition-transform duration-300 md:static md:flex md:w-[20%] md:translate-x-0 ${
                         sidebarOpen ? "translate-x-0" : "-translate-x-full"
                     }`}
                 >
@@ -161,7 +161,12 @@ const Assessment = () => {
                     ></div>
                 )}
 
-                <div className="scrollable h-[100dvh] flex-1 overflow-y-auto bg-gray-100 pt-10 lg:px-20">
+                <div
+                    className={`scrollable h-[100dvh] flex-1 overflow-y-auto pt-10 lg:px-20 ${
+                        currentScreen === "welcome" ? "bg-gradient-to-br from-purple-50 via-pink-50 to-cyan-50" : "bg-white"
+                    }`}
+                >
+                    {" "}
                     {currentScreen === "welcome" && (
                         <div className="w-full px-4 md:px-5 lg:p-0">
                             <WelcomeScreen
@@ -171,10 +176,10 @@ const Assessment = () => {
                                 isLoading={isLoading}
                                 error={error}
                                 setCurrentScreen={setCurrentScreen}
+                                className="bg-gradient-to-br from-purple-50 via-pink-50 to-cyan-50"
                             />
                         </div>
                     )}
-
                     {currentScreen === "questions" && selectedQuestionType && (
                         <QuestionScreen
                             questionType={selectedQuestionType}
@@ -183,16 +188,13 @@ const Assessment = () => {
                             setTestData={setTestData}
                         />
                     )}
-
                     {currentScreen === "result" && (
                         <ResultScreen
                             setSelectedCareer={setSelectedCareer}
                             setCurrentScreen={setCurrentScreen}
                         />
                     )}
-
                     {currentScreen === "career" && <CareerPathScreen selectedCareer={selectedCareer} />}
-
                     {currentScreen === "interest" && (
                         <InterestScreen
                             onBackToWelcome={handleBackToWelcome}
