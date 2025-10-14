@@ -99,7 +99,7 @@ const WelcomeScreen = ({ questionTypes, onQuestionTypeSelect, isLoading, testDat
                         );
                     })}
 
-                    <div className="grid grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                         {questionTypes &&
                             questionTypes.map((type) => {
                                 const isCompleted = Boolean(testData?.[type.section]?.isCompleted);
@@ -113,7 +113,7 @@ const WelcomeScreen = ({ questionTypes, onQuestionTypeSelect, isLoading, testDat
                                         className={`rounded-lg border-2 p-3 transition-all duration-300 hover:shadow-md ${
                                             isTestDone
                                                 ? "border-green-800 bg-white hover:bg-green-200"
-                                                : "border-gray-200 hover:border-indigo-300 hover:bg-indigo-50"
+                                                : "border-green-800 bg-white hover:border-indigo-400 hover:bg-indigo-50"
                                         }`}
                                     >
                                         <div className="mx-auto flex items-center justify-center rounded-xl p-4 transition-all hover:shadow-md">
@@ -125,11 +125,13 @@ const WelcomeScreen = ({ questionTypes, onQuestionTypeSelect, isLoading, testDat
                                                 <h3 className="text-[20px] font-bold tracking-wide">{type.title}</h3>
                                                 <div className="mt-2 flex justify-center">
                                                     {isTestDone ? (
-                                                        <button className="rounded-md bg-green-800 px-3 py-1 text-[16px] text-white shadow-sm transition-colors hover:bg-green-600">
-                                                            Completed
-                                                        </button>
+                                                            <button className="flex rounded-md bg-green-800 px-3 py-1 text-[16px] text-white shadow-sm transition-colors hover:bg-green-600">
+                                                            <CheckCircle className=" text-white h-6 w-6 pr-2" />
+
+                                                                Completed
+                                                            </button>
                                                     ) : (
-                                                        <p className="text-[13px] text-gray-500">{`${parseInt(type.duration.split(":")[1])} min`}</p>
+                                                        <p className="text-[16px] font-bold text-green-900">{`${parseInt(type.duration.split(":")[1])} min`}</p>
                                                     )}
                                                 </div>
                                             </div>
@@ -153,9 +155,6 @@ const WelcomeScreen = ({ questionTypes, onQuestionTypeSelect, isLoading, testDat
                                 style={{ animationDelay: "400ms" }}
                             >
                                 <div className="mb-6 flex items-start gap-4">
-                                    <div className="flex h-16 w-16 animate-bounce items-center justify-center rounded-2xl bg-green-800 text-3xl shadow-lg">
-                                        🎉
-                                    </div>
                                     <div>
                                         <h2 className="text-foreground mb-2 text-2xl font-bold">Amazing Progress!</h2>
                                         <p className="text-foreground/70 text-lg">
@@ -170,13 +169,13 @@ const WelcomeScreen = ({ questionTypes, onQuestionTypeSelect, isLoading, testDat
                                     onClick={() => setCurrentScreen("result")}
                                     className="shadow-float h-12 w-full rounded-2xl border-0 bg-gradient-to-r from-yellow-400 via-orange-400 to-yellow-500 text-xl font-bold text-white transition-all hover:scale-105 hover:from-yellow-500 hover:via-orange-500 hover:to-yellow-600 hover:shadow-xl"
                                 >
-                                    <div className="flex items-center justify-center"><Rocket className="mr-3 h-6 w-6" />
-                                    Get Career Results
-                                    <Sparkles className="ml-3 h-6 w-6" /></div>
+                                    <div className="flex items-center justify-center">
+                                        <Rocket className="mr-3 h-6 w-6" />
+                                        Get Career Results
+                                        <Sparkles className="ml-3 h-6 w-6" />
+                                    </div>
                                 </button>
                             </div>
-
-                            
                         </div>
                     )}
                 </div>

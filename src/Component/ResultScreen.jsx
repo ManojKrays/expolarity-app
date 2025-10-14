@@ -99,7 +99,7 @@ const ResultScreen = ({ setSelectedCareer, setCurrentScreen }) => {
                                 >
                                     <div className="flex w-1/4 items-center gap-2">
                                         <CheckCircle className="hidden text-[#12703C] md:block md:h-5 md:w-5" />
-                                        <span className="text-foreground font-semibold">{item.type}</span>
+                                        <span className=" font-semibold text-[14px] md:text-[16px]">{item.type}</span>
                                     </div>
                                     <div className="h-[6px] w-full rounded-full bg-primary">
                                         <div
@@ -144,7 +144,7 @@ const ResultScreen = ({ setSelectedCareer, setCurrentScreen }) => {
                                         setSelectedCareer(career);
                                         setCurrentScreen("career");
                                     }}
-                                    className="cursor-pointer rounded-lg border border-[#12703C] bg-white p-4 shadow transition hover:bg-indigo-50 hover:shadow-md"
+                                    className="cursor-pointer rounded-lg border-2 border-[#12703C] bg-white p-4 shadow transition hover:bg-green-100 hover:shadow-md"
                                 >
                                     <h3 className="text-md mb-1 text-center font-bold">{career}</h3>
                                     {/* <p className="text-xs text-gray-600">
