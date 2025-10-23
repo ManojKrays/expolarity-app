@@ -13,8 +13,9 @@ export default {
         lightGray: "#545969",
       },
       fontFamily: {
+        poppins: ['"Poppins"', "sans-serif"],
         kite: ['"Kite One"', "sans-serif"],
-        mallanna: ['"Mallanna"', "sans-serif"],
+        mallanna: ['"Andika"', "sans-serif"],
         golos: ['"Golos Text"', "sans-serif"],
       },
     },

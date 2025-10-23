@@ -230,7 +230,7 @@ const QuestionScreen = ({ questionType, testData, setTestData, onBackToWelcome }
     return (
         <>
             {isLoading ? (
-                <div className="min-h-[424px] flex-col rounded-md bg-gray-100 px-6 pt-5 md:pt-0">
+                <div className="min-h-[424px] flex-col rounded-md px-6 pt-5 md:pt-0">
                     <div className="mt-2 flex items-center gap-3 pb-5">
                         <div className="h-8 w-8 flex-shrink-0 overflow-hidden rounded-full">
                             <img
@@ -251,25 +251,41 @@ const QuestionScreen = ({ questionType, testData, setTestData, onBackToWelcome }
                     </div>
                 </div>
             ) : (
-                <div className="relative flex flex-col rounded-md pt-2 font-mallanna lg:pt-0">
+                <div className="bg- relative flex flex-col rounded-md pt-2 font-mallanna lg:pt-0">
                     <div>
-                        <div className="fixed right-2 top-14 z-30 flex flex-col items-center">
+                        <div className="fixed right-2 top-20 z-30 flex flex-col items-center">
                             <img
                                 src={hourGlass}
                                 alt="hourGlass"
-                                className="h-10 w-10"
-                            />
-                            <span className="text-xs text-[#12703C]">{formatTime(timer)}</span>
+                                className="h-10 w-10 hidden md:block"
+                                />
+                            <span className="text-xs text-[#12703C] hidden md:block">{formatTime(timer)}</span>
                         </div>
 
-                        <div className="fixed right-2 top-2 z-30 flex items-center justify-between rounded-md bg-[#12703C] px-3 py-2 text-sm">
-                            <span className="text-white">
-                                Questions - {currentData?.currentIndex + 1}/{questions?.length || 0}
-                            </span>
+                        <div className="fixed left-0 right-0 flex justify-center md:left-40 md:top-0 lg:left-60 xl:left-80">
+                            <div className="fixed w-full rounded-md border-b border-gray-200 bg-gray-50 px-6 py-4 md:w-[75%] lg:w-[70%] xl:w-[76%]">
+                                <div className="mb-2 flex items-center justify-between">
+                                    <span className="text-sm font-medium text-gray-800">
+                                        Question {currentData?.currentIndex + 1} of {questions?.length}
+                                    </span>
+                                    <span className="text-sm text-gray-500">
+                                        {Math.round(((currentData?.currentIndex + 1) / questions?.length) * 100)}% Complete
+                                    </span>
+                                </div>
+
+                                <div className="h-2 w-full overflow-hidden rounded-full bg-gray-200">
+                                    <div
+                                        className="h-full bg-[#12703C] transition-all duration-300"
+                                        style={{
+                                            width: `${((currentData?.currentIndex + 1) / questions?.length) * 100}%`,
+                                        }}
+                                    ></div>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
-                    <div className="custom-scrollbar scrollable flex-1 space-y-3 overflow-y-auto px-4 pb-10 pr-1 pt-3 md:px-6">
+                    <div className="custom-scrollbar scrollable flex-1 space-y-3 overflow-y-auto px-4 pb-40 pr-1 pt-20 md:px-6">
                         {currentData?.messages.map((msg, idx) => {
                             const isBot = msg.type === "bot";
                             const isLastBot = isBot && (idx === currentData.messages.length - 1 || currentData.messages[idx + 1]?.type !== "bot");
@@ -298,8 +314,8 @@ const QuestionScreen = ({ questionType, testData, setTestData, onBackToWelcome }
                                     <div
                                         className={`whitespace-pre-wrap break-words rounded-xl px-4 py-2 text-[16px] shadow-sm ${
                                             msg.type === "user"
-                                                ? "rounded-br-none bg-sky-200 text-gray-800"
-                                                : "rounded-bl-none bg-white text-gray-800"
+                                                ? "rounded-br-none bg-[#12703C] text-white"
+                                                : "rounded-bl-none bg-[#C9E9CE] text-gray-800"
                                         }`}
                                     >
                                         {msg.content}
@@ -332,26 +348,6 @@ const QuestionScreen = ({ questionType, testData, setTestData, onBackToWelcome }
                                     </div>
                                 ) : (
                                     <>
-                                        {isRange && (
-                                            <div className="ml-auto space-y-3 px-4 pb-2 font-mallanna md:max-w-[40%]">
-                                                <div className="mb-2 flex justify-between text-[14px] text-gray-600">
-                                                    <span>Strongly Disagree</span>
-                                                    <span>Strongly Agree</span>
-                                                </div>
-                                                <div className="flex items-center justify-between space-x-2">
-                                                    {[1, 2, 3, 4, 5].map((val) => (
-                                                        <button
-                                                            key={val}
-                                                            onClick={() => handleAnswer(val)}
-                                                            className="h-10 w-10 rounded-full border-2 bg-white text-[14px] font-semibold text-gray-600 transition-all duration-200 hover:scale-105 hover:border-gray-400"
-                                                        >
-                                                            {val}
-                                                        </button>
-                                                    ))}
-                                                </div>
-                                            </div>
-                                        )}
-
                                         {isSingle && (
                                             <div className="ml-auto mt-4 max-w-[75%] space-y-2 px-3 pb-2">
                                                 {currentQuestion?.options.map((option, index) => (
@@ -381,17 +377,39 @@ const QuestionScreen = ({ questionType, testData, setTestData, onBackToWelcome }
                                 </button>
                             </div>
                         )}
-                    </div>
 
-                    <div className="fixed bottom-2 w-full px-4 md:w-[80%] md:px-6 lg:w-[67%]">
-                        <input
-                            type="text"
-                            name=""
-                            id=""
-                            placeholder="Ask anything..."
-                            className="w-full rounded-md border bg-white p-2 py-4 shadow-sm outline-none"
-                            disabled={true}
-                        />
+                        <div className="fixed left-0 right-0 flex justify-center md:left-40 md:top-0 lg:left-60 xl:left-80">
+                            <div className="fixed bottom-2 flex w- flex-col  md:w-[75%] lg:w-[70%] xl:w-[76%]">
+                                {isRange && (
+                                    <div className="w-full rounded-t-md border-2 border-gray-200 bg-gray-100 p-4 font-mallanna">
+                                        <div className="mb-2 flex space-x-28 text-[14px] text-gray-600">
+                                            <span>Strongly Disagree</span>
+                                            <span>Strongly Agree</span>
+                                        </div>
+                                        <div className="flex items-center justify-start space-x-4 md:space-x-6">
+                                            {[1, 2, 3, 4, 5].map((val) => (
+                                                <button
+                                                    key={val}
+                                                    onClick={() => handleAnswer(val)}
+                                                    className="h-10 w-10 rounded-full border-2 border-[#12703C] bg-white text-[14px] font-semibold transition-all duration-200 hover:scale-105 hover:border-gray-400"
+                                                >
+                                                    {val}
+                                                </button>
+                                            ))}
+                                        </div>
+                                    </div>
+                                )}
+
+                                <div className="w-full rounded-b-md border border-[#12703C] bg-white">
+                                    <input
+                                        type="text"
+                                        placeholder="Ask anything..."
+                                        className="w-full rounded-md bg-white p-2  shadow-sm outline-none"
+                                        disabled={true}
+                                    />
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             )}
