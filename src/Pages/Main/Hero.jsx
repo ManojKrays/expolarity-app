@@ -44,7 +44,7 @@ const Hero = () => {
                             user ? navigate("/Assessment") : NavigateToApp();
                         }}
                         type="button"
-                        className="mt-5 flex w-[145px] cursor-pointer items-center justify-center gap-3 rounded-full border border-green-500 bg-green-500 px-2 py-2 font-semibold text-white duration-300 hover:bg-white hover:text-green-500"
+                        className="mt-5 flex w-[200px] cursor-pointer items-center justify-center gap-3 rounded-full border border-green-500 bg-green-500 px-2 py-2 font-semibold text-white duration-300 hover:bg-white hover:text-green-500"
                     >
                         Take the test
                         <CircleArrowRight

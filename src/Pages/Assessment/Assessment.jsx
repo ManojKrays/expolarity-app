@@ -97,8 +97,8 @@ const Assessment = () => {
             </div>
             <div className="flex">
                 <div
-                    style={{ backgroundImage: `url("src/assets/bg.png")` }}
-                    className={`fixed z-50 h-[100dvh] max-w-xs shadow-lg transition-transform duration-300 md:static md:flex md:w-[20%] md:translate-x-0 ${
+                    Z
+                    className={`fixed z-50 h-[100dvh] max-w-xs bg-[#12703C] shadow-lg transition-transform duration-300 md:static md:flex md:w-[20%] md:translate-x-0 ${
                         sidebarOpen ? "translate-x-0" : "-translate-x-full"
                     }`}
                 >
